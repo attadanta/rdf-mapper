@@ -7,7 +7,6 @@ import com.thaiopensource.validate.rng.SAXSchemaReader;
 import com.thaiopensource.xml.sax.ErrorHandlerImpl;
 import org.junit.Assert;
 import org.junit.Test;
-import org.xml.sax.ContentHandler;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 
@@ -28,7 +27,7 @@ import java.nio.file.Paths;
 public class SchemaTest {
 
     /**
-     * Demonstrates ...
+     * Demonstrates the validator - transformer interaction.
      *
      * @throws SAXException
      * @throws IOException
