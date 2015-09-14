@@ -1,0 +1,88 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:element name="ont-url" type="xs:string"/>
+	<xs:group name="ont-entity-attributes">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="ont-url"/>
+				<xs:element name="class-url" type="xs:string"/>
+				<xs:element name="property-map" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="ont-property" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element ref="ont-url"/>
+										<xs:element name="name" type="xs:string"/>
+										<xs:element name="property-type" type="xs:string"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:group>
+	<xs:element name="entity-map">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="class-map">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="ont-class" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:group ref="ont-entity-attributes"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="taxonomy-map">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="subclass-relation" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="super-class" type="xs:string"/>
+										<xs:element name="sub-class" type="xs:string"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="object-map">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="ont-object" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:group ref="ont-entity-attributes"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+		<xs:key name="class-id">
+			<xs:selector xpath="./class-map/ont-class/"/>
+			<xs:field xpath="ont-url"/>
+		</xs:key>
+		<xs:keyref name="object-class" refer="class-id">
+			<xs:selector xpath=".//class-url/../"/>
+			<xs:field xpath="class-url"/>
+		</xs:keyref>
+		<xs:unique name="object-id">
+			<xs:selector xpath="./object-map/ont-class/"/>
+			<xs:field xpath="ont-url"/>
+		</xs:unique>
+		<xs:unique name="property-id">
+			<xs:selector xpath=".//ont-property/"/>
+			<xs:field xpath="ont-url"/>
+		</xs:unique>
+	</xs:element>
+</xs:schema>
