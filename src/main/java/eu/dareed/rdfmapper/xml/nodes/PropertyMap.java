@@ -10,7 +10,7 @@ public class PropertyMap {
 	private List<OntProperty> propertyList;
 	
 	public PropertyMap() {
-		propertyList = new ArrayList<OntProperty>();
+		propertyList = new ArrayList<>();
 	}
 	
 	@XmlElement(name = "ont-property")

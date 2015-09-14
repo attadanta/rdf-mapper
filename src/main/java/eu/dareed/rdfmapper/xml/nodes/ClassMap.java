@@ -10,7 +10,7 @@ public class ClassMap {
 	private List<OntClass> ontClassList;
 	
 	public ClassMap() {
-		ontClassList = new ArrayList<OntClass>();
+		ontClassList = new ArrayList<>();
 	}
 
 	@XmlElement(name = "ont-class")

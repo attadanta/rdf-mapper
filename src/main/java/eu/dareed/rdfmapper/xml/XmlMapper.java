@@ -25,11 +25,9 @@ public class XmlMapper {
 		return entityMap;
 	}
 
-
 	public void setEntityMap(EntityMap entityMap) {
 		this.entityMap = entityMap;
 	}
-
 
 	public void mapIDDToXMLObjects(IDD idd){
 		entityMap = new EntityMap();
@@ -74,7 +72,6 @@ public class XmlMapper {
 			m.marshal(entityMap, file);
         } catch (JAXBException e) {e.printStackTrace();
 		}
-
 	}
 	
 	

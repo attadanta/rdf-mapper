@@ -9,7 +9,7 @@ public class TaxonomyMap {
 	private List<SubClassRelation> subRelList;
 	
 	public TaxonomyMap() {
-		subRelList = new ArrayList<SubClassRelation>();
+		subRelList = new ArrayList<>();
 	}
 
 	@XmlElement(name = "subclass-relation")
