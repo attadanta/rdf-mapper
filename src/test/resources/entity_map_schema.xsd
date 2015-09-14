@@ -5,7 +5,7 @@
 			<xs:sequence>
 				<xs:element ref="ont-url"/>
 				<xs:element name="class-url" type="xs:string"/>
-				<xs:elementname="property-map" minOccurs="0">
+				<xs:element name="property-map" minOccurs="0">
 					<xs:complexType>
 						<xs:sequence>
 							<xs:element name="ont-property" maxOccurs="unbounded">
@@ -34,12 +34,12 @@
 									<xs:sequence>
 										<xs:group ref="ont-entity-attributes"/>
 									</xs:sequence>
-								</xs:command>
-							</element>
+								</xs:complexType>
+							</xs:element>
 						</xs:sequence>
 					</xs:complexType>
 				</xs:element>
-				<xs:elementname="taxonomy-map">
+				<xs:element name="taxonomy-map">
 					<xs:complexType>
 						<xs:sequence>
 							<xs:element name="subclass-relation" maxOccurs="unbounded">
