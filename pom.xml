@@ -62,6 +62,12 @@
             <version>4.11</version>
             <scope>test</scope>
         </dependency>
+        
+        <dependency>
+            <groupId>net.sourceforge.owlapi</groupId>
+            <artifactId>owlapi-distribution</artifactId>
+            <version>4.0.2</version>
+        </dependency>
     </dependencies>
 
 </project>

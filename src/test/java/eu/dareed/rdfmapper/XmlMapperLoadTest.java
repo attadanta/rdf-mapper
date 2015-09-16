@@ -1,7 +1,7 @@
 package eu.dareed.rdfmapper;
 
 import eu.dareed.rdfmapper.xml.XmlMapper;
-import eu.dareed.rdfmapper.xml.nodes.OntClass;
+import eu.dareed.rdfmapper.xml.nodes.ClassEntity;
 import org.junit.Test;
 
 import javax.xml.bind.JAXBException;
@@ -17,8 +17,8 @@ public class XmlMapperLoadTest {
 
         XmlMapper mapper = new XmlMapper();
         mapper.loadXML(xmlMap);
-        for (OntClass ontClass : mapper.getEntityMap().getClassMap().getOntClassList()) {
-            System.out.println(ontClass.getOntURL());
+        for (ClassEntity ontClass : mapper.getEntityMap().getClassMap().getClassList()) {
+            System.out.println(ontClass.getURL());
         }
     }
 }

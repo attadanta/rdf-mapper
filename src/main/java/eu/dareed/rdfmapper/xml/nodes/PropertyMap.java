@@ -7,18 +7,18 @@ import javax.xml.bind.annotation.XmlElement;
 
 public class PropertyMap {
 
-	private List<OntProperty> propertyList;
+	private List<ClassProperty> propertyList;
 	
 	public PropertyMap() {
-		propertyList = new ArrayList<>();
+		propertyList = new ArrayList<ClassProperty>();
 	}
 	
-	@XmlElement(name = "ont-property")
-	public List<OntProperty> getPropertyList() {
+	@XmlElement(name = "class-property")
+	public List<ClassProperty> getPropertyList() {
 		return propertyList;
 	}
 
-	public void setPropertyList(List<OntProperty> propertyList) {
+	public void setPropertyList(List<ClassProperty> propertyList) {
 		this.propertyList = propertyList;
 	}
 }

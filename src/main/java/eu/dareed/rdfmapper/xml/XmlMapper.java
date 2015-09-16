@@ -5,8 +5,8 @@ import eu.dareed.eplus.model.idd.IDDField;
 import eu.dareed.eplus.model.idd.IDDObject;
 import eu.dareed.eplus.model.idd.Parameter;
 import eu.dareed.rdfmapper.xml.nodes.EntityMap;
-import eu.dareed.rdfmapper.xml.nodes.OntClass;
-import eu.dareed.rdfmapper.xml.nodes.OntProperty;
+import eu.dareed.rdfmapper.xml.nodes.ClassEntity;
+import eu.dareed.rdfmapper.xml.nodes.ClassProperty;
 import eu.dareed.rdfmapper.xml.nodes.SubClassRelation;
 
 import javax.xml.bind.JAXBContext;
@@ -30,25 +30,25 @@ public class XmlMapper {
 
     public void mapIDDToXMLObjects(IDD idd) {
         entityMap = new EntityMap();
-        List<OntClass> classList = entityMap.getClassMap().getOntClassList();
-        classList.add(new OntClass("ont-class", "ont-class"));
+        List<ClassEntity> classList = entityMap.getClassMap().getClassList();
+        classList.add(new ClassEntity("entity-class", "entity-class"));
         List<SubClassRelation> subRelList = entityMap.getTaxonomyMap().getSubRelList();
 
         for (IDDObject iddObj : idd.getAllObjects()) {
             String classURL = buildClassURL(iddObj.getType());
-            OntClass ontClass = new OntClass(classURL, "ont-class");
-            List<OntProperty> propertyList = ontClass.getPropertyMap().getPropertyList();
+            ClassEntity entClass = new ClassEntity(classURL, "entity-class");
+            List<ClassProperty> propertyList = entClass.getPropertyMap().getPropertyList();
 
             for (IDDField field : iddObj.getFields()) {
                 List<Parameter> propList = field.getParameters("field");
                 if (propList.size() != 0) {
-                    OntProperty ontProperty = new OntProperty(buildPropertyURL(propList.get(0).value()),
-                            determinePropertyType(field));
-                    ontProperty.setName(field.getName());
-                    propertyList.add(ontProperty);
+                    ClassProperty entProperty = new ClassProperty(buildPropertyURL(propList.get(0).value()));
+                    entProperty.setPropertyType(determineTypes(field, entProperty));
+                    entProperty.setName(field.getName());
+                    propertyList.add(entProperty);
                 }
             }
-            classList.add(ontClass);
+            classList.add(entClass);
 
             int relationIndicatorIdx = classURL.indexOf(':');
             if (relationIndicatorIdx > 0) {
@@ -90,10 +90,15 @@ public class XmlMapper {
         return propName.trim().replace(' ', '_');
     }
 
-    private String determinePropertyType(IDDField field) {
+    private String determineTypes(IDDField field, ClassProperty entProperty) {
         List<Parameter> typeList = field.getParameters("type");
-        if (typeList.size() != 0 && typeList.get(0).value().equals("object-list")) {
-            return "object-property";
+        if(typeList.size() != 0){
+        	String dataType = typeList.get(0).value();
+        	if (dataType.equals("object-list")) {
+        		entProperty.setDataType("object-url");
+        		return "object-property";
+        	}
+        	entProperty.setDataType(dataType);
         }
         return "data-property";
     }

@@ -7,18 +7,18 @@ import javax.xml.bind.annotation.XmlElement;
 
 public class ObjectMap {
 
-	private List<OntObject> ontObjectList;
+	private List<ObjectEntity> objectList;
 	
 	public ObjectMap() {
-		setOntObjectList(new ArrayList<OntObject>());
+		setObjectList(new ArrayList<ObjectEntity>());
 	}
 
-	@XmlElement(name = "ont-object")
-	public List<OntObject> getOntObjectList() {
-		return ontObjectList;
+	@XmlElement(name = "object-entity")
+	public List<ObjectEntity> getObjectList() {
+		return objectList;
 	}
 
-	public void setOntObjectList(List<OntObject> ontObjectList) {
-		this.ontObjectList = ontObjectList;
+	public void setObjectList(List<ObjectEntity> objectList) {
+		this.objectList = objectList;
 	}
 }

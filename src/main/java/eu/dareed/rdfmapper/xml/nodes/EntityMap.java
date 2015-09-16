@@ -10,7 +10,6 @@ import javax.xml.bind.annotation.XmlType;
 public class EntityMap {
 	
 	private ClassMap classMap;
-//	private PropertyMap propertyMap;
 	private TaxonomyMap taxonomyMap;
 	private ObjectMap objectMap;
 	
@@ -28,14 +27,6 @@ public class EntityMap {
 		this.classMap = classMap;
 	}
 	
-//	@XmlElement(name = "property-map")
-//	public PropertyMap getPropertyMap() {
-//		return propertyMap;
-//	}
-//	
-//	public void setPropertyMap(PropertyMap propertyMap) {
-//		this.propertyMap = propertyMap;
-//	}
 	
 	@XmlElement(name = "taxonomy-map")
 	public TaxonomyMap getTaxonomyMap() {

@@ -3,19 +3,19 @@ package eu.dareed.rdfmapper.xml.nodes;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-@XmlType(propOrder={"name", "propertyType"})
-public class OntProperty extends OntItem {
+@XmlType(propOrder={"name", "propertyType", "dataType"})
+public class ClassProperty extends Item {
 
 	private String name;
 	private String propertyType;
+	private String dataType;
 	
-	private OntProperty(){
+	private ClassProperty(){
 		super(null);
 	}
 	
-	public OntProperty(String url, String propertyType) {
+	public ClassProperty(String url) {
 		super(url);
-		setPropertyType(propertyType);
 	}
 	
 	@XmlElement(name = "name")
@@ -34,5 +34,14 @@ public class OntProperty extends OntItem {
 	
 	public void setPropertyType(String propertyType) {
 		this.propertyType = propertyType;
+	}
+
+	@XmlElement(name = "datatype")
+	public String getDataType() {
+		return dataType;
+	}
+
+	public void setDataType(String dataType) {
+		this.dataType = dataType;
 	}
 }

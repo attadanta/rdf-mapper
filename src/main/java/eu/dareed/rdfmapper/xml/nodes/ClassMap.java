@@ -7,19 +7,19 @@ import javax.xml.bind.annotation.XmlElement;
 
 public class ClassMap {
 
-	private List<OntClass> ontClassList;
+	private List<ClassEntity> classList;
 	
 	public ClassMap() {
-		ontClassList = new ArrayList<>();
+		classList = new ArrayList<>();
 	}
 
-	@XmlElement(name = "ont-class")
-	public List<OntClass> getOntClassList() {
-		return ontClassList;
+	@XmlElement(name = "entity-class")
+	public List<ClassEntity> getClassList() {
+		return classList;
 	}
 
-	public void setOntClassList(List<OntClass> ontClassList) {
-		this.ontClassList = ontClassList;
+	public void setClassList(List<ClassEntity> classList) {
+		this.classList = classList;
 	}
 	
 }
