@@ -11,8 +11,8 @@ public class ClassEntity extends Entity{
 		super(null, null);
 	}
 	
-	public ClassEntity(String url, String classURL) {
-		super(url, classURL);
+	public ClassEntity(String url, String className) {
+		super(url, className);
 		this.propertyMap = new PropertyMap();
 	}
 

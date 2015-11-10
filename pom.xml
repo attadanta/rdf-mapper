@@ -47,7 +47,7 @@
         <dependency>
             <groupId>eu.dareed</groupId>
             <artifactId>eplus</artifactId>
-            <version>0.5.1-SNAPSHOT</version>
+            <version>0.6.0-SNAPSHOT</version>
         </dependency>
 
         <dependency>
@@ -68,6 +68,12 @@
             <artifactId>owlapi-distribution</artifactId>
             <version>4.0.2</version>
         </dependency>
+        
+        <dependency>
+			<groupId>org.apache.jena</groupId>
+			<artifactId>jena-core</artifactId>
+			<version>2.13.0</version>
+		</dependency>
     </dependencies>
 
 </project>

@@ -13,7 +13,10 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+
 import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.List;
 
 public class XmlMapper {
@@ -24,10 +27,12 @@ public class XmlMapper {
         return entityMap;
     }
 
+    
     public void setEntityMap(EntityMap entityMap) {
         this.entityMap = entityMap;
     }
 
+    
     public void mapIDDToXMLObjects(IDD idd) {
         entityMap = new EntityMap();
         List<ClassEntity> classList = entityMap.getClassMap().getClassList();
@@ -36,28 +41,32 @@ public class XmlMapper {
 
         for (IDDObject iddObj : idd.getAllObjects()) {
             String classURL = buildClassURL(iddObj.getType());
-            ClassEntity entClass = new ClassEntity(classURL, "entity-class");
+            ClassEntity entClass = new ClassEntity(classURL, classURL);
+            entClass.setLabel(classURL);
+            entClass.getclassURLList().add("entity-class");
             List<ClassProperty> propertyList = entClass.getPropertyMap().getPropertyList();
 
             for (IDDField field : iddObj.getFields()) {
                 List<Parameter> propList = field.getParameters("field");
                 if (propList.size() != 0) {
                     ClassProperty entProperty = new ClassProperty(buildPropertyURL(propList.get(0).value()));
+                    entProperty.setLabel(propList.get(0).value().trim().replace(' ', '_'));
                     entProperty.setPropertyType(determineTypes(field, entProperty));
-                    entProperty.setName(field.getName());
+                    entProperty.setName(fixPropertyName(field.getName()));
                     propertyList.add(entProperty);
                 }
             }
             classList.add(entClass);
 
-            int relationIndicatorIdx = classURL.indexOf(':');
+            int relationIndicatorIdx = classURL.indexOf("--");
             if (relationIndicatorIdx > 0) {
-                String superURL = buildClassURL(classURL.substring(relationIndicatorIdx + 1));
+                String superURL = buildClassURL(classURL.substring(relationIndicatorIdx + 2));
                 subRelList.add(new SubClassRelation(superURL, classURL));
             }
         }
     }
 
+    
     public void saveXML(File file) throws JAXBException {
         JAXBContext context;
         context = JAXBContext.newInstance(EntityMap.class);
@@ -68,6 +77,7 @@ public class XmlMapper {
         m.marshal(entityMap, file);
     }
 
+    
     public void loadXML(File xmlFile) throws JAXBException {
         JAXBContext context = JAXBContext.newInstance(EntityMap.class);
         Unmarshaller um = context.createUnmarshaller();
@@ -76,24 +86,38 @@ public class XmlMapper {
         entityMap = (EntityMap) um.unmarshal(xmlFile);
     }
 
+    
     private String buildClassURL(String type) {
         String className = type.trim().replace(' ', '_').replace(':', '.');
         if (className.contains(".")) {
             int sepIdx = className.lastIndexOf('.');
-            return className.substring(sepIdx + 1) + ":"
+            return className.substring(sepIdx + 1) + "--"
                     + className.substring(0, sepIdx);
         }
         return className;
     }
 
+    
     private String buildPropertyURL(String propName) {
-        return propName.trim().replace(' ', '_');
+//        propName = propName.replaceAll("%", "percent");
+//        propName = propName.replaceAll("#", "no.");
+//        propName = propName.replaceAll(": ", "--");
+//        propName = propName.replaceAll(":", "--");
+//        propName = propName.replaceAll(",", "");
+//        propName = propName.replaceAll("/", "_");
+    	propName = propName.trim().replace(' ', '_');
+    	try {
+			propName = URLEncoder.encode(propName, "UTF-8");
+		} catch (UnsupportedEncodingException e) {e.printStackTrace();
+		}
+    	return propName;
     }
 
+    
     private String determineTypes(IDDField field, ClassProperty entProperty) {
         List<Parameter> typeList = field.getParameters("type");
         if(typeList.size() != 0){
-        	String dataType = typeList.get(0).value();
+        	String dataType = typeList.get(0).value().trim();
         	if (dataType.equals("object-list")) {
         		entProperty.setDataType("object-url");
         		return "object-property";
@@ -102,4 +126,16 @@ public class XmlMapper {
         }
         return "data-property";
     }
+
+    
+	private String fixPropertyName(String name) {
+//		name = name.replaceAll("%", "percent");
+		
+		int newLineIdx = name.lastIndexOf("\n");
+		if(newLineIdx >= 0){
+			name = name.substring(newLineIdx + 1); 
+		}
+		
+		return name.trim().replace(' ', '_');
+	}
 }
