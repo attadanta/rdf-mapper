@@ -4,7 +4,7 @@
     <class-map>
         <class-entity>
 			<label>"name without url encoding"</label>
-            <url></url>
+            <url>"can contain replaceable parts like: $idf-index$"</url>
 			<entity-name></entity-name>
             <class-url></class-url>
 			<!--  ...  -->
