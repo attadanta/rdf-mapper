@@ -52,7 +52,7 @@ public class RDFMapper {
 			Resource subject = model.createResource(clsEnt.getURL());
 			for(String classURL : clsEnt.getclassURLList()){
 //				com.hp.hpl.jena.vocabulary
-				subject.addProperty(RDF.type, model.createResource(classURL));
+				subject.addProperty(RDF.type, model.createResource(completeURL(classURL, idfObj)));
 			}
 			
 			// add triples for object properties
