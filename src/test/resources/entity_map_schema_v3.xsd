@@ -1,0 +1,66 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:group name="item-attributes">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="label" type="xs:string"/>
+				<xs:element name="url" type="xs:string"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:group>
+	<xs:element name="entity-map">
+		<xs:complexType>
+			<xs:sequence>
+			<xs:element name="namespace" type="xs:string"/>
+				<xs:element name="class-map">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="class-entity" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:group ref="item-attributes"/>
+										<xs:element name="entity-name"/>
+										<xs:element name="class-url" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+										<xs:element name="property-map" minOccurs="0">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="class-property" maxOccurs="unbounded">
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element ref="item-attributes"/>
+																<xs:element name="identifier" type="xs:string"/>
+																<xs:element name="property-type" type="xs:string"/>
+																<xs:element name="datatype" type="xs:string" minOccurs="0" maxOccurs="1"/>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="taxonomy-map" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="subclass-relation" minOccurs="0" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="super-class" type="xs:string"/>
+										<xs:element name="sub-class" type="xs:string"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+		<xs:unique name="property-id">
+			<xs:selector xpath=".//class-property/"/>
+			<xs:field xpath="url"/>
+		</xs:unique>
+	</xs:element>
+</xs:schema>

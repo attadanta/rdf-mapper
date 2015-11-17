@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<entity-map>
+    <namespace></namespace>
+    <class-map>
+        <class-entity>
+			<label>"name without url encoding"</label>
+            <url></url>
+			<entity-name></entity-name>
+            <class-url></class-url>
+			<!--  ...  -->
+            <property-map>
+				<class-property>
+					<label>"name without url encoding"</label>
+					<url></url>
+                    <identifier>"name in class (e.g. N1) or index in idf individual"</identifier>
+                    <property-type>object-property</property-type>
+                    <datatype>object-url</datatype>
+                </class-property>
+				<!--  ...  -->
+			</property-map>
+		</class-entity>
+		<!--  ...  -->
+	</class-map>
+	<taxonomy-map>
+		<subclass-relation>
+			<super-class></super-class>
+			<sub-class></sub-class>
+        </subclass-relation>
+		<!--  ...  -->
+	</taxonomy-map>
+</entity-map>

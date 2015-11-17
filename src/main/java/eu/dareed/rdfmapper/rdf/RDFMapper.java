@@ -56,7 +56,7 @@ public class RDFMapper {
 
             // add triples for object properties
             for (ClassProperty classProperty : clsEnt.getPropertyMap().getPropertyList()) {
-                int fieldIndex = Integer.parseInt(classProperty.getName());
+                int fieldIndex = Integer.parseInt(classProperty.getIdentifier());
                 String objectString = idfObj.getField(fieldIndex).getRawValue();
 
                 if (classProperty.getPropertyType().equals("data-property")) {

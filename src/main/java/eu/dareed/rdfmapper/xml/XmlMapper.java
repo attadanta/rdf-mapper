@@ -52,7 +52,7 @@ public class XmlMapper {
                     ClassProperty entProperty = new ClassProperty(buildPropertyURL(propList.get(0).value()));
                     entProperty.setLabel(propList.get(0).value().trim().replace(' ', '_'));
                     entProperty.setPropertyType(determineTypes(field, entProperty));
-                    entProperty.setName(fixPropertyName(field.getName()));
+                    entProperty.setIdentifier(fixPropertyName(field.getName()));
                     propertyList.add(entProperty);
                 }
             }
@@ -123,6 +123,8 @@ public class XmlMapper {
         		return "object-property";
         	}
         	entProperty.setDataType(dataType);
+        }else{
+        	entProperty.setDataType("unknown");
         }
         return "data-property";
     }

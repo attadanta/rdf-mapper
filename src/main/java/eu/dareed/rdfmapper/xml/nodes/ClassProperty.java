@@ -6,7 +6,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(propOrder={"name", "propertyType", "dataType"})
 public class ClassProperty extends Item {
 
-	private String name;
+	private String identifier;
 	private String propertyType;
 	private String dataType;
 	
@@ -18,13 +18,13 @@ public class ClassProperty extends Item {
 		super(url);
 	}
 	
-	@XmlElement(name = "name")
-	public String getName() {
-		return name;
+	@XmlElement(name = "identifier")
+	public String getIdentifier() {
+		return identifier;
 	}
 	
-	public void setName(String name) {
-		this.name = name;
+	public void setIdentifier(String identifier) {
+		this.identifier = identifier;
 	}
 	
 	@XmlElement(name = "property-type")
