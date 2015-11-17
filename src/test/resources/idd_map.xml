@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<entity-map>
+    <class-map>
+        <class-entity>
+            <label>Gebaeude</label>
+            <url>http://dareed.eu/Geb</url>
+            <entity-name>Building</entity-name>
+            <class-url>http://dareed.eu/LeBuilding</class-url>
+            <property-map>
+                <class-property>
+                    <label>Version_Identifier</label>
+                    <url>http://dareed.eu/name</url>
+                    <name>0</name>
+                    <property-type>data-property</property-type>
+                </class-property>
+            </property-map>
+        </class-entity>
+    </class-map>
+</entity-map>

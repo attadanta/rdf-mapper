@@ -1,0 +1,649 @@
+Version,
+8.3;
+
+Timestep,
+6;
+
+Building,
+way:308064632,
+0.0000000E+00,
+City,
+.05,
+.05,
+MinimalShadowing,
+30,
+6;
+
+HeatBalanceAlgorithm,
+ConductionTransferFunction;
+
+SurfaceConvectionAlgorithm:Inside,
+TARP;
+
+SurfaceConvectionAlgorithm:Outside,
+DOE-2;
+
+SimulationControl,
+No,
+No,
+No,
+Yes,
+Yes;
+
+RunPeriod,
+,
+1,
+1,
+12,
+31,
+Tuesday,
+Yes,
+Yes,
+No,
+Yes,
+Yes;
+
+Site:GroundTemperature:BuildingSurface,
+18.99,
+18.92,
+19.02,
+19.12,
+19.21,
+19.23,
+19.07,
+19.32,
+19.09,
+19.21,
+19.13,
+18.96;
+
+SizingPeriod:DesignDay,
+Summer Conditions,
+7,
+21,
+SummerDesignDay,
+32,
+15.2,
+,
+,
+WetBulb,
+15.5,
+,
+,
+,
+,
+81560,
+4.9,
+0,
+No,
+No,
+No,
+ASHRAEClearSky,
+,
+,
+,
+,
+1.00;
+
+SizingPeriod:DesignDay,
+Winter Conditions,
+12,
+21,
+WinterDesignDay,
+-18.8,
+0,
+,
+,
+WetBulb,
+-18.8,
+,
+,
+,
+,
+81560.,
+3,
+340,
+No,
+No,
+No,
+ASHRAEClearSky,
+,
+,
+,
+,
+0.00;
+
+GlobalGeometryRules,
+UpperLeftCorner,
+CounterClockwise,
+World;
+
+Material,
+Concrete Floor,
+MediumRough,
+0.1014984,
+1.729577,
+2242.585,
+836.8,
+0.9,
+0.65,
+0.65;
+
+Material:NoMass,
+Wall Material,
+Rough,
+2.90965,
+0.9,
+0.75,
+0.75;
+
+Material:NoMass,
+Roof Material,
+Rough,
+5.456,
+0.9,
+0.75,
+0.75;
+
+Zone,
+Building Zone,
+0.0,
+0.0,
+0.0,
+0.0,
+1,
+1,
+autocalculate,
+autocalculate;
+
+Construction,
+FloorConstruction,
+Concrete Floor;
+
+Construction,
+WallConstruction,
+Wall Material;
+
+Construction,
+RoofConstruction,
+Roof Material;
+
+BuildingSurface:Detailed,
+Building Zone:floor,
+Floor,
+FloorConstruction,
+Building Zone,
+Surface,
+Building Zone:floor,
+NoSun,
+NoWind,
+1.0,
+6,
+0.020268030115403235,
+3.298523704521358,
+0.0,
+0.0,
+3.7768651843070984,
+0.0,
+5.487329867202789,
+4.346946533769369,
+0.0,
+5.507598204538226,
+3.8686050828546286,
+0.0,
+5.659082324418705,
+0.26439712615683675,
+0.0,
+0.3410124552901834,
+0.0,
+0.0;
+
+BuildingSurface:Detailed,
+Building Zone:wall1,
+Wall,
+WallConstruction,
+Building Zone,
+Outdoors,
+,
+SunExposed,
+WindExposed,
+0.5,
+4,
+0.020268030115403235,
+3.298523704521358,
+2.4,
+0.020268030115403235,
+3.298523704521358,
+0.0,
+0.0,
+3.7768651843070984,
+0.0,
+0.0,
+3.7768651843070984,
+2.4;
+
+BuildingSurface:Detailed,
+Building Zone:wall2,
+Wall,
+WallConstruction,
+Building Zone,
+Outdoors,
+,
+SunExposed,
+WindExposed,
+0.5,
+4,
+0.0,
+3.7768651843070984,
+2.4,
+0.0,
+3.7768651843070984,
+0.0,
+5.487329867202789,
+4.346946533769369,
+0.0,
+5.487329867202789,
+4.346946533769369,
+2.4;
+
+BuildingSurface:Detailed,
+Building Zone:wall3,
+Wall,
+WallConstruction,
+Building Zone,
+Outdoors,
+,
+SunExposed,
+WindExposed,
+0.5,
+4,
+5.487329867202789,
+4.346946533769369,
+2.4,
+5.487329867202789,
+4.346946533769369,
+0.0,
+5.507598204538226,
+3.8686050828546286,
+0.0,
+5.507598204538226,
+3.8686050828546286,
+2.4;
+
+BuildingSurface:Detailed,
+Building Zone:wall4,
+Wall,
+WallConstruction,
+Building Zone,
+Outdoors,
+,
+SunExposed,
+WindExposed,
+0.5,
+4,
+5.507598204538226,
+3.8686050828546286,
+2.4,
+5.507598204538226,
+3.8686050828546286,
+0.0,
+5.659082324418705,
+0.26439712615683675,
+0.0,
+5.659082324418705,
+0.26439712615683675,
+2.4;
+
+BuildingSurface:Detailed,
+Building Zone:wall5,
+Wall,
+WallConstruction,
+Building Zone,
+Outdoors,
+,
+SunExposed,
+WindExposed,
+0.5,
+4,
+5.659082324418705,
+0.26439712615683675,
+2.4,
+5.659082324418705,
+0.26439712615683675,
+0.0,
+0.3410124552901834,
+0.0,
+0.0,
+0.3410124552901834,
+0.0,
+2.4;
+
+BuildingSurface:Detailed,
+Building Zone:wall6,
+Wall,
+WallConstruction,
+Building Zone,
+Outdoors,
+,
+SunExposed,
+WindExposed,
+0.5,
+4,
+0.3410124552901834,
+0.0,
+2.4,
+0.3410124552901834,
+0.0,
+0.0,
+0.020268030115403235,
+3.298523704521358,
+0.0,
+0.020268030115403235,
+3.298523704521358,
+2.4;
+
+BuildingSurface:Detailed,
+Building Zone:roof,
+Roof,
+RoofConstruction,
+Building Zone,
+Outdoors,
+,
+SunExposed,
+WindExposed,
+0.0,
+6,
+0.020268030115403235,
+3.298523704521358,
+2.4,
+0.3410124552901834,
+0.0,
+2.4,
+5.659082324418705,
+0.26439712615683675,
+2.4,
+5.507598204538226,
+3.8686050828546286,
+2.4,
+5.487329867202789,
+4.346946533769369,
+2.4,
+0.0,
+3.7768651843070984,
+2.4;
+
+Output:VariableDictionary,
+Regular;
+
+Output:Variable,
+*,
+Site Outdoor Air Drybulb Temperature,
+hourly;
+
+Output:Variable,
+*,
+Site Outdoor Air Wetbulb Temperature,
+hourly;
+
+Output:Variable,
+*,
+Site Outdoor Air Humidity Ratio,
+hourly;
+
+Output:Variable,
+*,
+Site Outdoor Air Relative Humidity,
+hourly;
+
+Output:Variable,
+*,
+Zone Mean Air Temperature,
+hourly;
+
+Output:Variable,
+Supply Outlet Node,
+System Node Mass Flow Rate,
+hourly;
+
+Output:Variable,
+*,
+System Node Temperature,
+hourly;
+
+Output:Variable,
+*,
+Baseboard Electric Power,
+hourly;
+
+Output:Meter:MeterFileOnly,
+Electricity:Facility,
+monthly;
+
+Output:Meter:MeterFileOnly,
+Electricity:HVAC,
+monthly;
+
+Output:Meter:MeterFileOnly,
+Electricity:Facility,
+runperiod;
+
+Output:Meter:MeterFileOnly,
+Electricity:HVAC,
+runperiod;
+
+ScheduleTypeLimits,
+Any Number;
+
+Schedule:Compact,
+System Availability Schedule,
+Any Number,
+THROUGH: 12/31,
+FOR: AllDays,
+UNTIL: 24:00,1;
+
+Schedule:Compact,
+Fan Availability Schedule,
+Any Number,
+THROUGH: 12/31,
+FOR: AllDays,
+UNTIL: 12:00,1,
+UNTIL: 24:00,0;
+
+AirLoopHVAC,
+Evap Cooler System,
+,
+Evap Cooler Availability List,
+2.0,
+Air Loop Branches,
+,
+Supply Inlet Node,
+Zone Equipment Outlet Node,
+Zone Equipment Inlet Node,
+Supply Outlet Node;
+
+AvailabilityManagerAssignmentList,
+Evap Cooler Availability List,
+AvailabilityManager:LowTemperatureTurnOff,
+Low Temperature Turn Off Availability Manager,
+AvailabilityManager:HighTemperatureTurnOn,
+High Temperature Turn On Availability Manager;
+
+AvailabilityManager:LowTemperatureTurnOff,
+Low Temperature Turn Off Availability Manager,
+Building Zone Outlet Node,
+23.0;
+
+AvailabilityManager:HighTemperatureTurnOn,
+High Temperature Turn On Availability Manager,
+Building Zone Outlet Node,
+27.0;
+
+BranchList,
+Air Loop Branches,
+Air Loop Main Branch;
+
+Branch,
+Air Loop Main Branch,
+2.0,
+,
+AirLoopHVAC:OutdoorAirSystem,
+Outside Air System,
+Supply Inlet Node,
+Fan Inlet Node,
+PASSIVE,
+Fan:ConstantVolume,
+Supply Fan,
+Fan Inlet Node,
+Evap Cooler Inlet Node,
+ACTIVE,
+EvaporativeCooler:Direct:CelDekPad,
+Evaporative Cooler,
+Evap Cooler Inlet Node,
+Supply Outlet Node,
+PASSIVE;
+
+AirLoopHVAC:OutdoorAirSystem,
+Outside Air System,
+Outside Air System Controllers,
+Outside Air System Equipment,
+Evap Cooler Availability List;
+
+OutdoorAir:Node,
+Outside Air Inlet Node;
+
+AirLoopHVAC:ControllerList,
+Outside Air System Controllers,
+Controller:OutdoorAir,
+Outside Air Controller;
+
+Controller:OutdoorAir,
+Outside Air Controller,
+Relief Air Outlet Node,
+Supply Inlet Node,
+Fan Inlet Node,
+Outside Air Inlet Node,
+2.0,
+2.0,
+NoEconomizer,
+ModulateFlow,
+19.,
+,
+,
+,
+4.,
+NoLockout,
+FixedMinimum;
+
+AirLoopHVAC:OutdoorAirSystem:EquipmentList,
+Outside Air System Equipment,
+OutdoorAir:Mixer,
+Outside Air Mixing Box;
+
+OutdoorAir:Mixer,
+Outside Air Mixing Box,
+Fan Inlet Node,
+Outside Air Inlet Node,
+Relief Air Outlet Node,
+Supply Inlet Node;
+
+Fan:ConstantVolume,
+Supply Fan,
+Fan Availability Schedule,
+0.7,
+600.0,
+2.0,
+0.9,
+1.0,
+Fan Inlet Node,
+Evap Cooler Inlet Node;
+
+EvaporativeCooler:Direct:CelDekPad,
+Evaporative Cooler,
+System Availability Schedule,
+0.6,
+0.2,
+225,
+Evap Cooler Inlet Node,
+Supply Outlet Node,
+CONSTANT;
+
+AirLoopHVAC:SupplyPath,
+Zone Supply Air Path,
+Zone Equipment Inlet Node,
+AirLoopHVAC:ZoneSplitter,
+Zone Supply Air Splitter;
+
+AirLoopHVAC:ZoneSplitter,
+Zone Supply Air Splitter,
+Zone Equipment Inlet Node,
+Building Zone Inlet Node;
+
+AirLoopHVAC:ReturnPath,
+Zone Return Air Path,
+Zone Equipment Outlet Node,
+AirLoopHVAC:ZoneMixer,
+Zone Return Air Mixer;
+
+AirLoopHVAC:ZoneMixer,
+Zone Return Air Mixer,
+Zone Equipment Outlet Node,
+Building Zone Outlet Node;
+
+ZoneHVAC:EquipmentConnections,
+Building Zone,
+Building Zone Equipment,
+Building Zone Inlet Node,
+,
+Building Zone Node,
+Building Zone Outlet Node;
+
+ZoneHVAC:EquipmentList,
+Building Zone Equipment,
+AirTerminal:SingleDuct:Uncontrolled,
+Building Zone Direct Air,
+1,
+2,
+ZoneHVAC:Baseboard:Convective:Electric,
+Building Zone Baseboard,
+2,
+1;
+
+AirTerminal:SingleDuct:Uncontrolled,
+Building Zone Direct Air,
+System Availability Schedule,
+Building Zone Inlet Node,
+1.5;
+
+ZoneHVAC:Baseboard:Convective:Electric,
+Building Zone Baseboard,
+System Availability Schedule,
+HeatingDesignCapacity,
+8000,
+,
+,
+0.97;
+
+ZoneControl:Thermostat,
+Building Zone Thermostat,
+Building Zone,
+Zone Control Type Sched,
+ThermostatSetpoint:SingleHeating,
+Heating Setpoint;
+
+Schedule:Compact,
+Zone Control Type Sched,
+Any Number,
+Through: 12/31,
+For: AllDays,
+Until: 24:00,1;
+
+ThermostatSetpoint:SingleHeating,
+Heating Setpoint,
+Heating Setpoint Schedule;
+
+Schedule:Compact,
+Heating Setpoint Schedule,
+Any Number,
+Through: 12/31,
+For: AllDays,
+Until: 24:00,20.0;
