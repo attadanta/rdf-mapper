@@ -3,9 +3,9 @@
     <class-map>
         <class-entity>
             <label>Gebaeude</label>
-            <url>http://dareed.eu/Geb</url>
+            <url>http://dareed.eu/$0$</url>
             <entity-name>Building</entity-name>
-            <class-url>http://dareed.eu/LeBuilding</class-url>
+            <class-url>http://dareed.eu/Building</class-url>
             <property-map>
                 <class-property>
                     <label>Version_Identifier</label>
