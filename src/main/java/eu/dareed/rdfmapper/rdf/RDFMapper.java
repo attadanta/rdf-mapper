@@ -17,32 +17,16 @@ import java.util.Map;
 
 public class RDFMapper {
 
-    Model model;
-
-    public RDFMapper() {
-        model = ModelFactory.createDefaultModel();
-    }
-
-
-    public Model getModel() {
-        return model;
-    }
-
-
-    public void setModel(Model model) {
-        this.model = model;
-    }
-
-
-    public void mapIDFToRDF(IDF idf, EntityMap entityMap) {
+    public Model mapIDFToRDF(IDF idf, EntityMap entityMap) {
+        Model model = ModelFactory.createDefaultModel();
 
         List<ClassEntity> classList = entityMap.getClassMap().getClassList();
         Map<String, Integer> classIndexMap = buildClassIndexMap(classList);
 
         for (IDFObject idfObj : idf.getObjects()) {
             // get class entity from entity map
-            if (classIndexMap.get(idfObj.getType()) == null) {
-                System.out.println("Class " + idfObj.getType() + " not found in entity-map.");
+            if (classIndexMap.containsKey(idfObj.getType())) {
+                System.err.println("Class " + idfObj.getType() + " not found in entity-map.");
                 continue;
             }
             ClassEntity clsEnt = classList.get(classIndexMap.get(idfObj.getType()));
@@ -61,15 +45,14 @@ public class RDFMapper {
 
                 if (classProperty.getPropertyType().equals("data-property")) {
                     subject.addProperty(model.getProperty(classProperty.getURL()), objectString);
-
                 } else if (classProperty.getPropertyType().equals("object-property")) {
                     subject.addProperty(model.getProperty(classProperty.getURL()), model.getResource(objectString));
                 }
-
             }
         }
-    }
 
+        return model;
+    }
 
     private Map<String, Integer> buildClassIndexMap(List<ClassEntity> classList) {
         Map<String, Integer> indexMap = new HashMap<>();
@@ -79,7 +62,6 @@ public class RDFMapper {
         }
         return indexMap;
     }
-
 
     private String completeURL(String url, IDFObject idfObj) {
         String[] splittedURL = url.split("\\$");

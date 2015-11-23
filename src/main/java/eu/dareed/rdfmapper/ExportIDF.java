@@ -7,6 +7,7 @@ import java.io.IOException;
 
 import javax.xml.bind.JAXBException;
 
+import com.hp.hpl.jena.rdf.model.Model;
 import eu.dareed.eplus.model.idf.IDF;
 import eu.dareed.eplus.parsers.idf.IDFParser;
 import eu.dareed.rdfmapper.rdf.RDFMapper;
@@ -25,8 +26,8 @@ public class ExportIDF {
         xmlMapper.loadXML(new File(args[1]));
         
         RDFMapper rdfMapper = new RDFMapper();
-        rdfMapper.mapIDFToRDF(idf, xmlMapper.getEntityMap());
-        
-        rdfMapper.getModel().write(new FileOutputStream(args[2]));
+
+        Model model = rdfMapper.mapIDFToRDF(idf, xmlMapper.getEntityMap());
+        model.write(new FileOutputStream(args[2]));
     }
 }

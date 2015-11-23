@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <entity-map>
-    <namespace></namespace>
+    <namespace><!-- namespace declaration --></namespace>
     <class-map>
         <class-entity>
-			<label>"name without url encoding"</label>
-            <url>"can contain replaceable parts like: $idf-index$"</url>
-			<entity-name></entity-name>
+            <label><!-- name without url encoding --></label>
+            <url><!-- can contain replaceable parts like: $idf-index$ --></url>
+            <entity-name></entity-name>
             <class-url></class-url>
-			<!--  ...  -->
+            <!--  ...  -->
             <property-map>
-				<class-property>
-					<label>"name without url encoding"</label>
-					<url></url>
-                    <identifier>"name in class (e.g. N1) or index in idf individual"</identifier>
-                    <property-type>object-property</property-type>
-                    <datatype>object-url</datatype>
+                <class-property>
+                    <label><!-- name without url encoding --></label>
+                    <url><!-- property url encoding --></url>
+                    <identifier><!-- the property to map name in class (e.g. N1) or index in idf individual --></identifier>
+                    <property-type><!-- object-property or data-property --></property-type>
+                    <datatype><!-- object-url --></datatype>
                 </class-property>
-				<!--  ...  -->
-			</property-map>
-		</class-entity>
-		<!--  ...  -->
-	</class-map>
-	<taxonomy-map>
-		<subclass-relation>
-			<super-class></super-class>
-			<sub-class></sub-class>
+                <!--  ...  -->
+            </property-map>
+        </class-entity>
+        <!--  ...  -->
+    </class-map>
+    <taxonomy-map>
+        <subclass-relation>
+            <super-class></super-class>
+            <sub-class></sub-class>
         </subclass-relation>
-		<!--  ...  -->
-	</taxonomy-map>
+        <!--  ...  -->
+    </taxonomy-map>
 </entity-map>
