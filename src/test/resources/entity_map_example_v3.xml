@@ -11,10 +11,11 @@
             <property-map>
                 <class-property>
                     <label><!-- name without url encoding --></label>
-                    <url><!-- property url encoding --></url>
+                    <url><!-- property url with encoding --></url>
                     <identifier><!-- the property to map name in class (e.g. N1) or index in idf individual --></identifier>
                     <property-type><!-- object-property or data-property --></property-type>
-                    <datatype><!-- object-url --></datatype>
+                    <datatype><!-- e.g. "object-url", "integer", "real" --></datatype>
+                    <object-url><!-- object-url (used only for object properties --></object-url>
                 </class-property>
                 <!--  ...  -->
             </property-map>

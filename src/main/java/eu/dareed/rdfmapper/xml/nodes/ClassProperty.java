@@ -9,6 +9,7 @@ public class ClassProperty extends Item {
 	private String identifier;
 	private String propertyType;
 	private String dataType;
+	private String objectURL;
 	
 	private ClassProperty(){
 		super(null);
@@ -43,5 +44,14 @@ public class ClassProperty extends Item {
 
 	public void setDataType(String dataType) {
 		this.dataType = dataType;
+	}
+
+	@XmlElement(name = "object-url")
+	public String getObjectURL() {
+		return objectURL;
+	}
+
+	public void setObjectURL(String objectURL) {
+		this.objectURL = objectURL;
 	}
 }
