@@ -89,8 +89,8 @@ public class OntologyMapper {
 //                        ontologyManager.addAxiom(ontology, dataFactory.getOWLDataPropertyRangeAxiom(owlProperty, dataFactory.getFloatOWLDatatype()));
                     } else {
 //                        OWLDatatype stringType = dataFactory.getOWLDatatype(OWL2Datatype.XSD_STRING.getIRI());
-                        OWLDatatype stringType = dataFactory.getOWLDatatype(IRI.create(dataType));
-                        ontologyManager.addAxiom(ontology, dataFactory.getOWLDataPropertyRangeAxiom(owlProperty, stringType));
+                        OWLDatatype owlDatatype = dataFactory.getOWLDatatype(IRI.create(dataType));
+                        ontologyManager.addAxiom(ontology, dataFactory.getOWLDataPropertyRangeAxiom(owlProperty, owlDatatype));
                     }
 
                 } else {
