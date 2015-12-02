@@ -14,6 +14,11 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
+import org.semanticweb.owlapi.model.OWLDatatype;
+import org.semanticweb.owlapi.vocab.OWL2Datatype;
+
+import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
+
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -51,7 +56,7 @@ public class XmlMapper {
                 if (propList.size() != 0) {
                     ClassProperty entProperty = new ClassProperty(buildPropertyURL(propList.get(0).value()));
                     entProperty.setLabel(propList.get(0).value().trim().replace(' ', '_'));
-                    entProperty.setPropertyType(determineTypes(field, entProperty));
+                    entProperty.setPropertyType(determineTypes(field, entProperty)); // also sets datatype (see determineTypes())
                     entProperty.setIdentifier(fixPropertyName(field.getName()));
                     propertyList.add(entProperty);
                 }
@@ -122,9 +127,20 @@ public class XmlMapper {
         		entProperty.setDataType("object-url");
         		return "object-property";
         	}
-        	entProperty.setDataType(dataType);
+        	
+            if (dataType.equals("integer")) {
+            	entProperty.setDataType(OWL2Datatype.XSD_INTEGER.getIRI().toString());
+            	entProperty.setDataType(XSDDatatype.XSDinteger.getURI().toString());
+            } else if (dataType.equals("real")) {
+            	entProperty.setDataType(OWL2Datatype.XSD_FLOAT.getIRI().toString());
+            	entProperty.setDataType(XSDDatatype.XSDfloat.getURI().toString());
+            } else {
+            	entProperty.setDataType(OWL2Datatype.XSD_STRING.getIRI().toString());
+            	entProperty.setDataType(XSDDatatype.XSDstring.getURI().toString());
+            }
         }else{
-        	entProperty.setDataType("unknown");
+        	entProperty.setDataType(null);
+//        	entProperty.setDataType("unknown");
         }
         return "data-property";
     }

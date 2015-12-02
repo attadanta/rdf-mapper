@@ -1,6 +1,5 @@
 package eu.dareed.rdfmapper.rdf;
 
-import com.hp.hpl.jena.Jena;
 import com.hp.hpl.jena.datatypes.RDFDatatype;
 import com.hp.hpl.jena.datatypes.TypeMapper;
 import com.hp.hpl.jena.rdf.model.Model;
@@ -22,7 +21,7 @@ import java.util.Map;
 
 public class RDFMapper {
 
-    public Model mapIDFToRDF(MappingData data, EntityMap entityMap) {
+    public Model mapToRDF(MappingData data, EntityMap entityMap) {
         Model model = ModelFactory.createDefaultModel();
 
         List<ClassEntity> classList = entityMap.getClassMap().getClassList();
@@ -51,7 +50,7 @@ public class RDFMapper {
                 	String objectString = dataEntity.getAttributeByIndex(fieldIndex);
                     if(classProperty.getDataType() != null){
                     /*	*	*	*	under construction	*	*	*	*/
-                    	RDFDatatype type = new TypeMapper().getSafeTypeByName(entityMap.getNamespace() + classProperty.getDataType());
+                    	RDFDatatype type = TypeMapper.getInstance().getSafeTypeByName(classProperty.getDataType());
                     	subject.addProperty(model.getProperty(classProperty.getURL()), model.createTypedLiteral(objectString, type));
                 	/*	*	*	*	*	*	*	*	*	*	*	*	*/
                     }else{

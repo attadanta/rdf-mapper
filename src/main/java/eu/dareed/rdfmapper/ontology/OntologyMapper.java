@@ -4,6 +4,8 @@ import eu.dareed.rdfmapper.xml.nodes.ClassEntity;
 import eu.dareed.rdfmapper.xml.nodes.ClassProperty;
 import eu.dareed.rdfmapper.xml.nodes.EntityMap;
 import eu.dareed.rdfmapper.xml.nodes.SubClassRelation;
+
+import org.apache.jena.iri.IRIFactory;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.vocab.OWL2Datatype;
@@ -77,16 +79,17 @@ public class OntologyMapper {
                     OWLDataProperty owlProperty = dataFactory.getOWLDataProperty(propertyIRI);
                     ontologyManager.addAxiom(ontology, dataFactory.getOWLDeclarationAxiom(owlProperty));
 //					ontologyManager.addAxiom(ontology, dataFactory.getOWLDataPropertyDomainAxiom(owlProperty, owlClass));
-
+           //OWL2Datatype.getDatatype(arg0)
                     String dataType = property.getDataType();
                     if (dataType == null) {
                         System.out.println("Invalid datatype in entity " + classEntity.getEntityName());
-                    } else if (dataType.equals("integer")) {
-                        ontologyManager.addAxiom(ontology, dataFactory.getOWLDataPropertyRangeAxiom(owlProperty, dataFactory.getIntegerOWLDatatype()));
-                    } else if (dataType.equals("real")) {
-                        ontologyManager.addAxiom(ontology, dataFactory.getOWLDataPropertyRangeAxiom(owlProperty, dataFactory.getFloatOWLDatatype()));
+//                    } else if (dataType.equals("integer")) {
+//                        ontologyManager.addAxiom(ontology, dataFactory.getOWLDataPropertyRangeAxiom(owlProperty, dataFactory.getIntegerOWLDatatype()));
+//                    } else if (dataType.equals("real")) {
+//                        ontologyManager.addAxiom(ontology, dataFactory.getOWLDataPropertyRangeAxiom(owlProperty, dataFactory.getFloatOWLDatatype()));
                     } else {
-                        OWLDatatype stringType = dataFactory.getOWLDatatype(OWL2Datatype.XSD_STRING.getIRI());
+//                        OWLDatatype stringType = dataFactory.getOWLDatatype(OWL2Datatype.XSD_STRING.getIRI());
+                        OWLDatatype stringType = dataFactory.getOWLDatatype(IRI.create(dataType));
                         ontologyManager.addAxiom(ontology, dataFactory.getOWLDataPropertyRangeAxiom(owlProperty, stringType));
                     }
 
