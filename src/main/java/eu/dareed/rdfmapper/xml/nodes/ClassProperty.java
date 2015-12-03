@@ -3,7 +3,7 @@ package eu.dareed.rdfmapper.xml.nodes;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-@XmlType(propOrder={"name", "propertyType", "dataType"})
+@XmlType(propOrder={"identifier", "propertyType", "dataType", "objectURL"})
 public class ClassProperty extends Item {
 
 	private String identifier;
