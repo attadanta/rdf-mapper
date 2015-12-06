@@ -130,13 +130,13 @@ public class XmlMapper {
         	
             if (dataType.equals("integer")) {
             	entProperty.setDataType(OWL2Datatype.XSD_INTEGER.getIRI().toString());
-            	entProperty.setDataType(XSDDatatype.XSDinteger.getURI().toString());
+//            	entProperty.setDataType(XSDDatatype.XSDinteger.getURI().toString());
             } else if (dataType.equals("real")) {
             	entProperty.setDataType(OWL2Datatype.XSD_FLOAT.getIRI().toString());
-            	entProperty.setDataType(XSDDatatype.XSDfloat.getURI().toString());
+//            	entProperty.setDataType(XSDDatatype.XSDfloat.getURI().toString());
             } else {
             	entProperty.setDataType(OWL2Datatype.XSD_STRING.getIRI().toString());
-            	entProperty.setDataType(XSDDatatype.XSDstring.getURI().toString());
+//            	entProperty.setDataType(XSDDatatype.XSDstring.getURI().toString());
             }
         }else{
         	entProperty.setDataType(null);

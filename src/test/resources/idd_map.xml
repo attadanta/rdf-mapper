@@ -9,13 +9,15 @@
             <property-map>
                 <class-property>
                     <url>http://dareed.eu/name</url>
-                    <name>0</name>
+                    <identifier>0</identifier>
                     <property-type>data-property</property-type>
+                    <datatype>http://www.w3.org/2001/XMLSchema#string</datatype>
                 </class-property>
                 <class-property>
                     <url>http://dareed.eu/shadowing</url>
-                    <name>5</name>
+                    <identifier>5</identifier>
                     <property-type>object-property</property-type>
+                    <datatype>object-url</datatype>
                     <object-url>http://dareed.eu/$2$</object-url>
                 </class-property>
             </property-map>
