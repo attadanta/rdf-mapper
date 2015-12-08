@@ -14,7 +14,7 @@
                     <url><!-- property url with encoding --></url>
                     <identifier><!-- the property to map name in class (e.g. N1) or index in idf individual --></identifier>
                     <property-type><!-- object-property or data-property --></property-type>
-                    <datatype><!-- e.g. "object-url", "integer", "real" --></datatype>
+                    <datatype><!-- e.g. "object-url" or url for the datatype (http://www.w3.org/2001/XMLSchema#string)--></datatype>
                     <object-url><!-- object-url (used only for object properties --></object-url>
                 </class-property>
                 <!--  ...  -->
