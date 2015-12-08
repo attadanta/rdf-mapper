@@ -31,6 +31,10 @@ public class Entity extends Item{
 	public List<String> getclassURLList(){
 		return classURLList;
 	}
+
+	public void addTypeURL(String typeURL) {
+		classURLList.add(typeURL);
+	}
 	
 	public void setClassURLList(List<String> classURLList){
 		this.classURLList = classURLList;

@@ -38,9 +38,10 @@ public class XmlMapper {
 
         for (IDDObject iddObj : idd.getAllObjects()) {
             String classURL = buildClassURL(iddObj.getType());
+
             ClassEntity entClass = new ClassEntity(classURL, classURL);
             entClass.setLabel(classURL);
-            entClass.getclassURLList().add("entity-class");
+            entClass.addTypeURL("entity-class");
             List<ClassProperty> propertyList = entClass.getPropertyMap().getPropertyList();
 
             for (IDDField field : iddObj.getFields()) {
@@ -48,7 +49,7 @@ public class XmlMapper {
                     String propertyDescription = field.getParameter("field").value();
 
                     ClassProperty entProperty = new ClassProperty(buildPropertyURL(propertyDescription));
-                    entProperty.setLabel(propertyDescription.trim().replace(' ', '_'));
+                    entProperty.setLabel(propertyDescription.trim());
                     entProperty.setPropertyType(getPropertyType(field));
                     entProperty.setIdentifier(fixPropertyName(field.getName()));
                     if (isDataProperty(field)) {
@@ -70,8 +71,7 @@ public class XmlMapper {
 
 
     public void saveXML(File file) throws JAXBException {
-        JAXBContext context;
-        context = JAXBContext.newInstance(EntityMap.class);
+        JAXBContext context = JAXBContext.newInstance(EntityMap.class);
         Marshaller m = context.createMarshaller();
         m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 
