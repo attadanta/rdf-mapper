@@ -3,41 +3,33 @@ package eu.dareed.rdfmapper.xml;
 import eu.dareed.eplus.model.idd.IDD;
 import eu.dareed.eplus.model.idd.IDDField;
 import eu.dareed.eplus.model.idd.IDDObject;
-import eu.dareed.eplus.model.idd.Parameter;
-import eu.dareed.rdfmapper.xml.nodes.EntityMap;
 import eu.dareed.rdfmapper.xml.nodes.ClassEntity;
 import eu.dareed.rdfmapper.xml.nodes.ClassProperty;
+import eu.dareed.rdfmapper.xml.nodes.EntityMap;
 import eu.dareed.rdfmapper.xml.nodes.SubClassRelation;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
-
-import org.semanticweb.owlapi.model.OWLDatatype;
-import org.semanticweb.owlapi.vocab.OWL2Datatype;
-
-import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
-
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.List;
 
 public class XmlMapper {
-
     private EntityMap entityMap;
 
     public EntityMap getEntityMap() {
         return entityMap;
     }
 
-    
+
     public void setEntityMap(EntityMap entityMap) {
         this.entityMap = entityMap;
     }
 
-    
+
     public void mapIDDToXMLObjects(IDD idd) {
         entityMap = new EntityMap();
         List<ClassEntity> classList = entityMap.getClassMap().getClassList();
@@ -52,12 +44,17 @@ public class XmlMapper {
             List<ClassProperty> propertyList = entClass.getPropertyMap().getPropertyList();
 
             for (IDDField field : iddObj.getFields()) {
-                List<Parameter> propList = field.getParameters("field");
-                if (propList.size() != 0) {
-                    ClassProperty entProperty = new ClassProperty(buildPropertyURL(propList.get(0).value()));
-                    entProperty.setLabel(propList.get(0).value().trim().replace(' ', '_'));
-                    entProperty.setPropertyType(determineTypes(field, entProperty)); // also sets datatype (see determineTypes())
+                if (field.isSet("field") && containsKnownProperty(field)) {
+                    String propertyDescription = field.getParameter("field").value();
+
+                    ClassProperty entProperty = new ClassProperty(buildPropertyURL(propertyDescription));
+                    entProperty.setLabel(propertyDescription.trim().replace(' ', '_'));
+                    entProperty.setPropertyType(getPropertyType(field));
                     entProperty.setIdentifier(fixPropertyName(field.getName()));
+                    if (isDataProperty(field)) {
+                        entProperty.setDataType(DataProperty.valueOf(field.getParameter("type").value().toUpperCase().trim()).typeURL);
+                    }
+
                     propertyList.add(entProperty);
                 }
             }
@@ -71,7 +68,7 @@ public class XmlMapper {
         }
     }
 
-    
+
     public void saveXML(File file) throws JAXBException {
         JAXBContext context;
         context = JAXBContext.newInstance(EntityMap.class);
@@ -82,7 +79,7 @@ public class XmlMapper {
         m.marshal(entityMap, file);
     }
 
-    
+
     public void loadXML(File xmlFile) throws JAXBException {
         JAXBContext context = JAXBContext.newInstance(EntityMap.class);
         Unmarshaller um = context.createUnmarshaller();
@@ -91,7 +88,7 @@ public class XmlMapper {
         entityMap = (EntityMap) um.unmarshal(xmlFile);
     }
 
-    
+
     private String buildClassURL(String type) {
         String className = type.trim().replace(' ', '_').replace(':', '.');
         if (className.contains(".")) {
@@ -102,7 +99,7 @@ public class XmlMapper {
         return className;
     }
 
-    
+
     private String buildPropertyURL(String propName) {
 //        propName = propName.replaceAll("%", "percent");
 //        propName = propName.replaceAll("#", "no.");
@@ -110,50 +107,52 @@ public class XmlMapper {
 //        propName = propName.replaceAll(":", "--");
 //        propName = propName.replaceAll(",", "");
 //        propName = propName.replaceAll("/", "_");
-    	propName = propName.trim().replace(' ', '_');
-    	try {
-			propName = URLEncoder.encode(propName, "UTF-8");
-		} catch (UnsupportedEncodingException e) {e.printStackTrace();
-		}
-    	return propName;
-    }
-
-    
-    private String determineTypes(IDDField field, ClassProperty entProperty) {
-        List<Parameter> typeList = field.getParameters("type");
-        if(typeList.size() != 0){
-        	String dataType = typeList.get(0).value().trim();
-        	if (dataType.equals("object-list")) {
-        		entProperty.setDataType("object-url");
-        		return "object-property";
-        	}
-        	
-            if (dataType.equals("integer")) {
-            	entProperty.setDataType(OWL2Datatype.XSD_INTEGER.getIRI().toString());
-//            	entProperty.setDataType(XSDDatatype.XSDinteger.getURI().toString());
-            } else if (dataType.equals("real")) {
-            	entProperty.setDataType(OWL2Datatype.XSD_FLOAT.getIRI().toString());
-//            	entProperty.setDataType(XSDDatatype.XSDfloat.getURI().toString());
-            } else {
-            	entProperty.setDataType(OWL2Datatype.XSD_STRING.getIRI().toString());
-//            	entProperty.setDataType(XSDDatatype.XSDstring.getURI().toString());
-            }
-        }else{
-        	entProperty.setDataType(null);
-//        	entProperty.setDataType("unknown");
+        propName = propName.trim().replace(' ', '_');
+        try {
+            propName = URLEncoder.encode(propName, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
         }
-        return "data-property";
+        return propName;
     }
 
-    
-	private String fixPropertyName(String name) {
+    /**
+     * Determines if a field contains a type declaration which is mappable.
+     *
+     * @param field the field to check.
+     * @return {@code true} if a type parameter is declared in the {@link IDDField}, it is known and mappable, and {@code false} otherwise.
+     */
+    private boolean containsKnownProperty(IDDField field) {
+        if (field.isSet("type")) {
+            String type = field.getParameter("type").value().trim();
+            try {
+                PropertyType.parseTypeParameter(type);
+                return true;
+            } catch (IllegalArgumentException e) {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    private boolean isDataProperty(IDDField field) {
+        return getPropertyType(field).equals("data-property");
+    }
+
+    protected String getPropertyType(IDDField field) {
+        String fieldType = field.getParameter("type").value();
+        return PropertyType.parseTypeParameter(fieldType).propertyType;
+    }
+
+    private String fixPropertyName(String name) {
 //		name = name.replaceAll("%", "percent");
-		
-		int newLineIdx = name.lastIndexOf("\n");
-		if(newLineIdx >= 0){
-			name = name.substring(newLineIdx + 1); 
-		}
-		
-		return name.trim().replace(' ', '_');
-	}
+
+        int newLineIdx = name.lastIndexOf("\n");
+        if (newLineIdx >= 0) {
+            name = name.substring(newLineIdx + 1);
+        }
+
+        return name.trim().replace(' ', '_');
+    }
 }
