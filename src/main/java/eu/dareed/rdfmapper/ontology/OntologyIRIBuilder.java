@@ -24,7 +24,7 @@ public class OntologyIRIBuilder {
 
 	
 	public IRI createPropertyIRI(String classURL, ClassProperty property) {
-		return createIRI(classURL + "/" + property.getPropertyType() + "/" + property.getIdentifier() + "/" + property.getURL());
+		return createIRI(classURL + "/" + property.getPropertyType() + "/" + property.getIdentifier() + "/" + property.getURI());
 	}
 
 

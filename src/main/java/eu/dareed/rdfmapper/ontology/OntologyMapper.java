@@ -1,8 +1,9 @@
 package eu.dareed.rdfmapper.ontology;
 
+import eu.dareed.rdfmapper.URIBuilder;
 import eu.dareed.rdfmapper.xml.nodes.ClassEntity;
 import eu.dareed.rdfmapper.xml.nodes.ClassProperty;
-import eu.dareed.rdfmapper.xml.nodes.EntityMap;
+import eu.dareed.rdfmapper.xml.nodes.Mapping;
 import eu.dareed.rdfmapper.xml.nodes.SubClassRelation;
 
 import org.apache.jena.iri.IRIFactory;
@@ -45,13 +46,14 @@ public class OntologyMapper {
     }
 
 
-    public void mapXMLToOntology(EntityMap entityMap) {
-        OntologyIRIBuilder iriBuilder = new OntologyIRIBuilder(entityMap.getNamespace());
+    public void mapXMLToOntology(Mapping mapping) {
+        URIBuilder uriBuilder = new URIBuilder(mapping.getNamespaceMap());
+        String addPrefix = "defaultns";
 
-        for (ClassEntity classEntity : entityMap.getClassMap().getClassList()) {
+        for (ClassEntity classEntity : mapping.getClassMap().getClassList()) {
 
-//			IRI classIRI = iriBuilder.createClassIRI(classEntity.getURL());
-            IRI classIRI = iriBuilder.createIRI(classEntity.getURL());
+            IRI classIRI = IRI.create(uriBuilder.buildURIString(classEntity.getURI(), addPrefix));
+            
             OWLClass owlClass = dataFactory.getOWLClass(classIRI);
 
             ontologyManager.addAxiom(ontology, dataFactory.getOWLDeclarationAxiom(owlClass));
@@ -67,9 +69,7 @@ public class OntologyMapper {
                     System.err.println("Invalid property type in entity " + classEntity.getEntityName());
                     continue;
                 }
-//				IRI propertyIRI = iriBuilder.createPropertyIRI(classEntity.getURL(), property);
-                IRI propertyIRI = iriBuilder.createIRI(property.getURL());
-
+                IRI propertyIRI = IRI.create(uriBuilder.buildURIString(property.getURI(), addPrefix));
 
                 if (property.getPropertyType().equals("object-property")) {
                     OWLObjectProperty owlProperty = dataFactory.getOWLObjectProperty(propertyIRI);
@@ -79,16 +79,11 @@ public class OntologyMapper {
                     OWLDataProperty owlProperty = dataFactory.getOWLDataProperty(propertyIRI);
                     ontologyManager.addAxiom(ontology, dataFactory.getOWLDeclarationAxiom(owlProperty));
 //					ontologyManager.addAxiom(ontology, dataFactory.getOWLDataPropertyDomainAxiom(owlProperty, owlClass));
-           //OWL2Datatype.getDatatype(arg0)
+
                     String dataType = property.getDataType();
                     if (dataType == null) {
                         System.out.println("Invalid datatype in entity " + classEntity.getEntityName());
-//                    } else if (dataType.equals("integer")) {
-//                        ontologyManager.addAxiom(ontology, dataFactory.getOWLDataPropertyRangeAxiom(owlProperty, dataFactory.getIntegerOWLDatatype()));
-//                    } else if (dataType.equals("real")) {
-//                        ontologyManager.addAxiom(ontology, dataFactory.getOWLDataPropertyRangeAxiom(owlProperty, dataFactory.getFloatOWLDatatype()));
                     } else {
-//                        OWLDatatype stringType = dataFactory.getOWLDatatype(OWL2Datatype.XSD_STRING.getIRI());
                         OWLDatatype owlDatatype = dataFactory.getOWLDatatype(IRI.create(dataType));
                         ontologyManager.addAxiom(ontology, dataFactory.getOWLDataPropertyRangeAxiom(owlProperty, owlDatatype));
                     }
@@ -105,12 +100,10 @@ public class OntologyMapper {
         }
 
         // Add subclass relations from taxonomy map
-        for (SubClassRelation relation : entityMap.getTaxonomyMap().getSubRelList()) {
-//			IRI subIRI = iriBuilder.createClassIRI(relation.getSubClass());
-            IRI subIRI = iriBuilder.createIRI(relation.getSubClass());
+        for (SubClassRelation relation : mapping.getTaxonomyMap().getSubRelList()) {
+            IRI subIRI = IRI.create(uriBuilder.buildURIString(relation.getSubClass(), addPrefix));
             OWLClass subClass = dataFactory.getOWLClass(subIRI);
-//			IRI superIRI = iriBuilder.createClassIRI(relation.getSuperClass());
-            IRI superIRI = iriBuilder.createIRI(relation.getSuperClass());
+            IRI superIRI = IRI.create(uriBuilder.buildURIString(relation.getSuperClass(), addPrefix));
             OWLClass superClass = dataFactory.getOWLClass(superIRI);
 
             ontologyManager.addAxiom(ontology, dataFactory.getOWLSubClassOfAxiom(subClass, superClass));

@@ -3,28 +3,28 @@ package eu.dareed.rdfmapper.xml.nodes;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-@XmlType(propOrder={"identifier", "propertyType", "dataType", "objectURL"})
+@XmlType(propOrder={"identifier", "propertyType", "dataType", "objectURI"})
 public class ClassProperty extends Item {
 
-	private String identifier;
+	private int identifier;
 	private String propertyType;
 	private String dataType;
-	private String objectURL;
+	private String objectURI;
 	
 	private ClassProperty(){
 		super(null);
 	}
 	
-	public ClassProperty(String url) {
-		super(url);
+	public ClassProperty(String uri) {
+		super(uri);
 	}
 	
 	@XmlElement(name = "identifier")
-	public String getIdentifier() {
+	public int getIdentifier() {
 		return identifier;
 	}
 	
-	public void setIdentifier(String identifier) {
+	public void setIdentifier(int identifier) {
 		this.identifier = identifier;
 	}
 	
@@ -46,12 +46,12 @@ public class ClassProperty extends Item {
 		this.dataType = dataType;
 	}
 
-	@XmlElement(name = "object-url")
-	public String getObjectURL() {
-		return objectURL;
+	@XmlElement(name = "object-uri")
+	public String getObjectURI() {
+		return objectURI;
 	}
 
-	public void setObjectURL(String objectURL) {
-		this.objectURL = objectURL;
+	public void setObjectURI(String objectURI) {
+		this.objectURI = objectURI;
 	}
 }
