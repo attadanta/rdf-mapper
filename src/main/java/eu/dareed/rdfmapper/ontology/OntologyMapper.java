@@ -6,11 +6,8 @@ import eu.dareed.rdfmapper.xml.nodes.ClassProperty;
 import eu.dareed.rdfmapper.xml.nodes.Mapping;
 import eu.dareed.rdfmapper.xml.nodes.SubClassRelation;
 
-import org.apache.jena.iri.IRIFactory;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.*;
-import org.semanticweb.owlapi.vocab.OWL2Datatype;
-
 import java.io.File;
 
 public class OntologyMapper {

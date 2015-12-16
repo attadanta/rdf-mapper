@@ -7,12 +7,15 @@ public class Item {
 	private String uri;
 	private String label;
 	
-	public Item(){
-		
-	}
+	
+//	private Item(){
+//		this.uri = null;
+//		this.label = null;
+//	}
+	
 	
 	public Item(String uri) {
-		setURI(uri);
+		this.uri = uri;
 	}
 
 	@XmlElement(name = "uri")

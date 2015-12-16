@@ -7,6 +7,7 @@ import eu.dareed.rdfmapper.xml.nodes.ClassEntity;
 import eu.dareed.rdfmapper.xml.nodes.ClassProperty;
 import eu.dareed.rdfmapper.xml.nodes.Item;
 import eu.dareed.rdfmapper.xml.nodes.Mapping;
+import eu.dareed.rdfmapper.xml.nodes.Namespace;
 import eu.dareed.rdfmapper.xml.nodes.SubClassRelation;
 
 import javax.xml.bind.JAXBContext;
@@ -37,17 +38,17 @@ public class XmlMapper {
 
     public void mapIDDToXMLObjects(IDD idd, Map<String, String> namespaceMap) {
         mapping = new Mapping();
-        List<Item> namespaceList = mapping.getNamespaceMap().getNamespaceList();
+        List<Namespace> namespaceList = mapping.getNamespaceMap().getNamespaceList();
         List<ClassEntity> classList = mapping.getClassMap().getClassList();
 //        classList.add(new ClassEntity("entity-class", "entity-class"));
         List<SubClassRelation> subRelList = mapping.getTaxonomyMap().getSubRelList();
         
         // add namespaces to mapping
-		Item defaultNs = new Item("https://energyplus.net/");
+		Namespace defaultNs = new Namespace("https://energyplus.net/");
 		defaultNs.setLabel("defaultns");
 		namespaceList.add(defaultNs);
         for(Entry<String, String> entry : namespaceMap.entrySet()){
-        	Item namespace = new Item(entry.getValue());
+        	Namespace namespace = new Namespace(entry.getValue());
         	namespace.setLabel(entry.getKey());
         	namespaceList.add(namespace);
         }
