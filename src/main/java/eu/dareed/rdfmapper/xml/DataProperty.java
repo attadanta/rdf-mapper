@@ -1,5 +1,6 @@
 package eu.dareed.rdfmapper.xml;
 
+import eu.dareed.eplus.model.idd.AnnotatedObject;
 import org.semanticweb.owlapi.vocab.OWL2Datatype;
 
 /**
@@ -14,5 +15,9 @@ enum DataProperty {
 
     DataProperty(String typeURL) {
         this.typeURL = typeURL;
+    }
+
+    static DataProperty parseDataTypeInField(AnnotatedObject field) {
+        return DataProperty.valueOf(field.getParameter("type").value().toUpperCase().trim());
     }
 }

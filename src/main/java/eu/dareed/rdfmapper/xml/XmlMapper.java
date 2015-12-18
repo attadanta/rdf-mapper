@@ -53,7 +53,7 @@ public class XmlMapper {
                     entProperty.setPropertyType(getPropertyType(field));
                     entProperty.setIdentifier(fixPropertyName(field.getName()));
                     if (isDataProperty(field)) {
-                        entProperty.setDataType(DataProperty.valueOf(field.getParameter("type").value().toUpperCase().trim()).typeURL);
+                        entProperty.setDataType(DataProperty.parseDataTypeInField(field).typeURL);
                     }
 
                     propertyList.add(entProperty);
