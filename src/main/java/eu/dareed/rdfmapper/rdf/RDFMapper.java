@@ -9,9 +9,10 @@ import com.hp.hpl.jena.vocabulary.RDF;
 
 import eu.dareed.rdfmapper.MappingData;
 import eu.dareed.rdfmapper.MappingDataEntity;
+import eu.dareed.rdfmapper.URIBuilder;
 import eu.dareed.rdfmapper.xml.nodes.ClassEntity;
 import eu.dareed.rdfmapper.xml.nodes.ClassProperty;
-import eu.dareed.rdfmapper.xml.nodes.EntityMap;
+import eu.dareed.rdfmapper.xml.nodes.Mapping;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -21,46 +22,47 @@ import java.util.Map;
 
 public class RDFMapper {
 
-    public Model mapToRDF(MappingData data, EntityMap entityMap) {
+    public Model mapToRDF(MappingData data, Mapping mapping) {
         Model model = ModelFactory.createDefaultModel();
+        URIBuilder uriBuilder = new URIBuilder(mapping.getNamespaceMap());
 
-        List<ClassEntity> classList = entityMap.getClassMap().getClassList();
+        List<ClassEntity> classList = mapping.getClassMap().getClassList();
         Map<String, Integer> classIndexMap = buildClassIndexMap(classList);
 
         for (MappingDataEntity dataEntity : data.getDataEntities()) {
             // get class entity from entity map
             if (!classIndexMap.containsKey(dataEntity.getType())) {
-                System.err.println("Class " + dataEntity.getType() + " not found in entity-map.");
+                System.err.println("Class " + dataEntity.getType() + " not found in class-map.");
                 continue;
             }
             ClassEntity clsEnt = classList.get(classIndexMap.get(dataEntity.getType()));
 
             // add triples for 'is instance of class xy'
-            Resource subject = model.createResource(completeURL(clsEnt.getURL(), dataEntity));
-            for (String classURL : clsEnt.getclassURLList()) {
-//				com.hp.hpl.jena.vocabulary
-                subject.addProperty(RDF.type, model.createResource(classURL));
+            String subjectURI = completeURI(uriBuilder.buildURIString(clsEnt.getURI()), dataEntity);
+            Resource subject = model.createResource(subjectURI);
+            for (String classURI : clsEnt.getclassURLList()) {
+                subject.addProperty(RDF.type, model.createResource(uriBuilder.buildURIString(classURI)));
             }
 
             // add triples for properties
             for (ClassProperty classProperty : clsEnt.getPropertyMap().getPropertyList()) {
+            	String predicateURI = uriBuilder.buildURIString(classProperty.getURI());
              
                 if (classProperty.getPropertyType().equals("data-property")) {
-                	int fieldIndex = Integer.parseInt(classProperty.getIdentifier());
+                	int fieldIndex = classProperty.getIdentifier();
                 	String objectString = dataEntity.getAttributeByIndex(fieldIndex);
                     if(classProperty.getDataType() != null){
-                    /*	*	*	*	under construction	*	*	*	*/
                     	RDFDatatype type = TypeMapper.getInstance().getSafeTypeByName(classProperty.getDataType());
-                    	subject.addProperty(model.getProperty(classProperty.getURL()), model.createTypedLiteral(objectString, type));
-                	/*	*	*	*	*	*	*	*	*	*	*	*	*/
+                    	subject.addProperty(model.getProperty(predicateURI), model.createTypedLiteral(objectString, type));
                     }else{
-                    	subject.addProperty(model.getProperty(classProperty.getURL()), objectString);
+                    	subject.addProperty(model.getProperty(predicateURI), objectString);
                     }
                     
                     
                 } else if (classProperty.getPropertyType().equals("object-property")) {
-                	Resource object = model.getResource(completeURL(classProperty.getObjectURL(), dataEntity));
-                    subject.addProperty(model.getProperty(classProperty.getURL()), object);
+                	String objectURI = uriBuilder.buildURIString(completeURI(classProperty.getObjectURI(), dataEntity));
+                	Resource object = model.getResource(objectURI);
+                    subject.addProperty(model.getProperty(predicateURI), object);
                 }
             }
         }
@@ -78,13 +80,13 @@ public class RDFMapper {
         return indexMap;
     }
 
-    private String completeURL(String url, MappingDataEntity dataEntity) {
-        String[] splittedURL = url.split("\\$");
-        for (int i = 1; i < splittedURL.length; i += 2) {
-            int idx = Integer.parseInt(splittedURL[i]);
-            splittedURL[i] = dataEntity.getAttributeByIndex(idx);
+    private String completeURI(String uri, MappingDataEntity dataEntity) {
+        String[] splittedURI = uri.split("\\$");
+        for (int i = 1; i < splittedURI.length; i += 2) {
+            int idx = Integer.parseInt(splittedURI[i]);
+            splittedURI[i] = dataEntity.getAttributeByIndex(idx);
         }
-        return StringUtils.join(splittedURL);
+        return StringUtils.join(splittedURI);
     }
 
 }

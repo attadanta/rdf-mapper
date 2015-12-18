@@ -1,26 +1,36 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<entity-map>
+<mapping xmlns="http://imi.kit.edu/">
+    <namespace-map>
+        <ns>
+            <label>defaultns</label>
+            <uri>https://energyplus.net/</uri>
+        </ns>
+        <ns>
+            <label>testprefix</label>
+            <uri>http://testu.ri/</uri>
+        </ns>
+    </namespace-map>
     <class-map>
         <class-entity>
             <label>Gebaeude</label>
-            <url>http://dareed.eu/$0$</url>
+            <uri>http://dareed.eu/$0$</uri>
             <entity-name>Building</entity-name>
-            <class-url>http://dareed.eu/Building</class-url>
+            <class-uri>http://dareed.eu/Building</class-uri>
             <property-map>
                 <class-property>
-                    <url>http://dareed.eu/name</url>
+                    <uri>http://dareed.eu/name</uri>
                     <identifier>0</identifier>
                     <property-type>data-property</property-type>
                     <datatype>http://www.w3.org/2001/XMLSchema#string</datatype>
                 </class-property>
                 <class-property>
-                    <url>http://dareed.eu/shadowing</url>
+                    <uri>http://dareed.eu/shadowing</uri>
                     <identifier>5</identifier>
                     <property-type>object-property</property-type>
                     <datatype>object-url</datatype>
-                    <object-url>http://dareed.eu/$2$</object-url>
+                    <object-uri>http://dareed.eu/$2$</object-uri>
                 </class-property>
             </property-map>
         </class-entity>
     </class-map>
-</entity-map>
+</mapping>

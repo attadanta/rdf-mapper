@@ -13,11 +13,13 @@ public class ClassMap {
 		classList = new ArrayList<>();
 	}
 
+	
 	@XmlElement(name = "class-entity")
 	public List<ClassEntity> getClassList() {
 		return classList;
 	}
 
+	
 	public void setClassList(List<ClassEntity> classList) {
 		this.classList = classList;
 	}

@@ -11,10 +11,10 @@ enum DataProperty {
     REAL(OWL2Datatype.XSD_FLOAT.getIRI().toString()),
     ALPHA(OWL2Datatype.XSD_STRING.getIRI().toString());
 
-    final String typeURL;
+    final String typeURI;
 
-    DataProperty(String typeURL) {
-        this.typeURL = typeURL;
+    DataProperty(String typeURI) {
+        this.typeURI = typeURI;
     }
 
     static DataProperty parseDataTypeInField(AnnotatedObject field) {

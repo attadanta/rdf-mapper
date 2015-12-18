@@ -9,13 +9,13 @@ import javax.xml.bind.annotation.XmlType;
 public class Entity extends Item{
 
 	private String entityName;
-	private List<String> classURLList;
+	private List<String> classURIList;
 	
 
-	public Entity(String url, String entityName) {
-		super(url);
+	public Entity(String uri, String entityName) {
+		super(uri);
 		setEntityName(entityName);
-		classURLList = new ArrayList<String>();
+		classURIList = new ArrayList<String>();
 	}
 
 	@XmlElement(name = "entity-name")
@@ -27,17 +27,17 @@ public class Entity extends Item{
 		this.entityName = entityName;
 	}
 
-	@XmlElement(name = "class-url")
+	@XmlElement(name = "class-uri")
 	public List<String> getclassURLList(){
-		return classURLList;
+		return classURIList;
 	}
 
 	public void addTypeURL(String typeURL) {
 		classURLList.add(typeURL);
 	}
 	
-	public void setClassURLList(List<String> classURLList){
-		this.classURLList = classURLList;
+	public void setClassURIList(List<String> classURIList){
+		this.classURIList = classURIList;
 	}
 	
 }

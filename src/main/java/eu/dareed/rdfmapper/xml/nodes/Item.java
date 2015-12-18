@@ -4,20 +4,27 @@ import javax.xml.bind.annotation.XmlElement;
 
 public class Item {
 	
-	private String url;
+	private String uri;
 	private String label;
 	
-	public Item(String url) {
-		setURL(url);
+	
+//	private Item(){
+//		this.uri = null;
+//		this.label = null;
+//	}
+	
+	
+	public Item(String uri) {
+		this.uri = uri;
 	}
 
-	@XmlElement(name = "url")
-	public String getURL(){
-		return url;
+	@XmlElement(name = "uri")
+	public String getURI(){
+		return uri;
 	}
 	
-	public void setURL(String url){
-		this.url = url;
+	public void setURI(String uri){
+		this.uri = uri;
 	}
 
 	@XmlElement(name = "label")

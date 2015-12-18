@@ -1,30 +1,45 @@
 package eu.dareed.rdfmapper.xml.nodes;
 
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-@XmlRootElement(name = "entity-map")
-@XmlType(propOrder = {"namespace", "classMap", "taxonomyMap"})
-public class EntityMap {
-    private String namespace;
+@XmlRootElement(name = "mapping", namespace = "http://imi.kit.edu/")
+@XmlType(propOrder = {"namespaceMap", "classMap", "taxonomyMap"})
+public class Mapping {
+    private NamespaceMap namespaceMap;
     private ClassMap classMap;
     private TaxonomyMap taxonomyMap;
+//    private String xmlnsAttribute;
 //	private ObjectMap objectMap;
 
-    public EntityMap() {
+    public Mapping() {
+    	namespaceMap = new NamespaceMap();
         classMap = new ClassMap();
         taxonomyMap = new TaxonomyMap();
     }
 
 
-    public String getNamespace() {
-        return namespace;
+//    @XmlAttribute(name = "xmlns")
+//    public String getXmlnsAttribute() {
+//		return xmlnsAttribute;
+//	}
+//
+//
+//	public void setXmlnsAttribute(String xmlnsAttribute) {
+//		this.xmlnsAttribute = xmlnsAttribute;
+//	}
+
+
+	@XmlElement(name = "namespace-map")
+    public NamespaceMap getNamespaceMap() {
+        return namespaceMap;
     }
 
 
-    public void setNamespace(String namespace) {
-        this.namespace = namespace;
+    public void setNamespace(NamespaceMap namespaceMap) {
+        this.namespaceMap = namespaceMap;
     }
 
 

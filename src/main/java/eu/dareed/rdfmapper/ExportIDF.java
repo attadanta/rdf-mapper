@@ -29,7 +29,7 @@ public class ExportIDF {
         
         RDFMapper rdfMapper = new RDFMapper();
 
-        Model model = rdfMapper.mapToRDF(new IDFMappingData(idf), xmlMapper.getEntityMap());
+        Model model = rdfMapper.mapToRDF(new IDFMappingData(idf), xmlMapper.getMapping());
         model.write(new FileOutputStream(args[2]));
     }
 }
