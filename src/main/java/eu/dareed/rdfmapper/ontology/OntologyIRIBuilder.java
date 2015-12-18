@@ -1,9 +1,7 @@
 package eu.dareed.rdfmapper.ontology;
 
-import org.semanticweb.owlapi.model.IRI;
-
-import eu.dareed.rdfmapper.xml.nodes.ClassEntity;
 import eu.dareed.rdfmapper.xml.nodes.ClassProperty;
+import org.semanticweb.owlapi.model.IRI;
 
 public class OntologyIRIBuilder {
 	

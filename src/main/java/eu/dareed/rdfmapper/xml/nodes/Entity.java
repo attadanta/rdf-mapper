@@ -1,10 +1,8 @@
 package eu.dareed.rdfmapper.xml.nodes;
 
+import javax.xml.bind.annotation.XmlElement;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlType;
 
 public class Entity extends Item{
 
@@ -33,7 +31,7 @@ public class Entity extends Item{
 	}
 
 	public void addTypeURL(String typeURL) {
-		classURLList.add(typeURL);
+		classURIList.add(typeURL);
 	}
 	
 	public void setClassURIList(List<String> classURIList){

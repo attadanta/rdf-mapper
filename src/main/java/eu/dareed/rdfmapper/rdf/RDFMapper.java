@@ -6,14 +6,12 @@ import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.vocabulary.RDF;
-
 import eu.dareed.rdfmapper.MappingData;
 import eu.dareed.rdfmapper.MappingDataEntity;
 import eu.dareed.rdfmapper.URIBuilder;
 import eu.dareed.rdfmapper.xml.nodes.ClassEntity;
 import eu.dareed.rdfmapper.xml.nodes.ClassProperty;
 import eu.dareed.rdfmapper.xml.nodes.Mapping;
-
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;

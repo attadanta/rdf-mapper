@@ -5,7 +5,6 @@ import eu.dareed.eplus.parsers.idd.IDDParser;
 import eu.dareed.rdfmapper.xml.XmlMapper;
 
 import javax.xml.bind.JAXBException;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;

@@ -17,8 +17,8 @@ public class XmlMapperLoadTest {
 
         XmlMapper mapper = new XmlMapper();
         mapper.loadXML(xmlMap);
-        for (ClassEntity ontClass : mapper.getEntityMap().getClassMap().getClassList()) {
-            System.out.println(ontClass.getURL());
+        for (ClassEntity ontClass : mapper.getMapping().getClassMap().getClassList()) {
+            System.out.println(ontClass.getURI());
         }
     }
 }

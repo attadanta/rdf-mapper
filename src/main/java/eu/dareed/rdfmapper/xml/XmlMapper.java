@@ -54,7 +54,6 @@ public class XmlMapper {
 //            entClass.getclassURLList().add("entity-class");
             List<ClassProperty> propertyList = entClass.getPropertyMap().getPropertyList();
 
-            int propertyCounter = 0;
             // add properties of current class to mapping
             for (IDDField field : iddObj.getFields()) {
                 if (field.isSet("field") && containsKnownProperty(field)) {
