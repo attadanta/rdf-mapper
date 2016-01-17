@@ -1,8 +1,10 @@
 package eu.dareed.rdfmapper.xml.nodes;
 
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlElements;
 
-public class ClassEntity extends Entity{
+public class ClassEntity extends Entity {
 
 	private PropertyMap propertyMap;
 	
@@ -16,8 +18,11 @@ public class ClassEntity extends Entity{
 		this.propertyMap = new PropertyMap();
 	}
 
-	
-	@XmlElement(name = "property-map")
+
+	@XmlElementWrapper( name = "properties" )
+	@XmlElements( {
+			@XmlElement( name="objectProperty", type = ObjectProperty.class ),
+			@XmlElement( name="dataProperty", type = DataProperty.class ) } )
 	public PropertyMap getPropertyMap() {
 		return propertyMap;
 	}

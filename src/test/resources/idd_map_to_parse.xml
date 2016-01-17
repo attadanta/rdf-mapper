@@ -1,32 +1,26 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <mapping xmlns="http://imi.kit.edu/">
-    <namespace-map>
+    <namespaces>
         <ns>
             <prefix>defaultns</prefix>
             <uri>https://energyplus.net/</uri>
         </ns>
-    </namespace-map>
-    <class-map>
-        <class-entity>
+    </namespaces>
+    <entities>
+        <entity>
             <label>Gebaeude</label>
             <uri>http://dareed.eu/$0$</uri>
             <entity-name>Building</entity-name>
-            <class-uri>http://dareed.eu/Building</class-uri>
-            <property-map>
-                <class-property>
-                    <uri>http://dareed.eu/name</uri>
-                    <identifier>0</identifier>
-                    <property-type>data-property</property-type>
-                    <datatype>http://www.w3.org/2001/XMLSchema#string</datatype>
-                </class-property>
-                <class-property>
+            <type>http://dareed.eu/Building</type>
+            <properties>
+                <property>
                     <uri>http://dareed.eu/shadowing</uri>
                     <identifier>5</identifier>
                     <property-type>object-property</property-type>
                     <datatype>object-url</datatype>
                     <object-uri>http://dareed.eu/$2$</object-uri>
-                </class-property>
-            </property-map>
-        </class-entity>
-    </class-map>
+                </property>
+            </properties>
+        </entity>
+    </entities>
 </mapping>

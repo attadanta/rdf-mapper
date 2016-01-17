@@ -4,14 +4,12 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-@XmlRootElement(name = "mapping", namespace = "http://imi.kit.edu/")
+@XmlRootElement(name = "mapping")
 @XmlType(propOrder = {"namespaceMap", "classMap", "taxonomyMap"})
 public class Mapping {
     private NamespaceMap namespaceMap;
     private ClassMap classMap;
     private TaxonomyMap taxonomyMap;
-//    private String xmlnsAttribute;
-//	private ObjectMap objectMap;
 
     public Mapping() {
     	namespaceMap = new NamespaceMap();

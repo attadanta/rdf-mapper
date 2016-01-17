@@ -13,7 +13,7 @@ public class ClassMap {
 	}
 
 	
-	@XmlElement(name = "class-entity")
+	@XmlElement(name = "entity")
 	public List<ClassEntity> getClassList() {
 		return classList;
 	}

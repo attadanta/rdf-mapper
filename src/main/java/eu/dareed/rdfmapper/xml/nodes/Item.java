@@ -3,7 +3,6 @@ package eu.dareed.rdfmapper.xml.nodes;
 import javax.xml.bind.annotation.XmlElement;
 
 public class Item {
-	
 	private String uri;
 	private String label;
 	

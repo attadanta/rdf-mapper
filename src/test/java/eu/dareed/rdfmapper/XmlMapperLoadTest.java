@@ -2,6 +2,8 @@ package eu.dareed.rdfmapper;
 
 import eu.dareed.rdfmapper.xml.XmlMapper;
 import eu.dareed.rdfmapper.xml.nodes.ClassEntity;
+import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import javax.xml.bind.JAXBException;
@@ -10,15 +12,22 @@ import java.net.URISyntaxException;
 import java.nio.file.Paths;
 
 public class XmlMapperLoadTest {
+private static XmlMapper mapper;
+    @BeforeClass
+    public static void setup() throws JAXBException, URISyntaxException {
+        File xmlMap = Paths.get(XmlMapperLoadTest.class.getResource("/idd_map_to_parse.xml").toURI()).toFile();
+
+        mapper = new XmlMapper();
+        mapper.loadXML(xmlMap);
+    }
 
     @Test
-    public void xmlImport() throws URISyntaxException, JAXBException {
-        File xmlMap = Paths.get(getClass().getResource("/dareed_entity_map3.xml").toURI()).toFile();
+    public void testNamespaces() {
+        Assert.assertEquals(1, mapper.getMapping().getNamespaceMap().getNamespaceList().size());
+    }
 
-        XmlMapper mapper = new XmlMapper();
-        mapper.loadXML(xmlMap);
-        for (ClassEntity ontClass : mapper.getMapping().getClassMap().getClassList()) {
-            System.out.println(ontClass.getURI());
-        }
+    @Test
+    public void testClasses() {
+        Assert.assertEquals(1, mapper.getMapping().getClassMap().getClassList().size());
     }
 }

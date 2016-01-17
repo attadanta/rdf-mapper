@@ -35,17 +35,13 @@ public class XmlMapper {
         List<ClassEntity> classList = mapping.getClassMap().getClassList();
 //        classList.add(new ClassEntity("entity-class", "entity-class"));
         List<SubClassRelation> subRelList = mapping.getTaxonomyMap().getSubRelList();
-        
+
         // add namespaces to mapping
-		Namespace defaultNs = new Namespace("https://energyplus.net/");
-		defaultNs.setLabel("defaultns");
-		namespaceList.add(defaultNs);
-        for(Entry<String, String> entry : namespaceMap.entrySet()){
-        	Namespace namespace = new Namespace(entry.getValue());
-        	namespace.setLabel(entry.getKey());
-        	namespaceList.add(namespace);
+		namespaceList.add(new Namespace(Namespace.defaultNamespacePrefix, "https://energyplus.net/"));
+        for (Entry<String, String> entry : namespaceMap.entrySet()) {
+        	namespaceList.add(new Namespace(entry.getKey(), entry.getValue()));
         }
-        
+
         // add classes to mapping
         for (IDDObject iddObj : idd.getAllObjects()) {
             String classURI = buildClassURI(iddObj.getType());
@@ -113,12 +109,6 @@ public class XmlMapper {
 
 
     private String buildPropertyURI(String propName) {
-//        propName = propName.replaceAll("%", "percent");
-//        propName = propName.replaceAll("#", "no.");
-//        propName = propName.replaceAll(": ", "--");
-//        propName = propName.replaceAll(":", "--");
-//        propName = propName.replaceAll(",", "");
-//        propName = propName.replaceAll("/", "_");
         propName = propName.trim().replace(' ', '_');
         try {
             propName = URLEncoder.encode(propName, "UTF-8");

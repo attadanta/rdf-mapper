@@ -13,7 +13,7 @@ public class NamespaceMap {
 	}
 	
 	
-	@XmlElement(name = "namespace")
+	@XmlElement(name = "ns")
 	public List<Namespace> getNamespaceList() {
 		return namespaceList;
 	}
