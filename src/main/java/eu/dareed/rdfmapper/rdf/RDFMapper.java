@@ -9,9 +9,7 @@ import com.hp.hpl.jena.vocabulary.RDF;
 import eu.dareed.rdfmapper.MappingData;
 import eu.dareed.rdfmapper.MappingDataEntity;
 import eu.dareed.rdfmapper.URIBuilder;
-import eu.dareed.rdfmapper.xml.nodes.ClassEntity;
-import eu.dareed.rdfmapper.xml.nodes.ClassProperty;
-import eu.dareed.rdfmapper.xml.nodes.Mapping;
+import eu.dareed.rdfmapper.xml.nodes.*;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;
@@ -22,9 +20,9 @@ public class RDFMapper {
 
     public Model mapToRDF(MappingData data, Mapping mapping) {
         Model model = ModelFactory.createDefaultModel();
-        URIBuilder uriBuilder = new URIBuilder(mapping.getNamespaceMap());
+        URIBuilder uriBuilder = new URIBuilder(mapping.getNamespaces());
 
-        List<ClassEntity> classList = mapping.getClassMap().getClassList();
+        List<Entity> classList = mapping.getEntities();
         Map<String, Integer> classIndexMap = buildClassIndexMap(classList);
 
         for (MappingDataEntity dataEntity : data.getDataEntities()) {
@@ -33,32 +31,32 @@ public class RDFMapper {
                 System.err.println("Class " + dataEntity.getType() + " not found in class-map.");
                 continue;
             }
-            ClassEntity clsEnt = classList.get(classIndexMap.get(dataEntity.getType()));
+            Entity clsEnt = classList.get(classIndexMap.get(dataEntity.getType()));
 
             // add triples for 'is instance of class xy'
-            String subjectURI = completeURI(uriBuilder.buildURIString(clsEnt.getURI()), dataEntity);
+            String subjectURI = completeURI(uriBuilder.buildURIString(clsEnt.getUri()), dataEntity);
             Resource subject = model.createResource(subjectURI);
-            for (String classURI : clsEnt.getclassURLList()) {
+            for (String classURI : clsEnt.getTypes()) {
                 subject.addProperty(RDF.type, model.createResource(uriBuilder.buildURIString(classURI)));
             }
 
             // add triples for properties
-            for (ClassProperty classProperty : clsEnt.getPropertyMap().getPropertyList()) {
-            	String predicateURI = uriBuilder.buildURIString(classProperty.getURI());
+            for (Property classProperty : clsEnt.getProperties()) {
+            	String predicateURI = uriBuilder.buildURIString(classProperty.getUri());
              
-                if (classProperty.getPropertyType().equals("data-property")) {
+                if (classProperty.getPropertyType() == PropertyType.DATA_PROPERTY) {
                 	int fieldIndex = classProperty.getIdentifier();
                 	String objectString = dataEntity.getAttributeByIndex(fieldIndex);
-                    if(classProperty.getDataType() != null){
-                    	RDFDatatype type = TypeMapper.getInstance().getSafeTypeByName(classProperty.getDataType());
+                    String dataType = ((DataProperty) classProperty).getType();
+                    if(dataType != null){
+                    	RDFDatatype type = TypeMapper.getInstance().getSafeTypeByName(dataType);
                     	subject.addProperty(model.getProperty(predicateURI), model.createTypedLiteral(objectString, type));
                     }else{
                     	subject.addProperty(model.getProperty(predicateURI), objectString);
                     }
-                    
-                    
-                } else if (classProperty.getPropertyType().equals("object-property")) {
-                	String objectURI = uriBuilder.buildURIString(completeURI(classProperty.getObjectURI(), dataEntity));
+                } else if (classProperty.getPropertyType() == PropertyType.OBJECT_PROPERTY) {
+                    String objectPattern = ((ObjectProperty) classProperty).getObject();
+                    String objectURI = uriBuilder.buildURIString(completeURI(objectPattern, dataEntity));
                 	Resource object = model.getResource(objectURI);
                     subject.addProperty(model.getProperty(predicateURI), object);
                 }
@@ -67,13 +65,12 @@ public class RDFMapper {
 
         return model;
     }
-    
 
-    private Map<String, Integer> buildClassIndexMap(List<ClassEntity> classList) {
+    private Map<String, Integer> buildClassIndexMap(List<Entity> classList) {
         Map<String, Integer> indexMap = new HashMap<>();
         for (int i = 0; i < classList.size(); i++) {
-            ClassEntity clsEnt = classList.get(i);
-            indexMap.put(clsEnt.getEntityName(), i);
+            Entity clsEnt = classList.get(i);
+            indexMap.put(clsEnt.getName(), i);
         }
         return indexMap;
     }

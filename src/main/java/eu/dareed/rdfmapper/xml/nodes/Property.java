@@ -8,29 +8,61 @@ import javax.xml.bind.annotation.XmlElement;
 public class Property {
     protected String name;
     protected String uri;
+    protected String label;
     protected int identifier;
+    protected PropertyType propertyType;
 
     protected Property() {
     }
 
-    public Property(String name, String uri, int identifier) {
+    protected Property(PropertyType propertyType) {
+        this.propertyType = propertyType;
+    }
+
+    public Property(String name, PropertyType propertyType, String uri, int identifier) {
         this.name = name;
+        this.propertyType = propertyType;
         this.uri = uri;
         this.identifier = identifier;
     }
 
-    @XmlElement(name = "name")
+    @XmlElement(name = "name", required = true)
     public String getName() {
         return name;
     }
 
-    @XmlElement(name = "uri")
-    public String getURI() {
+    @XmlElement(name = "uri", required = true)
+    public String getUri() {
         return uri;
     }
 
-    @XmlElement(name = "identifier")
+    public void setUri(String uri) {
+        this.uri = uri;
+    }
+
+    @XmlElement(name = "id", required = true)
     public int getIdentifier() {
         return identifier;
+    }
+
+    public void setIdentifier(int identifier) {
+        this.identifier = identifier;
+    }
+
+    @XmlElement(name = "label")
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
+    public PropertyType getPropertyType() {
+        return propertyType;
+    }
+
+    public void setPropertyType(PropertyType propertyType) {
+        this.propertyType = propertyType;
     }
 }

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<mapping xmlns="http://imi.kit.edu/rdfMapping">
+    <namespaces>
+        <ns>
+            <prefix>defaultns</prefix>
+            <uri>https://energyplus.net/</uri>
+        </ns>
+    </namespaces>
+    <entities>
+        <entity>
+            <label>Gebaeude</label>
+            <uri>http://dareed.eu/$0$</uri>
+            <name>Building</name>
+            <type>http://dareed.eu/Building</type>
+            <properties>
+                <objectProperty>
+                    <id>5</id>
+                    <uri>http://dareed.eu/shadowing</uri>
+                    <object>http://dareed.eu/$2$</object>
+                </objectProperty>
+                <dataProperty>
+                    <id>6</id>
+                    <uri>http://dareed.eu/power</uri>
+                    <type>xsd:int</type>
+                </dataProperty>
+            </properties>
+        </entity>
+        <entity>
+            <label>Office Gebaeude</label>
+            <uri>http://dareed.eu/$0$</uri>
+            <name>OfficeBuilding</name>
+            <type>http://dareed.eu/OfficeBuilding</type>
+        </entity>
+    </entities>
+    <taxonomy>
+        <relation>
+            <superClass>Building</superClass>
+            <subClass>OfficeBuilding</subClass>
+        </relation>
+    </taxonomy>
+</mapping>

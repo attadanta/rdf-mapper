@@ -1,78 +1,55 @@
 package eu.dareed.rdfmapper.xml.nodes;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @XmlRootElement(name = "mapping")
-@XmlType(propOrder = {"namespaceMap", "classMap", "taxonomyMap"})
+@XmlType(propOrder = {"namespaces", "entities", "taxonomy"})
 public class Mapping {
-    private NamespaceMap namespaceMap;
-    private ClassMap classMap;
-    private TaxonomyMap taxonomyMap;
+    private List<Namespace> namespaces;
+    private List<Entity> entities;
+    private List<SubClassRelation> taxonomy;
 
     public Mapping() {
-    	namespaceMap = new NamespaceMap();
-        classMap = new ClassMap();
-        taxonomyMap = new TaxonomyMap();
+        this.namespaces = new ArrayList<>();
+        this.entities = new ArrayList<>();
+        this.taxonomy = new ArrayList<>();
     }
 
-
-//    @XmlAttribute(name = "xmlns")
-//    public String getXmlnsAttribute() {
-//		return xmlnsAttribute;
-//	}
-//
-//
-//	public void setXmlnsAttribute(String xmlnsAttribute) {
-//		this.xmlnsAttribute = xmlnsAttribute;
-//	}
-
-
-	@XmlElement(name = "namespace-map")
-    public NamespaceMap getNamespaceMap() {
-        return namespaceMap;
+    @XmlElementWrapper(name = "namespaces")
+    @XmlElements({
+            @XmlElement(name = "ns")
+    })
+    public List<Namespace> getNamespaces() {
+        return namespaces;
     }
 
-
-    public void setNamespace(NamespaceMap namespaceMap) {
-        this.namespaceMap = namespaceMap;
+    public void setNamespaces(List<Namespace> namespaces) {
+        this.namespaces = namespaces;
     }
 
-
-    @XmlElement(name = "class-map")
-    public ClassMap getClassMap() {
-        return classMap;
+    @XmlElementWrapper(name = "entities")
+    @XmlElements({
+            @XmlElement(name = "entity")
+    })
+    public List<Entity> getEntities() {
+        return entities;
     }
 
-
-    public void setClassMap(ClassMap classMap) {
-        this.classMap = classMap;
+    public void setEntities(List<Entity> entities) {
+        this.entities = entities;
     }
 
-
-    @XmlElement(name = "taxonomy-map")
-    public TaxonomyMap getTaxonomyMap() {
-        return taxonomyMap;
+    @XmlElementWrapper(name = "taxonomy")
+    @XmlElements({
+            @XmlElement(name = "relation")
+    })
+    public List<SubClassRelation> getTaxonomy() {
+        return taxonomy;
     }
 
-
-    public void setTaxonomyMap(TaxonomyMap taxonomyMap) {
-        this.taxonomyMap = taxonomyMap;
+    public void setTaxonomy(List<SubClassRelation> taxonomy) {
+        this.taxonomy = taxonomy;
     }
-
-
-//	@XmlElement(name = "object-map")
-//	public ObjectMap getObjectMap() {
-//		if(objectMap == null){
-//			objectMap = new ObjectMap();
-//		}
-//		return objectMap;
-//	}
-//
-//	
-//	public void setObjectMap(ObjectMap objectMap) {
-//		this.objectMap = objectMap;
-//	}
-
 }

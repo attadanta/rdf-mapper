@@ -23,18 +23,12 @@ public class XmlMapper {
         return mapping;
     }
 
-
-    public void setMapping(Mapping mapping) {
-        this.mapping = mapping;
-    }
-
-
     public void mapIDDToXMLObjects(IDD idd, Map<String, String> namespaceMap) {
         mapping = new Mapping();
-        List<Namespace> namespaceList = mapping.getNamespaceMap().getNamespaceList();
-        List<ClassEntity> classList = mapping.getClassMap().getClassList();
+        List<Namespace> namespaceList = mapping.getNamespaces();
+        List<Entity> classList = mapping.getEntities();
 //        classList.add(new ClassEntity("entity-class", "entity-class"));
-        List<SubClassRelation> subRelList = mapping.getTaxonomyMap().getSubRelList();
+        List<SubClassRelation> subRelList = mapping.getTaxonomy();
 
         // add namespaces to mapping
 		namespaceList.add(new Namespace(Namespace.defaultNamespacePrefix, "https://energyplus.net/"));
@@ -45,25 +39,26 @@ public class XmlMapper {
         // add classes to mapping
         for (IDDObject iddObj : idd.getAllObjects()) {
             String classURI = buildClassURI(iddObj.getType());
-            ClassEntity entClass = new ClassEntity(classURI, classURI);
+            Entity entClass = new Entity(classURI, classURI);
             entClass.setLabel(classURI);
-//            entClass.getclassURLList().add("entity-class");
-            List<ClassProperty> propertyList = entClass.getPropertyMap().getPropertyList();
+            List<Property> propertyList = entClass.getProperties();
 
             // add properties of current class to mapping
             for (IDDField field : iddObj.getFields()) {
                 if (field.isSet("field") && containsKnownProperty(field)) {
                     String propertyDescription = field.getParameter("field").value();
+                    String propertyURI = buildPropertyURI(propertyDescription);
 
-                    ClassProperty entProperty = new ClassProperty(buildPropertyURI(propertyDescription));
-                    entProperty.setLabel(propertyDescription.trim().replace(' ', '_'));
-                    entProperty.setPropertyType(getPropertyType(field));
-                    entProperty.setIdentifier(getIdentifier(fixPropertyName(field.getName())));
+                    Property property;
                     if (isDataProperty(field)) {
-                        entProperty.setDataType(DataProperty.parseDataTypeInField(field).typeURI);
+                        property = new eu.dareed.rdfmapper.xml.nodes.DataProperty(propertyURI, DataProperty.parseDataTypeInField(field).typeURI);
+                    } else {
+                        property = new ObjectProperty(propertyURI);
                     }
+                    property.setLabel(propertyDescription.trim().replace(' ', '_'));
+                    property.setIdentifier(getIdentifier(fixPropertyName(field.getName())));
 
-                    propertyList.add(entProperty);
+                    propertyList.add(property);
                 }
             }
             classList.add(entClass);

@@ -10,14 +10,20 @@ public class ObjectProperty extends Property {
     protected String object;
 
     protected ObjectProperty() {
+        super(PropertyType.OBJECT_PROPERTY);
     }
 
-    public ObjectProperty(String name, String uri) {
-        super(name, uri);
+    public ObjectProperty(String uri) {
+        this();
+        this.uri = uri;
     }
 
     @XmlElement(name = "object")
     public String getObject() {
         return object;
+    }
+
+    public void setObject(String object) {
+        this.object = object;
     }
 }

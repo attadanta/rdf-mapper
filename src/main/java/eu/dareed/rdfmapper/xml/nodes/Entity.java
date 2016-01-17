@@ -1,54 +1,74 @@
 package eu.dareed.rdfmapper.xml.nodes;
 
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlElements;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Entity {
-	private String uri;
-	private String label;
-	private String entityName;
-	private List<String> classURIList;
+    private String uri;
+    private String label;
+    private String name;
+    private List<Property> properties;
+    private List<String> types;
 
-	public Entity(String uri, String entityName) {
-		this.uri = uri;
-		this.entityName = entityName;
-		this.classURIList = new ArrayList<>();
-	}
+    protected Entity() {
+        this.types = new ArrayList<>();
+        this.properties = new ArrayList<>();
+    }
 
-	@XmlElement(name = "name")
-	public String getEntityName() {
-		return entityName;
-	}
+    public Entity(String uri, String entityName) {
+        this();
+        this.uri = uri;
+        this.name = entityName;
+    }
 
-	@XmlElement(name = "uri")
-	public String getUri() {
-		return uri;
-	}
+    @XmlElement(name = "name", required = true)
+    public String getName() {
+        return name;
+    }
 
-	@XmlElement(name = "label")
-	public String getLabel() {
-		return label;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	@XmlElement(name = "type")
-	public List<String> getClassURIList() {
-		return classURIList;
-	}
+    @XmlElement(name = "uri", required = true)
+    public String getUri() {
+        return uri;
+    }
 
-	public void setUri(String uri) {
-		this.uri = uri;
-	}
+    public void setUri(String uri) {
+        this.uri = uri;
+    }
 
-	public void setLabel(String label) {
-		this.label = label;
-	}
+    @XmlElement(name = "label")
+    public String getLabel() {
+        return label;
+    }
 
-	public void setEntityName(String entityName) {
-		this.entityName = entityName;
-	}
+    public void setLabel(String label) {
+        this.label = label;
+    }
 
-	public void addTypeURI(String typeURL) {
-		classURIList.add(typeURL);
-	}
+    @XmlElementWrapper(name = "properties")
+    @XmlElements({
+            @XmlElement(name = "dataProperty", type = DataProperty.class),
+            @XmlElement(name = "objectProperty", type = ObjectProperty.class)})
+    public List<Property> getProperties() {
+        return properties;
+    }
+
+    public void setProperties(List<Property> properties) {
+        this.properties = properties;
+    }
+
+    @XmlElement(name = "type")
+    public List<String> getTypes() {
+        return types;
+    }
+
+    public void addTypeURI(String typeURL) {
+        types.add(typeURL);
+    }
 }

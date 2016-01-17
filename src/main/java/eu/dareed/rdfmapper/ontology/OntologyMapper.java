@@ -1,10 +1,7 @@
 package eu.dareed.rdfmapper.ontology;
 
 import eu.dareed.rdfmapper.URIBuilder;
-import eu.dareed.rdfmapper.xml.nodes.ClassEntity;
-import eu.dareed.rdfmapper.xml.nodes.ClassProperty;
-import eu.dareed.rdfmapper.xml.nodes.Mapping;
-import eu.dareed.rdfmapper.xml.nodes.SubClassRelation;
+import eu.dareed.rdfmapper.xml.nodes.*;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.*;
 
@@ -44,13 +41,12 @@ public class OntologyMapper {
 
 
     public void mapXMLToOntology(Mapping mapping) {
-        URIBuilder uriBuilder = new URIBuilder(mapping.getNamespaceMap());
-        String addPrefix = "defaultns";
+        URIBuilder uriBuilder = new URIBuilder(mapping.getNamespaces());
+        String addPrefix = Namespace.defaultNamespacePrefix;
 
-        for (ClassEntity classEntity : mapping.getClassMap().getClassList()) {
+        for (Entity classEntity : mapping.getEntities()) {
+            IRI classIRI = IRI.create(uriBuilder.buildURIString(classEntity.getUri(), addPrefix));
 
-            IRI classIRI = IRI.create(uriBuilder.buildURIString(classEntity.getURI(), addPrefix));
-            
             OWLClass owlClass = dataFactory.getOWLClass(classIRI);
 
             ontologyManager.addAxiom(ontology, dataFactory.getOWLDeclarationAxiom(owlClass));
@@ -61,32 +57,32 @@ public class OntologyMapper {
             }
 
 
-            for (ClassProperty property : classEntity.getPropertyMap().getPropertyList()) {
+            for (Property property : classEntity.getProperties()) {
                 if (property.getPropertyType() == null) {
-                    System.err.println("Invalid property type in entity " + classEntity.getEntityName());
+                    System.err.println("Invalid property type in entity " + classEntity.getName());
                     continue;
                 }
-                IRI propertyIRI = IRI.create(uriBuilder.buildURIString(property.getURI(), addPrefix));
+                IRI propertyIRI = IRI.create(uriBuilder.buildURIString(property.getUri(), addPrefix));
 
-                if (property.getPropertyType().equals("object-property")) {
+                if (property.getPropertyType() == PropertyType.OBJECT_PROPERTY) {
                     OWLObjectProperty owlProperty = dataFactory.getOWLObjectProperty(propertyIRI);
                     ontologyManager.addAxiom(ontology, dataFactory.getOWLDeclarationAxiom(owlProperty));
 //					ontologyManager.addAxiom(ontology, dataFactory.getOWLObjectPropertyDomainAxiom(owlProperty, owlClass));
-                } else if (property.getPropertyType().equals("data-property")) {
+                } else if (property.getPropertyType() == PropertyType.DATA_PROPERTY) {
                     OWLDataProperty owlProperty = dataFactory.getOWLDataProperty(propertyIRI);
                     ontologyManager.addAxiom(ontology, dataFactory.getOWLDeclarationAxiom(owlProperty));
 //					ontologyManager.addAxiom(ontology, dataFactory.getOWLDataPropertyDomainAxiom(owlProperty, owlClass));
 
-                    String dataType = property.getDataType();
+                    String dataType = ((DataProperty) property).getType();
                     if (dataType == null) {
-                        System.out.println("Invalid datatype in entity " + classEntity.getEntityName());
+                        System.out.println("Invalid datatype in entity " + classEntity.getName());
                     } else {
                         OWLDatatype owlDatatype = dataFactory.getOWLDatatype(IRI.create(dataType));
                         ontologyManager.addAxiom(ontology, dataFactory.getOWLDataPropertyRangeAxiom(owlProperty, owlDatatype));
                     }
 
                 } else {
-                    System.err.println("Invalid property type in entity " + classEntity.getEntityName());
+                    System.err.println("Invalid property type in entity " + classEntity.getName());
                     continue;
                 }
 
@@ -97,7 +93,7 @@ public class OntologyMapper {
         }
 
         // Add subclass relations from taxonomy map
-        for (SubClassRelation relation : mapping.getTaxonomyMap().getSubRelList()) {
+        for (SubClassRelation relation : mapping.getTaxonomy()) {
             IRI subIRI = IRI.create(uriBuilder.buildURIString(relation.getSubClass(), addPrefix));
             OWLClass subClass = dataFactory.getOWLClass(subIRI);
             IRI superIRI = IRI.create(uriBuilder.buildURIString(relation.getSuperClass(), addPrefix));
