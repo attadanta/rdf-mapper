@@ -12,35 +12,36 @@ import java.net.URISyntaxException;
 import java.nio.file.Paths;
 
 public class XMLParseTest {
-    private static XmlMapper mapper;
+    private static Mapping mapping;
 
     @BeforeClass
     public static void setup() throws JAXBException, URISyntaxException {
         File xmlMap = Paths.get(XMLParseTest.class.getResource("/fixtures/idd_map.xml").toURI()).toFile();
-        mapper = new XmlMapper();
+        XmlMapper mapper = new XmlMapper();
         mapper.loadXML(xmlMap);
+        mapping = mapper.getMapping();
     }
 
     @Test
     public void testNamespaces() {
-        Assert.assertEquals(1, mapper.getMapping().getNamespaces().size());
+        Assert.assertEquals(1, mapping.getNamespaces().size());
     }
 
     @Test
     public void testNamespaceProperties() {
-        Namespace ns = mapper.getMapping().getNamespaces().get(0);
+        Namespace ns = mapping.getNamespaces().get(0);
         Assert.assertEquals("defaultns", ns.getPrefix());
         Assert.assertEquals("https://energyplus.net/", ns.getUri());
     }
 
     @Test
     public void testEntities() {
-        Assert.assertEquals(2, mapper.getMapping().getEntities().size());
+        Assert.assertEquals(2, mapping.getEntities().size());
     }
 
     @Test
     public void testEntityProperties() {
-        Entity entity = mapper.getMapping().getEntities().get(0);
+        Entity entity = mapping.getEntities().get(0);
 
         Assert.assertEquals("Gebaeude", entity.getLabel());
         Assert.assertEquals("http://dareed.eu/$0$", entity.getUri());
@@ -52,7 +53,7 @@ public class XMLParseTest {
 
     @Test
     public void testObjectProperty() {
-        Property property = mapper.getMapping().getEntities().get(0).getProperties().get(0);
+        Property property = mapping.getEntities().get(0).getProperties().get(0);
         Assert.assertTrue("Expected an object property", property instanceof ObjectProperty);
 
         ObjectProperty objectProperty = (ObjectProperty) property;
@@ -63,7 +64,7 @@ public class XMLParseTest {
 
     @Test
     public void testDataProperty() {
-        Property property = mapper.getMapping().getEntities().get(0).getProperties().get(1);
+        Property property = mapping.getEntities().get(0).getProperties().get(1);
         Assert.assertTrue("Expected a data property.", property instanceof DataProperty);
 
         DataProperty dataProperty = (DataProperty) property;
@@ -74,12 +75,12 @@ public class XMLParseTest {
 
     @Test
     public void testTaxonomyExistence() {
-        Assert.assertEquals(1, mapper.getMapping().getTaxonomy().size());
+        Assert.assertEquals(1, mapping.getTaxonomy().size());
     }
 
     @Test
     public void testTaxonomyRelations() {
-        SubClassRelation relation = mapper.getMapping().getTaxonomy().get(0);
+        SubClassRelation relation = mapping.getTaxonomy().get(0);
         Assert.assertEquals("Building", relation.getSuperClass());
         Assert.assertEquals("OfficeBuilding", relation.getSubClass());
     }

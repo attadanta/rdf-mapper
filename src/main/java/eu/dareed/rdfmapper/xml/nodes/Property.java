@@ -5,7 +5,7 @@ import javax.xml.bind.annotation.XmlElement;
 /**
  * @author <a href="mailto:kiril.tonev@kit.edu">Kiril Tonev</a>
  */
-public class Property {
+public abstract class Property {
     protected String name;
     protected String uri;
     protected String label;

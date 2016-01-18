@@ -8,7 +8,7 @@ public class SubClassRelation {
     private String superClass;
     private String subClass;
 
-    public SubClassRelation() {
+    protected SubClassRelation() {
     }
 
     public SubClassRelation(String superClass, String subClass) {
@@ -16,17 +16,14 @@ public class SubClassRelation {
         this.subClass = subClass;
     }
 
-
     @XmlElement(name = "superClass", required = true)
     public String getSuperClass() {
         return superClass;
     }
 
-
     public void setSuperClass(String superClass) {
         this.superClass = superClass;
     }
-
 
     @XmlElement(name = "subClass", required = true)
     public String getSubClass() {
