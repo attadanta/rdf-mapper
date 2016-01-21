@@ -1,10 +1,12 @@
 package eu.dareed.rdfmapper.xml.nodes;
 
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlType;
 
 /**
  * @author <a href="mailto:kiril.tonev@kit.edu">Kiril Tonev</a>
  */
+@XmlType(propOrder = {"label", "uri", "name", "identifier", "propertyType"})
 public abstract class Property {
     protected String name;
     protected String uri;

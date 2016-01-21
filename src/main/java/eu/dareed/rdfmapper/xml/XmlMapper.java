@@ -18,11 +18,13 @@ import java.util.Map.Entry;
 
 public class XmlMapper {
     private Mapping mapping;
+	private int properyIdCounter;
 
     public Mapping getMapping() {
         return mapping;
     }
 
+    
     public void mapIDDToXMLObjects(IDD idd, Map<String, String> namespaceMap) {
         mapping = new Mapping();
         List<Namespace> namespaceList = mapping.getNamespaces();
@@ -42,6 +44,7 @@ public class XmlMapper {
             Entity entClass = new Entity(classURI, classURI);
             entClass.setLabel(classURI);
             List<Property> propertyList = entClass.getProperties();
+            properyIdCounter = 1;
 
             // add properties of current class to mapping
             for (IDDField field : iddObj.getFields()) {
@@ -113,6 +116,7 @@ public class XmlMapper {
         return propName;
     }
 
+    
     /**
      * Determines if a field contains a type declaration which is mappable.
      *
@@ -133,15 +137,18 @@ public class XmlMapper {
         }
     }
 
+    
     private boolean isDataProperty(IDDField field) {
         return getPropertyType(field).equals("data-property");
     }
 
+    
     protected String getPropertyType(IDDField field) {
         String fieldType = field.getParameter("type").value();
         return PropertyType.parseTypeParameter(fieldType).propertyType;
     }
 
+    
     private String fixPropertyName(String name) {
 //		name = name.replaceAll("%", "percent");
 
@@ -158,7 +165,8 @@ public class XmlMapper {
 		try{
 			return Integer.parseInt(fixPropertyName);
 		} catch (NumberFormatException e){
-            throw new RuntimeException("Expected an integer: `" + fixPropertyName + "'");
+//            throw new RuntimeException("Expected an integer: '" + fixPropertyName + "'");
+			return properyIdCounter++;
         }
 	}
 }

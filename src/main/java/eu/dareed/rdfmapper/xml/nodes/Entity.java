@@ -3,9 +3,12 @@ package eu.dareed.rdfmapper.xml.nodes;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlElements;
+import javax.xml.bind.annotation.XmlType;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@XmlType(propOrder = {"label", "uri", "name", "properties", "types"})
 public class Entity {
     private String uri;
     private String label;
