@@ -55,6 +55,7 @@ public class XMLParseTest {
     public void testObjectProperty() {
         Property property = mapping.getEntities().get(0).getProperties().get(0);
         Assert.assertTrue("Expected an object property", property instanceof ObjectProperty);
+        Assert.assertEquals(PropertyType.OBJECT_PROPERTY, property.getPropertyType());
 
         ObjectProperty objectProperty = (ObjectProperty) property;
         Assert.assertEquals(5, objectProperty.getIdentifier());
@@ -66,6 +67,7 @@ public class XMLParseTest {
     public void testDataProperty() {
         Property property = mapping.getEntities().get(0).getProperties().get(1);
         Assert.assertTrue("Expected a data property.", property instanceof DataProperty);
+        Assert.assertEquals(PropertyType.DATA_PROPERTY, property.getPropertyType());
 
         DataProperty dataProperty = (DataProperty) property;
         Assert.assertEquals(6, dataProperty.getIdentifier());
