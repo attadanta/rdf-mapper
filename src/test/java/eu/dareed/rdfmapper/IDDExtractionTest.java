@@ -40,7 +40,25 @@ public class IDDExtractionTest {
         Property name = entity.getProperties().get(0);
         Assert.assertEquals(PropertyType.DATA_PROPERTY, name.getPropertyType());
         Assert.assertEquals("Name", name.getLabel());
+        Assert.assertEquals("Name", name.getName());
+        Assert.assertEquals("http://energyplus.net/name", name.getUri());
         Assert.assertEquals(0, name.getIdentifier());
-        Assert.assertEquals("http://www.w3.org/2002/07/owl#DataProperty", ((DataProperty) name).getType());
+        Assert.assertEquals("http://www.w3.org/2001/XMLSchema#string", name.asDataProperty().getType());
+
+        Property lat = entity.getProperties().get(1);
+        Assert.assertEquals(PropertyType.DATA_PROPERTY, lat.getPropertyType());
+        Assert.assertEquals("Latitude", lat.getName());
+        Assert.assertEquals("Latitude", lat.getLabel());
+        Assert.assertEquals("http://energyplus.net/latitude", lat.getUri());
+        Assert.assertEquals(1, lat.getIdentifier());
+        Assert.assertEquals("http://www.w3.org/2001/XMLSchema#double", lat.asDataProperty().getType());
+    }
+
+    @Test
+    public void testDesignDayProperties() {
+        Entity entity = mapping.getEntities().get(1);
+        Property dayType = entity.getProperties().get(3);
+        Assert.assertEquals(PropertyType.OBJECT_PROPERTY, dayType.getPropertyType());
+        Assert.assertEquals(3, dayType.getIdentifier());
     }
 }

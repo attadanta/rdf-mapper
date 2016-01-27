@@ -29,6 +29,14 @@ public abstract class Property {
         this.identifier = identifier;
     }
 
+    public DataProperty asDataProperty() {
+        return (DataProperty) this;
+    }
+
+    public ObjectProperty asObjectProperty() {
+        return (ObjectProperty) this;
+    }
+
     @XmlElement(name = "name", required = true)
     public String getName() {
         return name;
