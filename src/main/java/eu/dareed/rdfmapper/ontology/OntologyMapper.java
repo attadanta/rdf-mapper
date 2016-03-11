@@ -45,7 +45,7 @@ public class OntologyMapper {
         String addPrefix = Namespace.defaultNamespacePrefix;
 
         for (Entity classEntity : mapping.getEntities()) {
-            IRI classIRI = IRI.create(uriBuilder.buildURIString(classEntity.getUri(), addPrefix));
+            IRI classIRI = IRI.create(uriBuilder.resolveURI(classEntity.getUri()));
 
             OWLClass owlClass = dataFactory.getOWLClass(classIRI);
 
@@ -62,7 +62,7 @@ public class OntologyMapper {
                     System.err.println("Invalid property type in entity " + classEntity.getName());
                     continue;
                 }
-                IRI propertyIRI = IRI.create(uriBuilder.buildURIString(property.getUri(), addPrefix));
+                IRI propertyIRI = IRI.create(uriBuilder.resolveURI(property.getUri()));
 
                 if (property.getPropertyType() == PropertyType.OBJECT_PROPERTY) {
                     OWLObjectProperty owlProperty = dataFactory.getOWLObjectProperty(propertyIRI);
@@ -94,9 +94,9 @@ public class OntologyMapper {
 
         // Add subclass relations from taxonomy map
         for (SubClassRelation relation : mapping.getTaxonomy()) {
-            IRI subIRI = IRI.create(uriBuilder.buildURIString(relation.getSubClass(), addPrefix));
+            IRI subIRI = IRI.create(uriBuilder.resolveURI(relation.getSubClass()));
             OWLClass subClass = dataFactory.getOWLClass(subIRI);
-            IRI superIRI = IRI.create(uriBuilder.buildURIString(relation.getSuperClass(), addPrefix));
+            IRI superIRI = IRI.create(uriBuilder.resolveURI(relation.getSuperClass()));
             OWLClass superClass = dataFactory.getOWLClass(superIRI);
 
             ontologyManager.addAxiom(ontology, dataFactory.getOWLSubClassOfAxiom(subClass, superClass));
