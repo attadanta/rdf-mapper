@@ -3,50 +3,50 @@ package eu.dareed.rdfmapper;
 import eu.dareed.rdfmapper.xml.nodes.Namespace;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 public class URIBuilder {
 
-    private Collection<? extends Namespace> namespaces;
+    protected final Map<String, String> nsMap;
 
     public URIBuilder(Collection<? extends Namespace> namespaces) {
-        this.namespaces = namespaces;
+        this.nsMap = mapNamespaces(namespaces);
     }
 
-
-    public String buildURIString(String uriPart) {
-        if (!uriPart.contains(":")) {
-            return uriPart;
+    public String resolveURI(String uri) {
+        if (uri.startsWith("http")) {
+            return uri;
         }
 
-        int prefixIdx = uriPart.indexOf(':');
-        String prefix = uriPart.substring(0, prefixIdx);
-        if (prefix.equals("http") || prefix.equals("https")) {
-            return prefix + ":" + uriPart.substring(prefixIdx + 1);
-        } else {
-            return buildURIString(findNamespace(prefix) + uriPart.substring(prefixIdx + 1));
-        }
-    }
-
-
-    public String buildURIString(String uriPart, String addPrefix) {
-        String innerURI = buildURIString(uriPart);
-        if (addPrefix != null) {
-            return buildURIString(addPrefix + ":" + innerURI);
-        } else {
-            return innerURI;
-        }
-
-    }
-
-
-    private String findNamespace(String prefix) {
-        for (Namespace ns : namespaces) {
-            if (ns.getPrefix().equals(prefix)) {
-                return ns.getUri();
+        if (uri.contains(":")) {
+            int i = uri.indexOf(":");
+            String prefix = uri.substring(0, i);
+            String suffix = uri.substring(i + 1, uri.length());
+            if (prefix.isEmpty()) {
+                return nsMap.get(Namespace.defaultNamespacePrefix) + suffix;
+            } else {
+                if (nsMap.containsKey(prefix)) {
+                    return nsMap.get(prefix) + suffix;
+                } else {
+                    System.err.println("Warning, ns prefix not found: " + prefix);
+                    return suffix;
+                }
             }
         }
-        System.out.println("Error: namespace with prefix: " + prefix + " not found!");
-        return null;
+
+        System.err.println("Warning, bad uri: " + uri);
+        return uri;
+    }
+
+    protected Map<String, String> mapNamespaces(Collection<? extends Namespace> namespaces) {
+        Map<String, String> map = new HashMap<>();
+
+        for (Namespace namespace : namespaces ) {
+            map.put(namespace.getPrefix(), namespace.getUri());
+        }
+
+        return map;
     }
 
 }
