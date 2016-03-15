@@ -4,14 +4,14 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlElements;
 import javax.xml.bind.annotation.XmlType;
-
 import java.util.ArrayList;
 import java.util.List;
 
-@XmlType(propOrder = {"label", "uri", "name", "properties", "types"})
+@XmlType(propOrder = {"label", "description", "uri", "name", "properties", "types"})
 public class Entity {
     private String uri;
     private String label;
+    private String description;
     private String name;
     private List<Property> properties;
     private List<String> types;
@@ -52,6 +52,15 @@ public class Entity {
 
     public void setLabel(String label) {
         this.label = label;
+    }
+
+    @XmlElement(name="description")
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     @XmlElementWrapper(name = "properties")

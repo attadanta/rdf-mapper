@@ -23,7 +23,6 @@ import java.util.Map.Entry;
  */
 public class XmlMapper {
     private Mapping mapping;
-    private int propertyIdCounter;
 
     public Mapping getMapping() {
         return mapping;
@@ -48,10 +47,12 @@ public class XmlMapper {
             Entity entClass = new Entity(classURI, classURI);
             entClass.setLabel(classURI);
             List<Property> propertyList = entClass.getProperties();
-            propertyIdCounter = 1;
 
             // add properties of current class to mapping
-            for (IDDField field : iddObj.getFields()) {
+            List<IDDField> fields = iddObj.getFields();
+            for (int i = 0; i < fields.size(); i++) {
+                IDDField field = fields.get(i);
+
                 if (field.isSet("field") && containsKnownProperty(field)) {
                     String propertyDescription = field.getParameter("field").value();
                     String propertyURI = buildPropertyURI(propertyDescription);
@@ -63,7 +64,7 @@ public class XmlMapper {
                         property = new ObjectProperty(propertyURI);
                     }
                     property.setLabel(propertyDescription.trim().replace(' ', '_'));
-                    property.setIdentifier(getIdentifier(fixPropertyName(field.getName())));
+                    property.setIdentifier(i);
 
                     propertyList.add(property);
                 }
@@ -116,7 +117,6 @@ public class XmlMapper {
         return className;
     }
 
-
     private String buildPropertyURI(String propName) {
         propName = propName.trim().replace(' ', '_');
         try {
@@ -148,36 +148,20 @@ public class XmlMapper {
         }
     }
 
-
     private boolean isDataProperty(IDDField field) {
         return getPropertyType(field).equals("data-property");
     }
-
 
     protected String getPropertyType(IDDField field) {
         String fieldType = field.getParameter("type").value();
         return PropertyType.parseTypeParameter(fieldType).propertyType;
     }
 
-
-    private String fixPropertyName(String name) {
-//		name = name.replaceAll("%", "percent");
-
-        int newLineIdx = name.lastIndexOf("\n");
-        if (newLineIdx >= 0) {
-            name = name.substring(newLineIdx + 1);
-        }
-
-        return name.trim().replace(' ', '_');
+    protected String classLabel(IDDObject object) {
+        return object.getType();
     }
 
-
-    private int getIdentifier(String fixPropertyName) {
-        try {
-            return Integer.parseInt(fixPropertyName);
-        } catch (NumberFormatException e) {
-//            throw new RuntimeException("Expected an integer: '" + fixPropertyName + "'");
-            return propertyIdCounter++;
-        }
+    protected String classDescription(IDDObject object) {
+        return object.getType();
     }
 }

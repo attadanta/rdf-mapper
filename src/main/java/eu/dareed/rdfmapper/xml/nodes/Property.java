@@ -7,11 +7,12 @@ import javax.xml.bind.annotation.XmlType;
 /**
  * @author <a href="mailto:kiril.tonev@kit.edu">Kiril Tonev</a>
  */
-@XmlType(propOrder = {"label", "uri", "name", "identifier"})
+@XmlType(propOrder = {"label", "description", "uri", "name", "identifier"})
 public abstract class Property {
     protected String name;
     protected String uri;
     protected String label;
+    protected String description;
     protected int identifier;
     protected PropertyType propertyType;
 
@@ -67,6 +68,15 @@ public abstract class Property {
 
     public void setLabel(String label) {
         this.label = label;
+    }
+
+    @XmlElement(name = "description")
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     @XmlTransient
