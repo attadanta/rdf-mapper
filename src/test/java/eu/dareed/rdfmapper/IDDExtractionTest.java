@@ -3,7 +3,10 @@ package eu.dareed.rdfmapper;
 import eu.dareed.eplus.model.idd.IDD;
 import eu.dareed.eplus.parsers.idd.IDDParser;
 import eu.dareed.rdfmapper.xml.XmlMapper;
-import eu.dareed.rdfmapper.xml.nodes.*;
+import eu.dareed.rdfmapper.xml.nodes.Entity;
+import eu.dareed.rdfmapper.xml.nodes.Mapping;
+import eu.dareed.rdfmapper.xml.nodes.Property;
+import eu.dareed.rdfmapper.xml.nodes.PropertyType;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -11,6 +14,7 @@ import org.junit.Test;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
+import java.util.List;
 
 public class IDDExtractionTest {
     private static Mapping mapping;
@@ -32,6 +36,27 @@ public class IDDExtractionTest {
     @Test
     public void testNumberOfEntities() {
         Assert.assertEquals(2, mapping.getEntities().size());
+    }
+
+    @Test
+    public void testEntityNames() {
+        List<Entity> entities = mapping.getEntities();
+        Assert.assertEquals("Site:Location", entities.get(0).getName());
+        Assert.assertEquals("SizingPeriod:DesignDay", entities.get(1).getName());
+    }
+
+    @Test
+    public void testEntityURIs() {
+        List<Entity> entities = mapping.getEntities();
+        Assert.assertEquals(":Location", entities.get(0).getUri());
+        Assert.assertEquals(":DesignDay", entities.get(1).getUri());
+    }
+
+    @Test
+    public void testEntityLabels() {
+        List<Entity> entities = mapping.getEntities();
+        Assert.assertEquals("Location", entities.get(0).getLabel());
+        Assert.assertEquals("DesignDay", entities.get(1).getLabel());
     }
 
     @Test
@@ -57,7 +82,13 @@ public class IDDExtractionTest {
     @Test
     public void testDesignDayProperties() {
         Entity entity = mapping.getEntities().get(1);
-        Property dayType = entity.getProperties().get(3);
+        List<Property> properties = entity.getProperties();
+
+        Property name = properties.get(0);
+        Assert.assertEquals(PropertyType.DATA_PROPERTY, name.getPropertyType());
+        Assert.assertEquals(0, name.getIdentifier());
+
+        Property dayType = properties.get(3);
         Assert.assertEquals(PropertyType.OBJECT_PROPERTY, dayType.getPropertyType());
         Assert.assertEquals(3, dayType.getIdentifier());
     }

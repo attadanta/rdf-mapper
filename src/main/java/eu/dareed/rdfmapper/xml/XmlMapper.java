@@ -16,15 +16,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+/**
+ * Maps an energy plus dictionary to a set of mapping entities.
+ *
+ * @see eu.dareed.rdfmapper.xml.nodes.Mapping
+ */
 public class XmlMapper {
     private Mapping mapping;
-	private int properyIdCounter;
+    private int propertyIdCounter;
 
     public Mapping getMapping() {
         return mapping;
     }
 
-    
     public void mapIDDToXMLObjects(IDD idd, Map<String, String> namespaceMap) {
         mapping = new Mapping();
         List<Namespace> namespaceList = mapping.getNamespaces();
@@ -33,9 +37,9 @@ public class XmlMapper {
         List<SubClassRelation> subRelList = mapping.getTaxonomy();
 
         // add namespaces to mapping
-		namespaceList.add(new Namespace(Namespace.defaultNamespacePrefix, "https://energyplus.net/"));
+        namespaceList.add(new Namespace(Namespace.defaultNamespacePrefix, "https://energyplus.net/"));
         for (Entry<String, String> entry : namespaceMap.entrySet()) {
-        	namespaceList.add(new Namespace(entry.getKey(), entry.getValue()));
+            namespaceList.add(new Namespace(entry.getKey(), entry.getValue()));
         }
 
         // add classes to mapping
@@ -44,7 +48,7 @@ public class XmlMapper {
             Entity entClass = new Entity(classURI, classURI);
             entClass.setLabel(classURI);
             List<Property> propertyList = entClass.getProperties();
-            properyIdCounter = 1;
+            propertyIdCounter = 1;
 
             // add properties of current class to mapping
             for (IDDField field : iddObj.getFields()) {
@@ -66,7 +70,7 @@ public class XmlMapper {
             }
             classList.add(entClass);
 
-            // Add taxonomy rule for sublass relation if present
+            // Add taxonomy rule for subclass relation if present
             int relationIndicatorIdx = classURI.indexOf("--");
             if (relationIndicatorIdx > 0) {
                 String superURI = buildClassURI(classURI.substring(relationIndicatorIdx + 2));
@@ -95,6 +99,13 @@ public class XmlMapper {
     }
 
 
+    /**
+     * Transforms an energy plus object designation to a type identifier suitable for urls. This means substituting
+     * unsafe characters with safe ones and url-encoding the rest.
+     *
+     * @param type the energy plus object designation.
+     * @return
+     */
     private String buildClassURI(String type) {
         String className = type.trim().replace(' ', '_').replace(':', '.');
         if (className.contains(".")) {
@@ -116,7 +127,7 @@ public class XmlMapper {
         return propName;
     }
 
-    
+
     /**
      * Determines if a field contains a type declaration which is mappable.
      *
@@ -137,18 +148,18 @@ public class XmlMapper {
         }
     }
 
-    
+
     private boolean isDataProperty(IDDField field) {
         return getPropertyType(field).equals("data-property");
     }
 
-    
+
     protected String getPropertyType(IDDField field) {
         String fieldType = field.getParameter("type").value();
         return PropertyType.parseTypeParameter(fieldType).propertyType;
     }
 
-    
+
     private String fixPropertyName(String name) {
 //		name = name.replaceAll("%", "percent");
 
@@ -161,12 +172,12 @@ public class XmlMapper {
     }
 
 
-	private int getIdentifier(String fixPropertyName) {
-		try{
-			return Integer.parseInt(fixPropertyName);
-		} catch (NumberFormatException e){
+    private int getIdentifier(String fixPropertyName) {
+        try {
+            return Integer.parseInt(fixPropertyName);
+        } catch (NumberFormatException e) {
 //            throw new RuntimeException("Expected an integer: '" + fixPropertyName + "'");
-			return properyIdCounter++;
+            return propertyIdCounter++;
         }
-	}
+    }
 }

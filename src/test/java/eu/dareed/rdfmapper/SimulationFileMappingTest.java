@@ -26,7 +26,6 @@ public class SimulationFileMappingTest {
 
     private static Mapping mapping;
     private static MappingData mappingData;
-    private static IDF idf;
 
     @BeforeClass
     public static void setUp() throws URISyntaxException, JAXBException, IOException {
@@ -35,17 +34,16 @@ public class SimulationFileMappingTest {
         xmlMapper.loadXML(xmlInput);
         mapping = xmlMapper.getMapping();
 
-        idf = new IDFParser().parseFile(SimulationFileMappingTest.class.getResourceAsStream("/fixtures/simulation.idf"));
+        IDF idf = new IDFParser().parseFile(SimulationFileMappingTest.class.getResourceAsStream("/fixtures/simulation.idf"));
 
         mappingData = new IDFMappingData(idf);
-
     }
 
     @Test
     public void testMapping() {
         List<Entity> entities = mapping.getEntities();
         for (int i = 0; i < entities.size(); i++) {
-            Assert.assertNotNull("Entity " + (i+1) + " has no name assigned.", entities.get(i).getName());
+            Assert.assertNotNull("Entity " + (i + 1) + " has no name assigned.", entities.get(i).getName());
             Assert.assertNotNull("No uri for entity `" + entities.get(i).getName() + "'.", entities.get(i).getUri());
             Assert.assertFalse("No declared types for entity `" + entities.get(i).getName() + "'.", entities.get(i).getTypes().isEmpty());
         }
