@@ -12,12 +12,9 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import java.io.File;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 /**
  * Maps an energy plus dictionary to a set of mapping entities.
@@ -55,20 +52,14 @@ public class XmlMapper {
         mapping = new Mapping();
         List<Namespace> namespaceList = mapping.getNamespaces();
         List<Entity> classList = mapping.getEntities();
-//        classList.add(new ClassEntity("entity-class", "entity-class"));
-        List<SubClassRelation> subRelList = mapping.getTaxonomy();
 
         // add namespaces to mapping
-        namespaceList.add(new Namespace(Namespace.defaultNamespacePrefix, "https://energyplus.net/"));
-        for (Entry<String, String> entry : namespaceMap.entrySet()) {
-            namespaceList.add(new Namespace(entry.getKey(), entry.getValue()));
-        }
+        namespaceList.add(namespace);
 
         // add classes to mapping
         for (IDDObject iddObj : idd.getAllObjects()) {
-            String classURI = buildClassURI(iddObj.getType());
-            Entity entClass = new Entity(classURI, classURI);
-            entClass.setLabel(classURI);
+            Entity entClass = processClass(iddObj).toEntity();
+
             List<Property> propertyList = entClass.getProperties();
 
             // add properties of current class to mapping
@@ -77,29 +68,22 @@ public class XmlMapper {
                 IDDField field = fields.get(i);
 
                 if (field.isSet("field") && containsKnownProperty(field)) {
-                    String propertyDescription = field.getParameter("field").value();
-                    String propertyURI = buildPropertyURI(propertyDescription);
+                    EplusProperty eplusProperty = processProperty(field);
 
                     Property property;
                     if (isDataProperty(field)) {
-                        property = new eu.dareed.rdfmapper.xml.nodes.DataProperty(propertyURI, DataProperty.parseDataTypeInField(field).typeURI);
+                        property = new eu.dareed.rdfmapper.xml.nodes.DataProperty(eplusProperty.uri, DataProperty.parseDataTypeInField(field).typeURI);
                     } else {
-                        property = new ObjectProperty(propertyURI);
+                        property = new ObjectProperty(eplusProperty.uri);
                     }
-                    property.setLabel(propertyDescription.trim().replace(' ', '_'));
+                    property.setLabel(eplusProperty.label);
+                    property.setDescription(eplusProperty.description);
                     property.setIdentifier(i);
 
                     propertyList.add(property);
                 }
             }
             classList.add(entClass);
-
-            // Add taxonomy rule for subclass relation if present
-            int relationIndicatorIdx = classURI.indexOf("--");
-            if (relationIndicatorIdx > 0) {
-                String superURI = buildClassURI(classURI.substring(relationIndicatorIdx + 2));
-                subRelList.add(new SubClassRelation(superURI, classURI));
-            }
         }
     }
 
@@ -121,35 +105,6 @@ public class XmlMapper {
         // Reading XML from the file and unmarshalling.
         mapping = (Mapping) um.unmarshal(xmlFile);
     }
-
-
-    /**
-     * Transforms an energy plus object designation to a type identifier suitable for urls. This means substituting
-     * unsafe characters with safe ones and url-encoding the rest.
-     *
-     * @param type the energy plus object designation.
-     * @return
-     */
-    private String buildClassURI(String type) {
-        String className = type.trim().replace(' ', '_').replace(':', '.');
-        if (className.contains(".")) {
-            int sepIdx = className.lastIndexOf('.');
-            return className.substring(sepIdx + 1) + "--"
-                    + className.substring(0, sepIdx);
-        }
-        return className;
-    }
-
-    private String buildPropertyURI(String propName) {
-        propName = propName.trim().replace(' ', '_');
-        try {
-            propName = URLEncoder.encode(propName, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        return propName;
-    }
-
 
     /**
      * Determines if a field contains a type declaration which is mappable.

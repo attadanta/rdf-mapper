@@ -7,7 +7,7 @@ import javax.xml.bind.annotation.XmlType;
 /**
  * @author <a href="mailto:kiril.tonev@kit.edu">Kiril Tonev</a>
  */
-@XmlType(propOrder = {"label", "description", "uri", "name", "identifier"})
+@XmlType(propOrder = {"label", "description", "uri", "identifier"})
 public abstract class Property {
     protected String name;
     protected String uri;
@@ -36,11 +36,6 @@ public abstract class Property {
 
     public ObjectProperty asObjectProperty() {
         return (ObjectProperty) this;
-    }
-
-    @XmlElement(name = "name", required = true)
-    public String getName() {
-        return name;
     }
 
     @XmlElement(name = "uri", required = true)

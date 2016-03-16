@@ -48,15 +48,15 @@ public class IDDExtractionTest {
     @Test
     public void testEntityURIs() {
         List<Entity> entities = mapping.getEntities();
-        Assert.assertEquals(":Location", entities.get(0).getUri());
-        Assert.assertEquals(":DesignDay", entities.get(1).getUri());
+        Assert.assertEquals("defaultns:Site_Location", entities.get(0).getUri());
+        Assert.assertEquals("defaultns:SizingPeriod_DesignDay", entities.get(1).getUri());
     }
 
     @Test
     public void testEntityLabels() {
         List<Entity> entities = mapping.getEntities();
         Assert.assertEquals("Location", entities.get(0).getLabel());
-        Assert.assertEquals("DesignDay", entities.get(1).getLabel());
+        Assert.assertEquals("Design Day", entities.get(1).getLabel());
     }
 
     @Test
@@ -65,16 +65,14 @@ public class IDDExtractionTest {
         Property name = entity.getProperties().get(0);
         Assert.assertEquals(PropertyType.DATA_PROPERTY, name.getPropertyType());
         Assert.assertEquals("Name", name.getLabel());
-        Assert.assertEquals("Name", name.getName());
-        Assert.assertEquals("http://energyplus.net/name", name.getUri());
+        Assert.assertEquals("defaultns:Name", name.getUri());
         Assert.assertEquals(0, name.getIdentifier());
         Assert.assertEquals("http://www.w3.org/2001/XMLSchema#string", name.asDataProperty().getType());
 
         Property lat = entity.getProperties().get(1);
         Assert.assertEquals(PropertyType.DATA_PROPERTY, lat.getPropertyType());
-        Assert.assertEquals("Latitude", lat.getName());
         Assert.assertEquals("Latitude", lat.getLabel());
-        Assert.assertEquals("http://energyplus.net/latitude", lat.getUri());
+        Assert.assertEquals("defaultns:Latitude", lat.getUri());
         Assert.assertEquals(1, lat.getIdentifier());
         Assert.assertEquals("http://www.w3.org/2001/XMLSchema#double", lat.asDataProperty().getType());
     }
