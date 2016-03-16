@@ -3,6 +3,7 @@ package eu.dareed.rdfmapper.xml;
 import eu.dareed.eplus.model.idd.IDD;
 import eu.dareed.eplus.model.idd.IDDField;
 import eu.dareed.eplus.model.idd.IDDObject;
+import eu.dareed.eplus.model.idd.Parameter;
 import eu.dareed.rdfmapper.xml.nodes.*;
 import org.apache.commons.lang3.StringUtils;
 
@@ -200,11 +201,6 @@ public class XmlMapper {
         return entityLabel(compoundLabel);
     }
 
-    protected String entityLabel(String compoundName) {
-        String[] labelComponents = compoundName.split("(?<=[a-z])(?=[A-Z])");
-        return StringUtils.join(labelComponents, " ");
-    }
-
     protected String classDescription(IDDObject object) {
         return object.getMemo();
     }
@@ -238,5 +234,31 @@ public class XmlMapper {
         }
 
         return result;
+    }
+
+    protected EplusProperty processProperty(IDDField field) {
+        EplusProperty property = new EplusProperty();
+
+        String propertyName = field.getParameter("field").value();
+        String uriSuffix = propertyName.replaceAll(" ", "_");
+
+        property.uri = namespace.getPrefix() + ":" + uriSuffix;
+        property.label = propertyName;
+
+        List<Parameter> parameters = field.getParameters("note");
+        List<String> notes = new ArrayList<>(parameters.size());
+
+        for (Parameter parameter : parameters) {
+            notes.add(parameter.value());
+        }
+
+        property.description = StringUtils.join(notes, "; ");
+
+        return property;
+    }
+
+    protected String entityLabel(String compoundName) {
+        String[] labelComponents = compoundName.split("(?<=[a-z])(?=[A-Z])");
+        return StringUtils.join(labelComponents, " ");
     }
 }

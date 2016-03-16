@@ -10,26 +10,11 @@ import java.util.List;
  *
  * @author <a href="mailto:kiril.tonev@kit.edu">Kiril Tonev</a>
  */
-class EplusClass {
+class EplusClass extends EplusEntity {
     /**
      * The name as it appears in the data dictionary. Never {@code null}.
      */
     protected String name;
-
-    /**
-     * Human-friendly name to display. Never {@code null}.
-     */
-    protected String label;
-
-    /**
-     * This class' memo. Could be {@code null}.
-     */
-    protected String description;
-
-    /**
-     * The assigned uri. Never {@code null}.
-     */
-    protected String uri;
 
     /**
      * A list of classes suggested as this classes' ancestors.

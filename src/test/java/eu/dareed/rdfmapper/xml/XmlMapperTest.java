@@ -1,6 +1,7 @@
 package eu.dareed.rdfmapper.xml;
 
 import eu.dareed.eplus.model.idd.IDD;
+import eu.dareed.eplus.model.idd.IDDField;
 import eu.dareed.eplus.model.idd.IDDObject;
 import eu.dareed.eplus.parsers.idd.IDDParser;
 import eu.dareed.rdfmapper.xml.nodes.Namespace;
@@ -43,6 +44,16 @@ public class XmlMapperTest {
         Assert.assertEquals(1, suggestedSuperClasses.size());
         Assert.assertEquals("Site", suggestedSuperClasses.get(0).label);
         Assert.assertEquals(namespace.getPrefix() + ":Site", suggestedSuperClasses.get(0).uri);
+    }
+
+    @Test
+    public void testLocationProperties() {
+        IDDField iddField = idd.getAllObjects().get(0).getFields().get(3);
+        EplusProperty property = xmlMapper.processProperty(iddField);
+
+        Assert.assertEquals("Time Zone", property.label);
+        Assert.assertEquals(namespace.getPrefix() + ":Time_Zone", property.uri);
+        Assert.assertEquals("basic these limits on the WorldTimeZone Map (2003);  Time relative to GMT. Decimal hours.", property.description);
     }
 
     @Test
