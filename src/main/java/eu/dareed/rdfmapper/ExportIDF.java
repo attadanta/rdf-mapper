@@ -19,10 +19,11 @@ public class ExportIDF {
             System.err.println("Usage: export-idf [idf] [xml] [path]");
             System.exit(1);
         }
+
         FileInputStream idfStream = new FileInputStream(new File(args[0]));
         IDF idf = new IDFParser().parseFile(idfStream);
 
-        XmlMapper xmlMapper = new XmlMapper();
+        XmlMapper xmlMapper = new XmlMapper("http://energyplus.net/");
         xmlMapper.loadXML(new File(args[1]));
         
         RDFMapper rdfMapper = new RDFMapper();

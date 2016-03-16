@@ -23,7 +23,7 @@ public class IDDExtractionTest {
     public static void setup() throws IOException {
         InputStream resource = IDDExtractionTest.class.getResourceAsStream("/fixtures/data_dictionary.idd");
         IDD idd = new IDDParser().parseFile(resource);
-        XmlMapper mapper = new XmlMapper();
+        XmlMapper mapper = new XmlMapper("http://energyplus.net/");
         mapper.mapIDDToXMLObjects(idd, Collections.<String, String>emptyMap());
         mapping = mapper.getMapping();
     }

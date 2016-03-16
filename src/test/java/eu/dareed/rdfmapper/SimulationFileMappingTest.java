@@ -30,7 +30,7 @@ public class SimulationFileMappingTest {
     @BeforeClass
     public static void setUp() throws URISyntaxException, JAXBException, IOException {
         File xmlInput = Paths.get(SimulationFileMappingTest.class.getResource("/fixtures/simulation_map.xml").toURI()).toFile();
-        XmlMapper xmlMapper = new XmlMapper();
+        XmlMapper xmlMapper = new XmlMapper("http://energyplus.net/");
         xmlMapper.loadXML(xmlInput);
         mapping = xmlMapper.getMapping();
 

@@ -27,7 +27,7 @@ public class ExportIDD {
         Map<String, String> namespaceMap = new HashMap<>();
         namespaceMap.put("testprefix", "http://testu.ri/");
 
-        XmlMapper mapper = new XmlMapper();
+        XmlMapper mapper = new XmlMapper("http://energyplus.net/");
         mapper.mapIDDToXMLObjects(idd, namespaceMap);
         mapper.saveXML(new File(args[1]));
     }

@@ -17,7 +17,7 @@ public class XMLParseTest {
     @BeforeClass
     public static void setup() throws JAXBException, URISyntaxException {
         File xmlMap = Paths.get(XMLParseTest.class.getResource("/fixtures/idd_map.xml").toURI()).toFile();
-        XmlMapper mapper = new XmlMapper();
+        XmlMapper mapper = new XmlMapper("http://energyplus.net/");
         mapper.loadXML(xmlMap);
         mapping = mapper.getMapping();
     }

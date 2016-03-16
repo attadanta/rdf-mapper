@@ -1,6 +1,8 @@
 package eu.dareed.rdfmapper.xml;
 
-import java.util.ArrayList;
+import eu.dareed.rdfmapper.xml.nodes.Entity;
+
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -10,22 +12,22 @@ import java.util.List;
  */
 class EplusClass {
     /**
-     * The name as it appears in the data dictionary.
+     * The name as it appears in the data dictionary. Never {@code null}.
      */
     protected String name;
 
     /**
-     * Human-friendly name to display.
+     * Human-friendly name to display. Never {@code null}.
      */
     protected String label;
 
     /**
-     * This class' memo.
+     * This class' memo. Could be {@code null}.
      */
     protected String description;
 
     /**
-     * The assigned uri.
+     * The assigned uri. Never {@code null}.
      */
     protected String uri;
 
@@ -35,6 +37,15 @@ class EplusClass {
     protected List<EplusClass> suggestedSuperClasses;
 
     public EplusClass() {
-        this.suggestedSuperClasses = new ArrayList<>();
+        this.suggestedSuperClasses = Collections.emptyList();
+    }
+
+    public Entity toEntity() {
+        Entity entity = new Entity(uri, name);
+
+        entity.setLabel(label);
+        entity.setDescription(description);
+
+        return entity;
     }
 }

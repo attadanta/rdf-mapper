@@ -22,7 +22,7 @@ import java.io.IOException;
 public class Main {
     public static void main(String[] args) throws JAXBException, IOException {
         File xmlInput = new File(args[0]);
-        XmlMapper xmlMapper = new XmlMapper();
+        XmlMapper xmlMapper = new XmlMapper("http://energyplus.net/");
         xmlMapper.loadXML(xmlInput);
         Mapping mapping = xmlMapper.getMapping();
 

@@ -4,6 +4,7 @@ import eu.dareed.eplus.model.idd.IDD;
 import eu.dareed.eplus.model.idd.IDDField;
 import eu.dareed.eplus.model.idd.IDDObject;
 import eu.dareed.rdfmapper.xml.nodes.*;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -12,6 +13,7 @@ import javax.xml.bind.Unmarshaller;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -23,6 +25,26 @@ import java.util.Map.Entry;
  */
 public class XmlMapper {
     private Mapping mapping;
+
+    protected final Namespace namespace;
+
+    /**
+     * Constructor.
+     *
+     * @param namespaceURL the base namespace url.
+     */
+    public XmlMapper(String namespaceURL) {
+        this(new Namespace(Namespace.defaultNamespacePrefix, namespaceURL));
+    }
+
+    /**
+     * Default constructor.
+     *
+     * @param namespace the base namespace.
+     */
+    public XmlMapper(Namespace namespace) {
+        this.namespace = namespace;
+    }
 
     public Mapping getMapping() {
         return mapping;
@@ -157,11 +179,64 @@ public class XmlMapper {
         return PropertyType.parseTypeParameter(fieldType).propertyType;
     }
 
+    protected EplusClass processClass(IDDObject object) {
+        EplusClass eplusClass = new EplusClass();
+        eplusClass.uri = classUrl(object);
+        eplusClass.name = className(object);
+        eplusClass.label = classLabel(object);
+        eplusClass.description = classDescription(object);
+        eplusClass.suggestedSuperClasses = suggestedSuperClasses(object);
+        return eplusClass;
+    }
+
     protected String classLabel(IDDObject object) {
-        return object.getType();
+        return classLabel(object.getType());
+    }
+
+    protected String classLabel(String objectType) {
+        String[] typeComponents = objectType.split(":");
+        String compoundLabel = typeComponents[typeComponents.length - 1];
+
+        return entityLabel(compoundLabel);
+    }
+
+    protected String entityLabel(String compoundName) {
+        String[] labelComponents = compoundName.split("(?<=[a-z])(?=[A-Z])");
+        return StringUtils.join(labelComponents, " ");
     }
 
     protected String classDescription(IDDObject object) {
+        return object.getMemo();
+    }
+
+    protected String classUrl(IDDObject object) {
+        return classUrl(object.getType());
+    }
+
+    protected String classUrl(String objectType) {
+        String typeSuffix = objectType.replace(":", "_");
+        return namespace.getPrefix() + ":" + typeSuffix;
+    }
+
+    protected String className(IDDObject object) {
         return object.getType();
+    }
+
+    protected List<EplusClass> suggestedSuperClasses(IDDObject object) {
+        String[] types = object.getType().split(":");
+        List<EplusClass> result = new ArrayList<>(types.length - 1);
+
+        for (int i = 0; i < types.length - 1; i++) {
+            EplusClass superClass = new EplusClass();
+            String type = types[i];
+
+            superClass.name = type;
+            superClass.label = classLabel(type);
+            superClass.uri = classUrl(type);
+
+            result.add(superClass);
+        }
+
+        return result;
     }
 }
