@@ -7,7 +7,7 @@ import java.util.Map;
 /**
  * @author <a href="mailto:kiril.tonev@kit.edu">Kiril Tonev</a>
  */
-public class EplusClassHierarchyNode {
+class EplusClassHierarchyNode {
     protected final String className;
     protected final Map<String, EplusClassHierarchyNode> children;
 
