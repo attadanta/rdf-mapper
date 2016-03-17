@@ -5,7 +5,6 @@ import eu.dareed.eplus.model.idf.IDF;
 import eu.dareed.eplus.parsers.idf.IDFParser;
 import eu.dareed.rdfmapper.MappingDataImpl.IDFMappingData;
 import eu.dareed.rdfmapper.rdf.RDFMapper;
-import eu.dareed.rdfmapper.xml.XmlMapper;
 import eu.dareed.rdfmapper.xml.nodes.Mapping;
 
 import javax.xml.bind.JAXBException;
@@ -22,9 +21,7 @@ import java.io.IOException;
 public class Main {
     public static void main(String[] args) throws JAXBException, IOException {
         File xmlInput = new File(args[0]);
-        XmlMapper xmlMapper = new XmlMapper("http://energyplus.net/");
-        xmlMapper.loadXML(xmlInput);
-        Mapping mapping = xmlMapper.getMapping();
+        Mapping mapping = new MappingIO().loadXML(xmlInput);
 
         IDF idf = new IDFParser().parseFile(new FileInputStream(new File(args[1])));
 

@@ -5,7 +5,7 @@ import eu.dareed.eplus.model.idf.IDF;
 import eu.dareed.eplus.parsers.idf.IDFParser;
 import eu.dareed.rdfmapper.MappingDataImpl.IDFMappingData;
 import eu.dareed.rdfmapper.rdf.RDFMapper;
-import eu.dareed.rdfmapper.xml.XmlMapper;
+import eu.dareed.rdfmapper.xml.nodes.Mapping;
 
 import javax.xml.bind.JAXBException;
 import java.io.File;
@@ -23,12 +23,12 @@ public class ExportIDF {
         FileInputStream idfStream = new FileInputStream(new File(args[0]));
         IDF idf = new IDFParser().parseFile(idfStream);
 
-        XmlMapper xmlMapper = new XmlMapper("http://energyplus.net/");
-        xmlMapper.loadXML(new File(args[1]));
-        
+        MappingIO mappingIO = new MappingIO();
+        Mapping mapping = mappingIO.loadXML(new File(args[1]));
+
         RDFMapper rdfMapper = new RDFMapper();
 
-        Model model = rdfMapper.mapToRDF(new IDFMappingData(idf), xmlMapper.getMapping());
+        Model model = rdfMapper.mapToRDF(new IDFMappingData(idf), mapping);
         model.write(new FileOutputStream(args[2]));
     }
 }

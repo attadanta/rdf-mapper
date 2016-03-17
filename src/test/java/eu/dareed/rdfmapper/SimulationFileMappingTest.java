@@ -5,7 +5,6 @@ import eu.dareed.eplus.model.idf.IDF;
 import eu.dareed.eplus.parsers.idf.IDFParser;
 import eu.dareed.rdfmapper.MappingDataImpl.IDFMappingData;
 import eu.dareed.rdfmapper.rdf.RDFMapper;
-import eu.dareed.rdfmapper.xml.XmlMapper;
 import eu.dareed.rdfmapper.xml.nodes.Entity;
 import eu.dareed.rdfmapper.xml.nodes.Mapping;
 import org.junit.Assert;
@@ -30,12 +29,9 @@ public class SimulationFileMappingTest {
     @BeforeClass
     public static void setUp() throws URISyntaxException, JAXBException, IOException {
         File xmlInput = Paths.get(SimulationFileMappingTest.class.getResource("/fixtures/simulation_map.xml").toURI()).toFile();
-        XmlMapper xmlMapper = new XmlMapper("http://energyplus.net/");
-        xmlMapper.loadXML(xmlInput);
-        mapping = xmlMapper.getMapping();
+        mapping = new MappingIO().loadXML(xmlInput);
 
         IDF idf = new IDFParser().parseFile(SimulationFileMappingTest.class.getResourceAsStream("/fixtures/simulation.idf"));
-
         mappingData = new IDFMappingData(idf);
     }
 

@@ -1,6 +1,5 @@
 package eu.dareed.rdfmapper;
 
-import eu.dareed.rdfmapper.xml.XmlMapper;
 import eu.dareed.rdfmapper.xml.nodes.*;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -17,9 +16,7 @@ public class XMLParseTest {
     @BeforeClass
     public static void setup() throws JAXBException, URISyntaxException {
         File xmlMap = Paths.get(XMLParseTest.class.getResource("/fixtures/idd_map.xml").toURI()).toFile();
-        XmlMapper mapper = new XmlMapper("http://energyplus.net/");
-        mapper.loadXML(xmlMap);
-        mapping = mapper.getMapping();
+        mapping = new MappingIO().loadXML(xmlMap);
     }
 
     @Test

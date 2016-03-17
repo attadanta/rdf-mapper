@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public class IDDExtractionTest {
@@ -23,8 +22,7 @@ public class IDDExtractionTest {
         InputStream resource = IDDExtractionTest.class.getResourceAsStream("/fixtures/data_dictionary.idd");
         IDD idd = new IDDParser().parseFile(resource);
         XmlMapper mapper = new XmlMapper("http://energyplus.net/");
-        mapper.mapIDDToXMLObjects(idd, Collections.<String, String>emptyMap());
-        mapping = mapper.getMapping();
+        mapping = mapper.mapIDDToXMLObjects(idd);
     }
 
     @Test

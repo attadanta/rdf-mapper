@@ -7,14 +7,8 @@ import eu.dareed.eplus.model.idd.Parameter;
 import eu.dareed.rdfmapper.xml.nodes.*;
 import org.apache.commons.lang3.StringUtils;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Maps an energy plus dictionary to a set of mapping entities.
@@ -22,8 +16,6 @@ import java.util.Map;
  * @see eu.dareed.rdfmapper.xml.nodes.Mapping
  */
 public class XmlMapper {
-    private Mapping mapping;
-
     protected final Namespace namespace;
 
     /**
@@ -44,12 +36,8 @@ public class XmlMapper {
         this.namespace = namespace;
     }
 
-    public Mapping getMapping() {
-        return mapping;
-    }
-
-    public void mapIDDToXMLObjects(IDD idd, Map<String, String> namespaceMap) {
-        mapping = new Mapping();
+    public Mapping mapIDDToXMLObjects(IDD idd) {
+        Mapping mapping = new Mapping();
         List<Namespace> namespaceList = mapping.getNamespaces();
 
         List<Entity> classList = mapping.getEntities();
@@ -91,25 +79,9 @@ public class XmlMapper {
         }
 
         mapping.setTaxonomy(hierarchy.getRelations());
+        return mapping;
     }
 
-    public void saveXML(File file) throws JAXBException {
-        JAXBContext context = JAXBContext.newInstance(Mapping.class);
-        Marshaller m = context.createMarshaller();
-        m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-
-        // Marshalling and saving XML to the file.
-        m.marshal(mapping, file);
-    }
-
-
-    public void loadXML(File xmlFile) throws JAXBException {
-        JAXBContext context = JAXBContext.newInstance(Mapping.class);
-        Unmarshaller um = context.createUnmarshaller();
-
-        // Reading XML from the file and unmarshalling.
-        mapping = (Mapping) um.unmarshal(xmlFile);
-    }
 
     /**
      * Determines if a field contains a type declaration which is mappable.

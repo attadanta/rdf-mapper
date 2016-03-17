@@ -3,13 +3,12 @@ package eu.dareed.rdfmapper;
 import eu.dareed.eplus.model.idd.IDD;
 import eu.dareed.eplus.parsers.idd.IDDParser;
 import eu.dareed.rdfmapper.xml.XmlMapper;
+import eu.dareed.rdfmapper.xml.nodes.Mapping;
 
 import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Runs {@link XmlMapper} on an input IDD and saves the results in a file.
@@ -24,11 +23,11 @@ public class ExportIDD {
         }
         FileInputStream iddStream = new FileInputStream(new File(args[0]));
         IDD idd = new IDDParser().parseFile(iddStream);
-        Map<String, String> namespaceMap = new HashMap<>();
-        namespaceMap.put("testprefix", "http://testu.ri/");
 
         XmlMapper mapper = new XmlMapper("http://energyplus.net/");
-        mapper.mapIDDToXMLObjects(idd, namespaceMap);
-        mapper.saveXML(new File(args[1]));
+        Mapping mapping = mapper.mapIDDToXMLObjects(idd);
+
+        MappingIO io = new MappingIO();
+        io.saveXML(mapping, new File(args[1]));
     }
 }
