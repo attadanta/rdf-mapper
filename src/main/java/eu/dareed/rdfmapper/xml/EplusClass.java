@@ -3,6 +3,7 @@ package eu.dareed.rdfmapper.xml;
 import eu.dareed.rdfmapper.xml.nodes.Entity;
 
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -21,6 +22,11 @@ class EplusClass extends EplusEntity {
      */
     protected List<EplusClass> suggestedSuperClasses;
 
+    protected EplusClass(String name) {
+        this();
+        this.name = name;
+    }
+
     public EplusClass() {
         this.suggestedSuperClasses = Collections.emptyList();
     }
@@ -32,5 +38,14 @@ class EplusClass extends EplusEntity {
         entity.setDescription(description);
 
         return entity;
+    }
+
+    public LinkedList<EplusClass> getAncestry() {
+        LinkedList<EplusClass> ancestors = new LinkedList<>();
+
+        ancestors.addAll(suggestedSuperClasses);
+        ancestors.add(this);
+
+        return ancestors;
     }
 }

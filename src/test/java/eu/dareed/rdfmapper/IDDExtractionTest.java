@@ -3,16 +3,15 @@ package eu.dareed.rdfmapper;
 import eu.dareed.eplus.model.idd.IDD;
 import eu.dareed.eplus.parsers.idd.IDDParser;
 import eu.dareed.rdfmapper.xml.XmlMapper;
-import eu.dareed.rdfmapper.xml.nodes.Entity;
-import eu.dareed.rdfmapper.xml.nodes.Mapping;
-import eu.dareed.rdfmapper.xml.nodes.Property;
-import eu.dareed.rdfmapper.xml.nodes.PropertyType;
+import eu.dareed.rdfmapper.xml.nodes.*;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -89,5 +88,20 @@ public class IDDExtractionTest {
         Property dayType = properties.get(3);
         Assert.assertEquals(PropertyType.OBJECT_PROPERTY, dayType.getPropertyType());
         Assert.assertEquals(3, dayType.getIdentifier());
+    }
+
+    @Test
+    public void testClassHierarchy() {
+        List<String> expected = Arrays.asList("Site", "Site:Location", "SizingPeriod", "SizingPeriod:DesignDay");
+
+        List<SubClassRelation> taxonomy = mapping.getTaxonomy();
+        List<String> flatTaxonomy = new ArrayList<>(taxonomy.size() * 2);
+        for (SubClassRelation relation : taxonomy) {
+            flatTaxonomy.add(relation.getSuperClass());
+            flatTaxonomy.add(relation.getSubClass());
+        }
+
+        Assert.assertArrayEquals(expected.toArray(new String[expected.size()]),
+                flatTaxonomy.toArray(new String[flatTaxonomy.size()]));
     }
 }

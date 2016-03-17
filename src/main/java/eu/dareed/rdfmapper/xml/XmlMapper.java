@@ -51,15 +51,19 @@ public class XmlMapper {
     public void mapIDDToXMLObjects(IDD idd, Map<String, String> namespaceMap) {
         mapping = new Mapping();
         List<Namespace> namespaceList = mapping.getNamespaces();
+
         List<Entity> classList = mapping.getEntities();
+        EplusClassHierarchy hierarchy = new EplusClassHierarchy();
 
         // add namespaces to mapping
         namespaceList.add(namespace);
 
         // add classes to mapping
         for (IDDObject iddObj : idd.getAllObjects()) {
-            Entity entClass = processClass(iddObj).toEntity();
+            EplusClass eplusClass = processClass(iddObj);
+            hierarchy.extend(eplusClass.getAncestry());
 
+            Entity entClass = eplusClass.toEntity();
             List<Property> propertyList = entClass.getProperties();
 
             // add properties of current class to mapping
@@ -85,8 +89,9 @@ public class XmlMapper {
             }
             classList.add(entClass);
         }
-    }
 
+        mapping.setTaxonomy(hierarchy.getRelations());
+    }
 
     public void saveXML(File file) throws JAXBException {
         JAXBContext context = JAXBContext.newInstance(Mapping.class);
