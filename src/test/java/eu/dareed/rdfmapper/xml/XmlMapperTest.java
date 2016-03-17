@@ -67,4 +67,19 @@ public class XmlMapperTest {
         Assert.assertEquals(1, suggestedSuperClasses.size());
         Assert.assertEquals("Sizing Period", suggestedSuperClasses.get(0).label);
     }
+
+    @Test
+    public void testAncestry() {
+        List<EplusClass> ancestors = xmlMapper.suggestedSuperClasses("DesignSpecification:ZoneHVAC:Sizing");
+
+        Assert.assertEquals(2, ancestors.size());
+
+        Assert.assertEquals("DesignSpecification", ancestors.get(0).name);
+        Assert.assertEquals("DesignSpecification:ZoneHVAC", ancestors.get(1).name);
+    }
+
+    @Test
+    public void testClassURI() {
+        Assert.assertEquals("defaultns:Lead_Input", xmlMapper.classUrl("Lead Input"));
+    }
 }

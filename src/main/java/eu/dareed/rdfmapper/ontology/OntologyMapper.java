@@ -4,15 +4,20 @@ import eu.dareed.rdfmapper.NamespaceResolver;
 import eu.dareed.rdfmapper.xml.nodes.*;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 public class OntologyMapper {
+
+    private final static Logger log = LoggerFactory.getLogger(OntologyMapper.class);
 
     private OWLOntologyManager ontologyManager;
     private OWLOntology ontology;
     private OWLDataFactory dataFactory;
-
 
     public OntologyMapper() {
         ontologyManager = OWLManager.createOWLOntologyManager();
@@ -42,11 +47,13 @@ public class OntologyMapper {
 
     public void mapXMLToOntology(Mapping mapping) {
         NamespaceResolver namespaceResolver = mapping.namespaceResolver();
+        Map<String, OWLClassExpression> owlClasses = new HashMap<>();
 
         for (Entity classEntity : mapping.getEntities()) {
             IRI classIRI = IRI.create(namespaceResolver.resolveURI(classEntity.getUri()));
 
             OWLClass owlClass = dataFactory.getOWLClass(classIRI);
+            owlClasses.put(classEntity.getName(), owlClass);
 
             ontologyManager.addAxiom(ontology, dataFactory.getOWLDeclarationAxiom(owlClass));
 
@@ -55,34 +62,30 @@ public class OntologyMapper {
                 ontologyManager.addAxiom(ontology, dataFactory.getOWLAnnotationAssertionAxiom(classIRI, classLabel));
             }
 
+            if (classEntity.getDescription() != null) {
+                OWLAnnotation classDescription = dataFactory.getOWLAnnotation(dataFactory.getRDFSComment(), dataFactory.getOWLLiteral(classEntity.getDescription()));
+                ontologyManager.addAxiom(ontology, dataFactory.getOWLAnnotationAssertionAxiom(classIRI, classDescription));
+            }
 
             for (Property property : classEntity.getProperties()) {
-                if (property.getPropertyType() == null) {
-                    System.err.println("Invalid property type in entity " + classEntity.getName());
-                    continue;
-                }
                 IRI propertyIRI = IRI.create(namespaceResolver.resolveURI(property.getUri()));
 
                 if (property.getPropertyType() == PropertyType.OBJECT_PROPERTY) {
                     OWLObjectProperty owlProperty = dataFactory.getOWLObjectProperty(propertyIRI);
                     ontologyManager.addAxiom(ontology, dataFactory.getOWLDeclarationAxiom(owlProperty));
-//					ontologyManager.addAxiom(ontology, dataFactory.getOWLObjectPropertyDomainAxiom(owlProperty, owlClass));
                 } else if (property.getPropertyType() == PropertyType.DATA_PROPERTY) {
                     OWLDataProperty owlProperty = dataFactory.getOWLDataProperty(propertyIRI);
                     ontologyManager.addAxiom(ontology, dataFactory.getOWLDeclarationAxiom(owlProperty));
-//					ontologyManager.addAxiom(ontology, dataFactory.getOWLDataPropertyDomainAxiom(owlProperty, owlClass));
 
-                    String dataType = ((DataProperty) property).getType();
+                    String dataType = property.asDataProperty().getType();
                     if (dataType == null) {
-                        System.out.println("Invalid datatype in entity " + classEntity.getName());
+                        log.warn("No data type assignment in property: " + classEntity.getName());
                     } else {
                         OWLDatatype owlDatatype = dataFactory.getOWLDatatype(IRI.create(dataType));
                         ontologyManager.addAxiom(ontology, dataFactory.getOWLDataPropertyRangeAxiom(owlProperty, owlDatatype));
                     }
-
                 } else {
-                    System.err.println("Invalid property type in entity " + classEntity.getName());
-                    continue;
+                    throw new RuntimeException("No known property type in property `" + property.getIdentifier() + " of `" + classEntity.getName() + "'.");
                 }
 
                 OWLAnnotation propertyLabel = dataFactory.getOWLAnnotation(dataFactory.getRDFSLabel(), dataFactory.getOWLLiteral(property.getLabel()));
@@ -93,10 +96,11 @@ public class OntologyMapper {
 
         // Add subclass relations from taxonomy map
         for (SubClassRelation relation : mapping.getTaxonomy()) {
-            IRI subIRI = IRI.create(namespaceResolver.resolveURI(relation.getSubClass()));
-            OWLClass subClass = dataFactory.getOWLClass(subIRI);
-            IRI superIRI = IRI.create(namespaceResolver.resolveURI(relation.getSuperClass()));
-            OWLClass superClass = dataFactory.getOWLClass(superIRI);
+            assert owlClasses.containsKey(relation.getSubClass());
+            assert owlClasses.containsKey(relation.getSuperClass());
+
+            OWLClassExpression subClass = owlClasses.get(relation.getSubClass());
+            OWLClassExpression superClass = owlClasses.get(relation.getSuperClass());
 
             ontologyManager.addAxiom(ontology, dataFactory.getOWLSubClassOfAxiom(subClass, superClass));
         }
@@ -109,9 +113,5 @@ public class OntologyMapper {
         } catch (OWLOntologyStorageException e) {
             e.printStackTrace();
         }
-
-
     }
-
-
 }

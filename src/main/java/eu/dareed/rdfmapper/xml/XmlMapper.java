@@ -8,6 +8,7 @@ import eu.dareed.rdfmapper.xml.nodes.*;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -142,7 +143,7 @@ public class XmlMapper {
     }
 
     protected String classUrl(String objectType) {
-        String typeSuffix = objectType.replace(":", "_");
+        String typeSuffix = objectType.replaceAll(":", "_").replaceAll(" ", "_");
         return namespace.getPrefix() + ":" + typeSuffix;
     }
 
@@ -151,16 +152,21 @@ public class XmlMapper {
     }
 
     protected List<EplusClass> suggestedSuperClasses(IDDObject object) {
-        String[] types = object.getType().split(":");
-        List<EplusClass> result = new ArrayList<>(types.length - 1);
+        return suggestedSuperClasses(object.getType());
+    }
 
-        for (int i = 0; i < types.length - 1; i++) {
+    protected List<EplusClass> suggestedSuperClasses(String compoundTypeLabel) {
+        List<String> types = Arrays.asList(compoundTypeLabel.split(":"));
+        List<EplusClass> result = new ArrayList<>(types.size() - 1);
+
+        for (int i = 0; i < types.size() - 1; i++) {
             EplusClass superClass = new EplusClass();
-            String type = types[i];
+            String type = types.get(i);
+            String typeName = StringUtils.join(types.subList(0, i + 1), ":");
 
-            superClass.name = type;
+            superClass.name = typeName;
             superClass.label = classLabel(type);
-            superClass.uri = classUrl(type);
+            superClass.uri = classUrl(typeName);
 
             result.add(superClass);
         }

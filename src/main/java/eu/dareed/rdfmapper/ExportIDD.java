@@ -16,6 +16,7 @@ import java.io.IOException;
  * @author <a href="mailto:kiril.tonev@kit.edu">Kiril Tonev</a>
  */
 public class ExportIDD {
+
     public static void main(String[] args) throws JAXBException, IOException {
         if (args.length < 2) {
             System.err.println("Usage: export-idd [idd] [path]");
