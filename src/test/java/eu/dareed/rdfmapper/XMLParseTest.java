@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import javax.xml.bind.JAXBException;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.net.URISyntaxException;
 import java.nio.file.Paths;
 
@@ -14,7 +15,7 @@ public class XMLParseTest {
     private static Mapping mapping;
 
     @BeforeClass
-    public static void setup() throws JAXBException, URISyntaxException {
+    public static void setup() throws JAXBException, URISyntaxException, FileNotFoundException {
         File xmlMap = Paths.get(XMLParseTest.class.getResource("/fixtures/idd_map.xml").toURI()).toFile();
         mapping = new MappingIO().loadXML(xmlMap);
     }
