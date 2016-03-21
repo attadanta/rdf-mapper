@@ -19,6 +19,7 @@ import java.util.List;
 public class XmlMapper {
     protected final Namespace namespace;
     protected final boolean suppressObjectProperties;
+    protected final boolean appendTaxonomy;
 
     /**
      * Constructor.
@@ -37,6 +38,7 @@ public class XmlMapper {
     public XmlMapper(Namespace namespace) {
         this.namespace = namespace;
         this.suppressObjectProperties = true;
+        this.appendTaxonomy = false;
     }
 
     public Mapping mapIDDToXMLObjects(IDD idd) {
@@ -81,7 +83,9 @@ public class XmlMapper {
             classList.add(entClass);
         }
 
-        mapping.setTaxonomy(hierarchy.getRelations());
+        if (appendTaxonomy) {
+            mapping.setTaxonomy(hierarchy.getRelations());
+        }
         return mapping;
     }
 
