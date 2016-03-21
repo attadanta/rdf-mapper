@@ -18,6 +18,7 @@ import java.util.List;
  */
 public class XmlMapper {
     protected final Namespace namespace;
+    protected final boolean suppressObjectProperties;
 
     /**
      * Constructor.
@@ -35,6 +36,7 @@ public class XmlMapper {
      */
     public XmlMapper(Namespace namespace) {
         this.namespace = namespace;
+        this.suppressObjectProperties = true;
     }
 
     public Mapping mapIDDToXMLObjects(IDD idd) {
@@ -60,7 +62,7 @@ public class XmlMapper {
             for (int i = 0; i < fields.size(); i++) {
                 IDDField field = fields.get(i);
 
-                if (field.isSet("field") && containsKnownProperty(field)) {
+                if (field.isSet("field") && containsKnownProperty(field) && (!suppressObjectProperties || isDataProperty(field))) {
                     EplusProperty eplusProperty = processProperty(field);
 
                     Property property;

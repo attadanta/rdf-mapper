@@ -83,9 +83,9 @@ public class IDDExtractionTest {
         Assert.assertEquals(PropertyType.DATA_PROPERTY, name.getPropertyType());
         Assert.assertEquals(0, name.getIdentifier());
 
-        Property dayType = properties.get(3);
-        Assert.assertEquals(PropertyType.OBJECT_PROPERTY, dayType.getPropertyType());
-        Assert.assertEquals(3, dayType.getIdentifier());
+        Property maxDrybulbTemperature = properties.get(3);
+        Assert.assertEquals(PropertyType.DATA_PROPERTY, maxDrybulbTemperature.getPropertyType());
+        Assert.assertEquals(4, maxDrybulbTemperature.getIdentifier());
     }
 
     @Test
