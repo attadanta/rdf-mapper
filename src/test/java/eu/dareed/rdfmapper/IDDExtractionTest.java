@@ -21,7 +21,7 @@ public class IDDExtractionTest {
     public static void setup() throws IOException {
         InputStream resource = IDDExtractionTest.class.getResourceAsStream("/fixtures/data_dictionary.idd");
         IDD idd = new IDDParser().parseFile(resource);
-        XmlMapper mapper = new XmlMapper("http://energyplus.net/");
+        XmlMapper mapper = new XmlMapper(new Namespace(Namespace.defaultNamespacePrefix, "http://energyplus.net/"), true, true);
         mapping = mapper.mapIDDToXMLObjects(idd);
     }
 

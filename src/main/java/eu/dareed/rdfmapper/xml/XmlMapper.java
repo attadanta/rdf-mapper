@@ -22,12 +22,12 @@ public class XmlMapper {
     protected final boolean appendTaxonomy;
 
     /**
-     * Constructor.
+     * Shorthand onstructor.
      *
      * @param namespaceURL the base namespace url.
      */
     public XmlMapper(String namespaceURL) {
-        this(new Namespace(Namespace.defaultNamespacePrefix, namespaceURL));
+        this(new Namespace(Namespace.defaultNamespacePrefix, namespaceURL), true, false);
     }
 
     /**
@@ -35,10 +35,10 @@ public class XmlMapper {
      *
      * @param namespace the base namespace.
      */
-    public XmlMapper(Namespace namespace) {
+    public XmlMapper(Namespace namespace, boolean suppressObjectProperties, boolean appendTaxonomy) {
         this.namespace = namespace;
-        this.suppressObjectProperties = true;
-        this.appendTaxonomy = false;
+        this.suppressObjectProperties = suppressObjectProperties;
+        this.appendTaxonomy = appendTaxonomy;
     }
 
     public Mapping mapIDDToXMLObjects(IDD idd) {

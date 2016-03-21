@@ -24,7 +24,7 @@ public class XmlMapperTest {
     @BeforeClass
     public static void setup() throws IOException {
         namespace = new Namespace(Namespace.defaultNamespacePrefix, "http://energyplus.net/");
-        xmlMapper = new XmlMapper(namespace);
+        xmlMapper = new XmlMapper(namespace, true, true);
 
         InputStream resource = XmlMapperTest.class.getResourceAsStream("/fixtures/data_dictionary.idd");
         idd = new IDDParser().parseFile(resource);
