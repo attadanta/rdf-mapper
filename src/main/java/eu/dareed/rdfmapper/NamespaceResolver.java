@@ -22,14 +22,14 @@ public class NamespaceResolver {
     }
 
     public String resolveURI(String uri) {
-        if (uri.startsWith("http")) {
+        if (isAbsolute(uri)) {
             return uri;
         }
 
-        if (uri.contains(":")) {
-            int i = uri.indexOf(":");
-            String prefix = uri.substring(0, i);
-            String suffix = uri.substring(i + 1, uri.length());
+        if (isQualifiedURL(uri)) {
+            String[] split = splitURL(uri);
+            String prefix = split[0];
+            String suffix = split[1];
             if (prefix.isEmpty()) {
                 return nsMap.get(Namespace.defaultNamespacePrefix) + suffix;
             } else {
@@ -44,5 +44,33 @@ public class NamespaceResolver {
 
         log.warn("Bad uri: `" + uri + "'.");
         return uri;
+    }
+
+    public boolean containsNamespacePrefixMapping(String prefix) {
+        return nsMap.containsKey(prefix);
+    }
+
+    public boolean isQualifiedURL(String url) {
+        return !isAbsolute(url) && url.contains(":");
+    }
+
+    public boolean isAbsolute(String url) {
+        return url.startsWith("http");
+    }
+
+    public String[] splitURL(String url) {
+        if (isAbsolute(url)) {
+            throw new IllegalArgumentException("URL appears to be absolute: " + url);
+        }
+
+        if (isQualifiedURL(url)) {
+            int i = url.indexOf(":");
+            String prefix = url.substring(0, i);
+            String suffix = url.substring(i + 1, url.length());
+
+            return new String[]{prefix, suffix};
+        } else {
+            return new String[]{null, url};
+        }
     }
 }

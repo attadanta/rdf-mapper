@@ -8,16 +8,27 @@ import javax.xml.transform.stream.StreamResult;
 import java.io.*;
 
 public class MappingIO {
-    public void saveXML(Mapping mapping, File out) throws JAXBException {
-        JAXBContext context = JAXBContext.newInstance(Mapping.class);
+    protected final JAXBContext context;
+    protected final Marshaller marshaller;
+    protected final Unmarshaller unmarshaller;
 
-        Marshaller m = context.createMarshaller();
-        m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-        m.marshal(mapping, out);
+    public MappingIO() {
+        try {
+            this.context = JAXBContext.newInstance(Mapping.class);
+            this.marshaller = context.createMarshaller();
+            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+
+            this.unmarshaller = context.createUnmarshaller();
+        } catch (JAXBException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void saveXML(Mapping mapping, File out) throws JAXBException {
+        marshaller.marshal(mapping, out);
     }
 
     public void genSchema(File outFile) throws JAXBException, IOException {
-        JAXBContext context = JAXBContext.newInstance(Mapping.class);
         context.generateSchema(new MappingSchemaOutputResolver(outFile.getParent()));
     }
 
@@ -26,15 +37,11 @@ public class MappingIO {
     }
 
     public Mapping loadXML(Reader reader) throws JAXBException {
-        JAXBContext context = JAXBContext.newInstance(Mapping.class);
-        Unmarshaller um = context.createUnmarshaller();
-        return (Mapping) um.unmarshal(reader);
+        return (Mapping) unmarshaller.unmarshal(reader);
     }
 
     public Mapping loadXML(InputStream inputStream) throws JAXBException {
-        JAXBContext context = JAXBContext.newInstance(Mapping.class);
-        Unmarshaller um = context.createUnmarshaller();
-        return (Mapping) um.unmarshal(inputStream);
+        return (Mapping) unmarshaller.unmarshal(inputStream);
     }
 
     private static final class MappingSchemaOutputResolver extends SchemaOutputResolver {

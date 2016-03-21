@@ -2,10 +2,6 @@
 <mapping xmlns="http://imi.kit.edu/rdfMapping">
     <namespaces>
         <ns>
-            <prefix>defaultns</prefix>
-            <uri>https://energyplus.net/</uri>
-        </ns>
-        <ns>
             <prefix>geo</prefix>
             <uri>http://www.w3.org/2003/01/geo/wgs84_pos#</uri>
         </ns>

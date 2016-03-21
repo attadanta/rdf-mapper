@@ -37,4 +37,10 @@
             </properties>
         </entity>
     </entities>
+    <taxonomy>
+        <relation>
+            <superClass>Thing</superClass>
+            <subClass>Building</subClass>
+        </relation>
+    </taxonomy>
 </mapping>

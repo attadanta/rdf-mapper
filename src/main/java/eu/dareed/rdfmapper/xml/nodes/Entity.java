@@ -7,7 +7,7 @@ import javax.xml.bind.annotation.XmlType;
 import java.util.ArrayList;
 import java.util.List;
 
-@XmlType(propOrder = {"label", "description", "uri", "name", "properties", "types"})
+@XmlType(propOrder = {"label", "description", "uri", "name", "types", "properties" })
 public class Entity {
     private String uri;
     private String label;
