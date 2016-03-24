@@ -57,14 +57,13 @@ public class RDFMapper {
                 String predicateURI = resolver.resolveURI(classProperty.getUri());
 
                 if (classProperty.getPropertyType() == PropertyType.DATA_PROPERTY) {
-                    int fieldIndex = classProperty.getIdentifier();
-                    String objectString = dataEntity.getAttributeByIndex(fieldIndex);
-                    String dataType = ((DataProperty) classProperty).getType();
+                    String value = dataEntity.getAttributeByIndex(classProperty.getIdentifier());
+                    String dataType = classProperty.asDataProperty().getType();
                     if (dataType != null) {
                         RDFDatatype type = TypeMapper.getInstance().getSafeTypeByName(dataType);
-                        subject.addProperty(model.getProperty(predicateURI), model.createTypedLiteral(objectString, type));
+                        subject.addProperty(model.getProperty(predicateURI), model.createTypedLiteral(value, type));
                     } else {
-                        subject.addProperty(model.getProperty(predicateURI), objectString);
+                        subject.addProperty(model.getProperty(predicateURI), value);
                     }
                 } else if (classProperty.getPropertyType() == PropertyType.OBJECT_PROPERTY) {
                     String objectPattern = classProperty.asObjectProperty().getObject();
@@ -73,7 +72,7 @@ public class RDFMapper {
                     try {
                         objectURI = resolver.resolveURI(completeURI(objectPattern, dataEntity));
                     } catch (IndexOutOfBoundsException e) {
-                        log.info("No field present in entity: " + objectPattern);
+                        log.info("No field with index " + objectPattern + " found in entity: " + clsEnt.getName());
                         continue;
                     }
 

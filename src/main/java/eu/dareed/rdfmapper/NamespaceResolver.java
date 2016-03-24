@@ -4,6 +4,8 @@ import eu.dareed.rdfmapper.xml.nodes.Namespace;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Collections;
 import java.util.Map;
 
@@ -29,7 +31,12 @@ public class NamespaceResolver {
         if (isQualifiedURL(uri)) {
             String[] split = splitURL(uri);
             String prefix = split[0];
-            String suffix = split[1];
+            String suffix;
+            try {
+                suffix = URLEncoder.encode(split[1], "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                throw new RuntimeException("Could not encode URL suffix: " + e.getMessage(), e);
+            }
             if (prefix.isEmpty()) {
                 return nsMap.get(Namespace.defaultNamespacePrefix) + suffix;
             } else {

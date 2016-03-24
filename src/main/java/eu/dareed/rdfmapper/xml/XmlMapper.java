@@ -16,15 +16,14 @@ import java.util.*;
  */
 public class XmlMapper {
     protected final Namespace namespace;
-    protected final boolean suppressObjectProperties;
 
     /**
-     * Shorthand onstructor.
+     * Shorthand constructor.
      *
      * @param namespaceURL the base namespace url.
      */
     public XmlMapper(String namespaceURL) {
-        this(new Namespace(Namespace.defaultNamespacePrefix, namespaceURL), true);
+        this(new Namespace(Namespace.defaultNamespacePrefix, namespaceURL));
     }
 
     /**
@@ -32,9 +31,8 @@ public class XmlMapper {
      *
      * @param namespace the base namespace.
      */
-    public XmlMapper(Namespace namespace, boolean suppressObjectProperties) {
+    public XmlMapper(Namespace namespace) {
         this.namespace = namespace;
-        this.suppressObjectProperties = suppressObjectProperties;
     }
 
     public Mapping mapIDDToXMLObjects(IDD idd) {
@@ -63,14 +61,14 @@ public class XmlMapper {
             for (int i = 0; i < fields.size(); i++) {
                 IDDField field = fields.get(i);
 
-                if (field.isSet("field") && containsKnownProperty(field) && (!suppressObjectProperties || isDataProperty(field))) {
+                if (field.isSet("field") && containsKnownProperty(field)) {
                     EplusProperty eplusProperty = processProperty(field);
 
                     Property property;
                     if (isDataProperty(field)) {
                         property = new eu.dareed.rdfmapper.xml.nodes.DataProperty(eplusProperty.uri, DataProperty.parseDataTypeInField(field).typeURI);
                     } else {
-                        property = new ObjectProperty(eplusProperty.uri);
+                        property = new ObjectProperty(eplusProperty.uri, namespace.getPrefix() + ":");
                     }
                     property.setLabel(eplusProperty.label);
                     property.setDescription(eplusProperty.description);
