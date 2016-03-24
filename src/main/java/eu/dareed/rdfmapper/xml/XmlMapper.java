@@ -7,9 +7,7 @@ import eu.dareed.eplus.model.idd.Parameter;
 import eu.dareed.rdfmapper.xml.nodes.*;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * Maps an energy plus dictionary to a set of mapping entities.
@@ -19,7 +17,6 @@ import java.util.List;
 public class XmlMapper {
     protected final Namespace namespace;
     protected final boolean suppressObjectProperties;
-    protected final boolean appendTaxonomy;
 
     /**
      * Shorthand onstructor.
@@ -27,7 +24,7 @@ public class XmlMapper {
      * @param namespaceURL the base namespace url.
      */
     public XmlMapper(String namespaceURL) {
-        this(new Namespace(Namespace.defaultNamespacePrefix, namespaceURL), true, false);
+        this(new Namespace(Namespace.defaultNamespacePrefix, namespaceURL), true);
     }
 
     /**
@@ -35,10 +32,9 @@ public class XmlMapper {
      *
      * @param namespace the base namespace.
      */
-    public XmlMapper(Namespace namespace, boolean suppressObjectProperties, boolean appendTaxonomy) {
+    public XmlMapper(Namespace namespace, boolean suppressObjectProperties) {
         this.namespace = namespace;
         this.suppressObjectProperties = suppressObjectProperties;
-        this.appendTaxonomy = appendTaxonomy;
     }
 
     public Mapping mapIDDToXMLObjects(IDD idd) {
@@ -51,9 +47,12 @@ public class XmlMapper {
         // add namespaces to mapping
         namespaceList.add(namespace);
 
+        Set<EplusClass> processedClasses = new HashSet<>(idd.getAllObjects().size() * 2);
         // add classes to mapping
         for (IDDObject iddObj : idd.getAllObjects()) {
             EplusClass eplusClass = processClass(iddObj);
+
+            processedClasses.add(eplusClass);
             hierarchy.extend(eplusClass.getAncestry());
 
             Entity entClass = eplusClass.toEntity();
@@ -83,8 +82,10 @@ public class XmlMapper {
             classList.add(entClass);
         }
 
-        if (appendTaxonomy) {
-            mapping.setTaxonomy(hierarchy.getRelations());
+        for (EplusClass eplusClass : hierarchy.traverseHierarchy()) {
+            if (!processedClasses.contains(eplusClass)) {
+                classList.add(eplusClass.toEntity());
+            }
         }
         return mapping;
     }

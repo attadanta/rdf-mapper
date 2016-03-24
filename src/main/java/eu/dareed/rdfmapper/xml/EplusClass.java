@@ -48,4 +48,27 @@ class EplusClass extends EplusEntity {
 
         return ancestors;
     }
+
+    @Override
+    public String toString() {
+        return "EplusClass{" +
+                "name='" + name + '\'' +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        EplusClass that = (EplusClass) o;
+
+        return name.equals(that.name);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return name.hashCode();
+    }
 }

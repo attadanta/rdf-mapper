@@ -47,4 +47,14 @@ public class EplusClassHierarchyTest {
         Assert.assertEquals("SizingPeriod", relation.getSuperClass());
         Assert.assertEquals("DesignDay", relation.getSubClass());
     }
+
+    @Test
+    public void testTraversal() {
+        List<EplusClass> eplusClasses = hierarchy.traverseHierarchy();
+        Assert.assertEquals(4, eplusClasses.size());
+        Assert.assertEquals(new EplusClass("Site"), eplusClasses.get(0));
+        Assert.assertEquals(new EplusClass("Location"), eplusClasses.get(1));
+        Assert.assertEquals(new EplusClass("SizingPeriod"), eplusClasses.get(2));
+        Assert.assertEquals(new EplusClass("DesignDay"), eplusClasses.get(3));
+    }
 }

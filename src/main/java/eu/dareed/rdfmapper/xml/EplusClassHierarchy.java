@@ -34,6 +34,26 @@ class EplusClassHierarchy {
         }
     }
 
+    protected List<EplusClass> traverseHierarchy() {
+        List<EplusClass> result = new LinkedList<>();
+
+        Deque<EplusClassHierarchyNode> queue = new LinkedList<>();
+        for (EplusClassHierarchyNode root : rootNode.getChildren()) {
+            queue.add(root);
+        }
+
+        while (!queue.isEmpty()) {
+            EplusClassHierarchyNode contextNode = queue.pollFirst();
+            result.add(contextNode.eplusClass);
+
+            for (EplusClassHierarchyNode contextNodeChild : contextNode.getChildren()) {
+                queue.addFirst(contextNodeChild);
+            }
+        }
+
+        return result;
+    }
+
     protected List<SubClassRelation> getRelations() {
         List<SubClassRelation> result = new LinkedList<>();
 
@@ -46,7 +66,7 @@ class EplusClassHierarchy {
             EplusClassHierarchyNode contextNode = queue.pollFirst();
 
             for (EplusClassHierarchyNode contextNodeChild : contextNode.getChildren()) {
-                result.add(new SubClassRelation(contextNode.className, contextNodeChild.className));
+                result.add(new SubClassRelation(contextNode.eplusClass.name, contextNodeChild.eplusClass.name));
                 queue.addFirst(contextNodeChild);
             }
         }

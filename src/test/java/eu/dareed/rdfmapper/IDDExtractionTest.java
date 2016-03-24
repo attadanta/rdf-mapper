@@ -10,8 +10,6 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class IDDExtractionTest {
@@ -21,7 +19,7 @@ public class IDDExtractionTest {
     public static void setup() throws IOException {
         InputStream resource = IDDExtractionTest.class.getResourceAsStream("/fixtures/data_dictionary.idd");
         IDD idd = new IDDParser().parseFile(resource);
-        XmlMapper mapper = new XmlMapper(new Namespace(Namespace.defaultNamespacePrefix, "http://energyplus.net/"), true, true);
+        XmlMapper mapper = new XmlMapper(new Namespace(Namespace.defaultNamespacePrefix, "http://energyplus.net/"), true);
         mapping = mapper.mapIDDToXMLObjects(idd);
     }
 
@@ -32,7 +30,7 @@ public class IDDExtractionTest {
 
     @Test
     public void testNumberOfEntities() {
-        Assert.assertEquals(2, mapping.getEntities().size());
+        Assert.assertEquals(4, mapping.getEntities().size());
     }
 
     @Test
@@ -90,16 +88,6 @@ public class IDDExtractionTest {
 
     @Test
     public void testClassHierarchy() {
-        List<String> expected = Arrays.asList("Site", "Site:Location", "SizingPeriod", "SizingPeriod:DesignDay");
-
-        List<SubClassRelation> taxonomy = mapping.getTaxonomy();
-        List<String> flatTaxonomy = new ArrayList<>(taxonomy.size() * 2);
-        for (SubClassRelation relation : taxonomy) {
-            flatTaxonomy.add(relation.getSuperClass());
-            flatTaxonomy.add(relation.getSubClass());
-        }
-
-        Assert.assertArrayEquals(expected.toArray(new String[expected.size()]),
-                flatTaxonomy.toArray(new String[flatTaxonomy.size()]));
+        Assert.assertTrue(mapping.getTaxonomy().isEmpty());
     }
 }

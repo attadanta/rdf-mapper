@@ -8,11 +8,11 @@ import java.util.Map;
  * @author <a href="mailto:kiril.tonev@kit.edu">Kiril Tonev</a>
  */
 class EplusClassHierarchyNode {
-    protected final String className;
+    protected final EplusClass eplusClass;
     protected final Map<String, EplusClassHierarchyNode> children;
 
-    public EplusClassHierarchyNode(String className) {
-        this.className = className;
+    public EplusClassHierarchyNode(EplusClass eplusClass) {
+        this.eplusClass = eplusClass;
         this.children = new LinkedHashMap<>();
     }
 
@@ -33,7 +33,7 @@ class EplusClassHierarchyNode {
     }
 
     protected EplusClassHierarchyNode addChild(EplusClass eplusClass) {
-        EplusClassHierarchyNode childNode = new EplusClassHierarchyNode(eplusClass.name);
+        EplusClassHierarchyNode childNode = new EplusClassHierarchyNode(eplusClass);
         children.put(eplusClass.name, childNode);
         return childNode;
     }
