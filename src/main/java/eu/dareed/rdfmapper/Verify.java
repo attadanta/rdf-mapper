@@ -1,13 +1,13 @@
 package eu.dareed.rdfmapper;
 
-import eu.dareed.rdfmapper.xml.verification.Grade;
 import eu.dareed.rdfmapper.xml.verification.MappingVerifier;
 import eu.dareed.rdfmapper.xml.verification.Offense;
-import org.apache.commons.io.IOUtils;
+import eu.dareed.rdfmapper.xml.verification.ParseAttempt;
 
-import javax.xml.bind.JAXBException;
-import java.io.*;
-import java.util.ArrayList;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintStream;
 import java.util.List;
 
 /**
@@ -19,42 +19,8 @@ public class Verify {
     private final List<Offense> warnings;
 
     private static Verify file(File file, MappingVerifier verifier) throws IOException {
-        String mappingInput;
-
-        try (FileInputStream input = new FileInputStream(file)) {
-            mappingInput = IOUtils.toString(input);
-        }
-
-        List<Offense> errors = new ArrayList<>();
-        List<Offense> warnings = new ArrayList<>();
-
-        StringReader validationInput = new StringReader(mappingInput);
-        for (Offense offense : verifier.tryParse(validationInput)) {
-            if (offense.grade == Grade.ERROR) {
-                errors.add(offense);
-            } else if (offense.grade == Grade.WARNING) {
-                warnings.add(offense);
-            }
-        }
-        validationInput.close();
-
-        if (errors.isEmpty()) {
-            StringReader verificationInput = new StringReader(mappingInput);
-            try {
-                for (Offense offense : verifier.verify(verifier.getIO().loadXML(verificationInput))) {
-                    if (offense.grade == Grade.ERROR) {
-                        errors.add(offense);
-                    } else if (offense.grade == Grade.WARNING) {
-                        warnings.add(offense);
-                    }
-                }
-            } catch (JAXBException e) {
-                errors.add(new Offense(Grade.ERROR, e.getMessage()));
-            }
-            verificationInput.close();
-        }
-
-        return new Verify(file, errors, warnings);
+        ParseAttempt parseAttempt = verifier.tryParse(new FileReader(file));
+        return new Verify(file, parseAttempt.getErrors(), parseAttempt.getWarnings());
     }
 
     public static void main(String[] args) {

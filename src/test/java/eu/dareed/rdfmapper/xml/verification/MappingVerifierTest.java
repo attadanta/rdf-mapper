@@ -1,7 +1,5 @@
 package eu.dareed.rdfmapper.xml.verification;
 
-import eu.dareed.rdfmapper.MappingIO;
-import eu.dareed.rdfmapper.xml.nodes.Mapping;
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -18,18 +16,16 @@ import java.util.List;
  */
 public class MappingVerifierTest {
     private static MappingVerifier verifier;
-    private static MappingIO mappingIO;
 
     @BeforeClass
     public static void setup() {
         verifier = MappingVerifier.initialize();
-        mappingIO = new MappingIO();
     }
 
     @Test
     public void testValidSchema() throws IOException {
         InputStream inputStream = MappingVerifierTest.class.getResourceAsStream("/fixtures/verification/valid_mapping.xml");
-        List<Offense> offenses = verifier.tryParse(inputStream);
+        List<Offense> offenses = verifier.tryParse(inputStream).allOffenses();
         inputStream.close();
 
         Assert.assertTrue(offenses.isEmpty());
@@ -38,16 +34,16 @@ public class MappingVerifierTest {
     @Test
     public void testValidEmptySchema() throws IOException {
         InputStream inputStream = MappingVerifierTest.class.getResourceAsStream("/fixtures/verification/valid_mapping_empty.xml");
-        List<Offense> offenses = verifier.tryParse(inputStream);
+        ParseAttempt parseAttempt = verifier.tryParse(inputStream);
         inputStream.close();
 
-        Assert.assertTrue(offenses.isEmpty());
+        Assert.assertTrue(parseAttempt.getErrors().isEmpty());
     }
 
     @Test
     public void testInvalidSchema() throws IOException {
         InputStream inputStream = MappingVerifierTest.class.getResourceAsStream("/fixtures/verification/invalid_mapping_no_root.xml");
-        List<Offense> offenses = verifier.tryParse(inputStream);
+        List<Offense> offenses = verifier.tryParse(inputStream).allOffenses();
         inputStream.close();
 
         Assert.assertFalse(offenses.isEmpty());
@@ -57,7 +53,7 @@ public class MappingVerifierTest {
     @Test
     public void testInvalidSchemaRootElement() throws IOException {
         InputStream inputStream = MappingVerifierTest.class.getResourceAsStream("/fixtures/verification/invalid_mapping_wrong_root.xml");
-        List<Offense> offenses = verifier.tryParse(inputStream);
+        List<Offense> offenses = verifier.tryParse(inputStream).allOffenses();
         inputStream.close();
 
         Assert.assertFalse(offenses.isEmpty());
@@ -67,7 +63,7 @@ public class MappingVerifierTest {
     @Test
     public void testInvalidSchemaInnerElement() throws IOException {
         InputStream inputStream = MappingVerifierTest.class.getResourceAsStream("/fixtures/verification/invalid_mapping_inner_element.xml");
-        List<Offense> offenses = verifier.tryParse(inputStream);
+        List<Offense> offenses = verifier.tryParse(inputStream).allOffenses();
         inputStream.close();
 
         Assert.assertFalse(offenses.isEmpty());
@@ -77,25 +73,25 @@ public class MappingVerifierTest {
     @Test
     public void testUndeclaredSuperType() throws IOException, JAXBException {
         String fixture = IOUtils.toString(MappingVerifierTest.class.getResourceAsStream("/fixtures/verification/invalid_mapping_undeclared_taxonomy_element.xml"));
-        List<Offense> offenses = verifier.tryParse(new StringReader(fixture));
-        Assert.assertTrue(offenses.isEmpty());
+        ParseAttempt parseAttempt = verifier.tryParse(new StringReader(fixture));
 
-        Mapping mapping = mappingIO.loadXML(new StringReader(fixture));
-        offenses.addAll(verifier.verify(mapping));
+        Assert.assertTrue(parseAttempt.parsingSucceeded());
+        Assert.assertTrue(parseAttempt.containsErrors());
+        Assert.assertFalse(parseAttempt.containsWarnings());
 
-        Assert.assertEquals(1, offenses.size());
-        Assert.assertEquals(Grade.ERROR, offenses.iterator().next().grade);
+        List<Offense> errors = parseAttempt.getErrors();
+        Assert.assertEquals(1, errors.size());
+        Assert.assertEquals(Grade.ERROR, errors.iterator().next().grade);
     }
 
     @Test
     public void testUndeclaredNamespace() throws IOException, JAXBException {
         String fixture = IOUtils.toString(MappingVerifierTest.class.getResourceAsStream("/fixtures/verification/valid_mapping_undeclared_namespace.xml"));
-        List<Offense> offenses = verifier.tryParse(new StringReader(fixture));
-        Assert.assertTrue(offenses.isEmpty());
+        ParseAttempt parseAttempt = verifier.tryParse(new StringReader(fixture));
 
-        Mapping mapping = mappingIO.loadXML(new StringReader(fixture));
-        offenses.addAll(verifier.verify(mapping));
+        Assert.assertTrue(parseAttempt.getErrors().isEmpty());
 
+        List<Offense> offenses = parseAttempt.allOffenses();
         Assert.assertEquals(4, offenses.size());
         for (Offense offense : offenses) {
             Assert.assertEquals(Grade.WARNING, offense.grade);
@@ -105,12 +101,11 @@ public class MappingVerifierTest {
     @Test
     public void testUndeclaredDefaultNamespace() throws IOException, JAXBException {
         String fixture = IOUtils.toString(MappingVerifierTest.class.getResourceAsStream("/fixtures/verification/valid_mapping_undeclared_default_namespace.xml"));
-        List<Offense> offenses = verifier.tryParse(new StringReader(fixture));
-        Assert.assertTrue(offenses.isEmpty());
+        ParseAttempt parseAttempt = verifier.tryParse(new StringReader(fixture));
 
-        Mapping mapping = mappingIO.loadXML(new StringReader(fixture));
-        offenses.addAll(verifier.verify(mapping));
+        Assert.assertTrue(parseAttempt.getErrors().isEmpty());
 
+        List<Offense> offenses = parseAttempt.allOffenses();
         Assert.assertEquals(1, offenses.size());
         Assert.assertEquals(Grade.WARNING, offenses.iterator().next().grade);
     }
