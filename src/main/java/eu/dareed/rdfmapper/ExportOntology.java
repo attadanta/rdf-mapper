@@ -1,6 +1,6 @@
 package eu.dareed.rdfmapper;
 
-import eu.dareed.rdfmapper.ontology.OntologyMapper;
+import eu.dareed.rdfmapper.energyplus.OntologyMapper;
 import eu.dareed.rdfmapper.xml.nodes.Mapping;
 
 import javax.xml.bind.JAXBException;

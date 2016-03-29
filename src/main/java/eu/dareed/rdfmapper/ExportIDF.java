@@ -3,7 +3,7 @@ package eu.dareed.rdfmapper;
 import com.hp.hpl.jena.rdf.model.Model;
 import eu.dareed.eplus.model.idf.IDF;
 import eu.dareed.eplus.parsers.idf.IDFParser;
-import eu.dareed.rdfmapper.MappingDataImpl.IDFMappingData;
+import eu.dareed.rdfmapper.energyplus.mapping.IDFMappingData;
 import eu.dareed.rdfmapper.rdf.RDFMapper;
 import eu.dareed.rdfmapper.xml.nodes.Mapping;
 

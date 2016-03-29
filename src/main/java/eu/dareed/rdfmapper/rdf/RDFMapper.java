@@ -15,6 +15,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,7 +41,7 @@ public class RDFMapper {
         for (MappingDataEntity dataEntity : data.getDataEntities()) {
             // get class entity from entity map
             if (!classIndexMap.containsKey(dataEntity.getType().toLowerCase())) {
-                log.info("Class " + dataEntity.getType() + " not found in class-map.");
+                log.info("Class `{}' not found in class map.", dataEntity.getType());
                 continue;
             }
             Entity clsEnt = classList.get(classIndexMap.get(dataEntity.getType().toLowerCase()));
@@ -67,17 +68,17 @@ public class RDFMapper {
                     }
                 } else if (classProperty.getPropertyType() == PropertyType.OBJECT_PROPERTY) {
                     String objectPattern = classProperty.asObjectProperty().getObject();
-                    String objectURI;
+                    List<Integer> unresolvablePropertyReferences = unresolvablePropertyReferences(objectPattern, dataEntity);
 
-                    try {
-                        objectURI = resolver.resolveURI(completeURI(objectPattern, dataEntity));
-                    } catch (IndexOutOfBoundsException e) {
-                        log.info("No field with index " + objectPattern + " found in entity: " + clsEnt.getName());
-                        continue;
+                    if (unresolvablePropertyReferences.isEmpty()) {
+                        String objectURI = resolver.resolveURI(completeURI(objectPattern, dataEntity));
+                        Resource object = model.getResource(objectURI);
+                        subject.addProperty(model.getProperty(predicateURI), object);
+                    } else {
+                        for (Integer reference : unresolvablePropertyReferences) {
+                            log.info("No field with index {} found in entity `{}'.", reference, clsEnt.getName());
+                        }
                     }
-
-                    Resource object = model.getResource(objectURI);
-                    subject.addProperty(model.getProperty(predicateURI), object);
                 }
             }
         }
@@ -104,4 +105,26 @@ public class RDFMapper {
         return StringUtils.join(splittedURI);
     }
 
+    private List<Integer> unresolvablePropertyReferences(String uri, MappingDataEntity dataEntity) {
+        List<Integer> references = new ArrayList<>();
+
+        for (Integer reference : propertyReferences(uri)) {
+            if (!dataEntity.containsAttributeWithIndex(reference)) {
+                references.add(reference);
+            }
+        }
+
+        return references;
+    }
+
+    private List<Integer> propertyReferences(String uri) {
+        List<Integer> references = new ArrayList<>();
+
+        String[] splitURI = uri.split("\\$");
+        for (int i = 1; i < splitURI.length; i += 2) {
+            references.add(Integer.parseInt(splitURI[i]));
+        }
+
+        return references;
+    }
 }
