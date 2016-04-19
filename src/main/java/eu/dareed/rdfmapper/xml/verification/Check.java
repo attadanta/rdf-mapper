@@ -8,6 +8,6 @@ import eu.dareed.rdfmapper.xml.nodes.Mapping;
 
 import java.util.List;
 
-interface Check {
+public interface Check {
     List<Offense> verify(Mapping context);
 }

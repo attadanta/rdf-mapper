@@ -23,7 +23,7 @@ import java.util.List;
  *     be reported as errors.
  * </p>
  *
- * @see Grade
+ * @see Check
  * @author <a href="mailto:kiril.tonev@kit.edu">Kiril Tonev</a>
  */
 public class Profile {
