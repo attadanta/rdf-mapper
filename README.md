@@ -13,7 +13,8 @@ represented by a row in some table. These assumptions are namely:
 
  * Schemas are associated with a names which identifies item types
    uniquely.
- * Item properties are accessed by integers which identify a cell value.
+ * Item properties are accessed by integers which identify property
+   values.
 
 These requirements are stated in the interfaces which have to be
 implemented in order to make the data sources for the mapping available
@@ -25,12 +26,139 @@ to the library:
 
 ## Creating a Mapping
 
-A mapping specification is comprised of three elements:
+A mapping specification is comprised of three main elements:
 
- * Entity Maps: Assigns to each mapped object a resource URL and,
+ * Entity Maps: Assign each mapped object a resource URL and,
    optionally, one or more types.
  * Property Maps: Assign to each mapped object's field a property URL.
  * Subtype Map: Organizes entities in a taxonomy.
+
+For convenience's sake, URL prefixes can be reused after being declared
+once at the top of the mapping spec.
+
+### Namespace Declarations
+
+The namespaces are declared as prefix-uri pairs in a `namespaces`
+element:
+
+    <namespaces xmlns="http://imi.kit.edu/rdfMapping">
+        <ns>
+            <prefix>defaultns</prefix>
+            <uri>https://energyplus.net/</uri>
+        </ns>
+        <ns>
+            <prefix>geo</prefix>
+            <uri>http://www.w3.org/2003/01/geo/wgs84_pos#</uri>
+        </ns>
+        <ns>
+            <prefix>rdfs</prefix>
+            <uri>http://www.w3.org/2000/01/rdf-schema#</uri>
+        </ns>
+        <ns>
+            <prefix>xsd</prefix>
+            <uri>http://www.w3.org/2001/XMLSchema#</uri>
+        </ns>
+    </namespaces>
+
+The prefix `defaultns` is reserved and denotes a base URL.
+
+Given that a prefix `p` is declared in the mapping, a URL with the form
+`p:suffix` is resolved by substituting `p:` with the full URL assigned
+to `p` in the namespace map. The default prefix can be used by leaving
+`p` empty. Thus, following the above example, `:Energy` will resolve to
+`https://energyplus.net/Energy` and `geo:lat` will resolve to
+`http://www.w3.org/2003/01/geo/wgs84_pos#lat`.
+
+### Property Value Expansion
+
+The mapping utilizes the concept of property value placeholders, much
+like the URI patterns defined in [RFC 6570](https://tools.ietf.org/html/rfc6570).
+
+Placeholders are delimited by the dollar character `$` on both sides and
+enclose an integer. The integer is a zero-based index of a property
+value in the entity in the scope.
+
+This convention is used both for building typed literals and URLs. The
+prefixed URL notation and the property value expansion can thus be
+mixed. The character sequence `:$2$` will resolve to a URL using the
+default URL prefix and append the property value of the third property
+in the entity under consideration.
+
+### Entity Map
+
+An entity mapping specifies a naming scheme for resources. For the sake
+of convenience, type assignments are also given in this section instead
+of using property mappings. This imitates the shortcut employed in
+TURTLE whereby the `rdfs:type` predicate is aliased.
+
+Entity maps are defined by four elements:
+
+ * `uri`: the URL scheme. In order to uniquely identify each resource,
+   value expansion can be leveraged here.
+ * `name`: a string identifier of the entity's type. The mapper is using
+   this to identify the mapping with which to process an object from the
+   data set.
+ * `type`: a URL of a class resource. This element can be used multiple
+   times.
+ * `properties`: a property map attached to this entity map. See below.
+
+### Property Map
+
+The property map is a sequence of data property and object property
+definitions. Both types should give a URL pattern in an `uri` element
+and an `id` that references the index of the mapped property.
+
+Values are encoded differently in data properties and object properties.
+Data property mappings _may_ indicate a `type` URL in order to build a
+[typed literal](https://www.w3.org/TR/rdf11-concepts/#section-Graph-Literal)
+with the value. Object properties on the other hand _should_ give the
+object's URL pattern in an `object` element.
+
+### Full Example
+
+A full example demonstrating the usage of the concepts explained above
+is given below:
+
+    <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+    <mapping xmlns="http://imi.kit.edu/rdfMapping">
+        <namespaces>
+            <ns>
+                <prefix>defaultns</prefix>
+                <uri>https://energyplus.net/</uri>
+            </ns>
+            <ns>
+                <prefix>geo</prefix>
+                <uri>http://www.w3.org/2003/01/geo/wgs84_pos#</uri>
+            </ns>
+            <ns>
+                <prefix>rdfs</prefix>
+                <uri>http://www.w3.org/2000/01/rdf-schema#</uri>
+            </ns>
+            <ns>
+                <prefix>xsd</prefix>
+                <uri>http://www.w3.org/2001/XMLSchema#</uri>
+            </ns>
+        </namespaces>
+        <entities>
+            <entity>
+                <uri>http://dareed.eu/simulation/buildings/$0$</uri>
+                <name>Building</name>
+                <type>:Building</type>
+                <properties>
+                    <dataProperty>
+                        <uri>rdfs:label</uri>
+                        <id>0</id>
+                        <type>xsd:string</type>
+                    </dataProperty>
+                    <objectProperty>
+                        <uri>:terrain</uri>
+                        <id>2</id>
+                        <object>:$2$</object>
+                    </objectProperty>
+                </properties>
+            </entity>
+        </entities>
+    </mapping>
 
 ## Usage
 
@@ -105,11 +233,11 @@ Finally, the parsed spec is exposed via `ParseAttempt#getMapping()`.
 
 A `Profile` accepts a list of `Check`s next to the schema validator. You
 can write custom checks by implementing that interface. It accepts a
-valid mapping it can inspect and returns a list of `Offense`s. It is the
-`MappingVerifier`s job to sort the errors from the warnings. Like stated
-above, any `ERROR`-graded offenses you include in the result signifies
-that the mapping is invalid and hence a graph cannot (or shouldn't) be
-constructed.
+valid (according to some schema) mapping it can inspect and returns a
+list of `Offense`s. It is the `MappingVerifier`s job to sort the errors
+from the warnings. Like stated above, any `ERROR`-graded offenses you
+include in the result signifies that the mapping is invalid and hence a
+graph cannot (or shouldn't) be constructed.
 
 #### Command line usage
 
@@ -145,4 +273,12 @@ implied in the naming convention of the data dictionary's objects.
 The derived spec can then be edited manually to fine-tune the mapping or
 exclude some objects or properties. The library also has an OWL ontology
 exporter which transforms the spec into an OWL2 document. Here, the
-library adopts different semantics than those described above, however.
+library adopts different semantics for the conversion of the mapping
+spec, however. Instead of mapping entities to URLs from the OWL2
+namespace, the converter maps the mapper's elements themselves to OWL
+entities. The spec is regarded as an ontology. Each entity is thereby
+converted to a OWL class. Labels and descriptions are asserted on that
+class, but the type assignments are ignored. The properties are asserted
+in the ontology without creating any restrictions beside range axioms on
+data properties, where data types given. The taxonomy is trivially
+converted to a series of subclass axioms.
