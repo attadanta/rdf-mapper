@@ -114,6 +114,22 @@ Data property mappings _may_ indicate a `type` URL in order to build a
 with the value. Object properties on the other hand _should_ give the
 object's URL pattern in an `object` element.
 
+### Taxonomy Map
+
+The taxonomy map can be used to construct a type hierarchy separately
+from entities' `type` assignments. Each subtype relation is represented
+by a `subClassRelation` element. It has two children:
+
+ * `superClass`: the _name_ of the abstract entity.
+ * `subClass`: the _name_ of the specialization.
+
+The two name references _should_ be defined in type entities of the
+spec in order to resolve entity names.
+
+This feature feature is obviously incompatible with entity maps that use
+URL patterns. It is only used for deriving an ontology within the DAREED
+project (see below).
+
 ### Full Example
 
 A full example demonstrating the usage of the concepts explained above
@@ -280,5 +296,8 @@ entities. The spec is regarded as an ontology. Each entity is thereby
 converted to a OWL class. Labels and descriptions are asserted on that
 class, but the type assignments are ignored. The properties are asserted
 in the ontology without creating any restrictions beside range axioms on
-data properties, where data types given. The taxonomy is trivially
+data properties, where data types are given. The taxonomy is trivially
 converted to a series of subclass axioms.
+
+The inconsistency affords us to handle both the mapping of IDF files and
+IDD files with with a single specification.
