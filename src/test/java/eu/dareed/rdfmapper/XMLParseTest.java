@@ -1,6 +1,5 @@
 package eu.dareed.rdfmapper;
 
-import eu.dareed.rdfmapper.xml.XmlMapper;
 import eu.dareed.rdfmapper.xml.nodes.*;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -8,6 +7,7 @@ import org.junit.Test;
 
 import javax.xml.bind.JAXBException;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.net.URISyntaxException;
 import java.nio.file.Paths;
 
@@ -15,11 +15,9 @@ public class XMLParseTest {
     private static Mapping mapping;
 
     @BeforeClass
-    public static void setup() throws JAXBException, URISyntaxException {
+    public static void setup() throws JAXBException, URISyntaxException, FileNotFoundException {
         File xmlMap = Paths.get(XMLParseTest.class.getResource("/fixtures/idd_map.xml").toURI()).toFile();
-        XmlMapper mapper = new XmlMapper();
-        mapper.loadXML(xmlMap);
-        mapping = mapper.getMapping();
+        mapping = new MappingIO().loadXML(xmlMap);
     }
 
     @Test
@@ -55,6 +53,7 @@ public class XMLParseTest {
     public void testObjectProperty() {
         Property property = mapping.getEntities().get(0).getProperties().get(0);
         Assert.assertTrue("Expected an object property", property instanceof ObjectProperty);
+        Assert.assertEquals(PropertyType.OBJECT_PROPERTY, property.getPropertyType());
 
         ObjectProperty objectProperty = (ObjectProperty) property;
         Assert.assertEquals(5, objectProperty.getIdentifier());
@@ -66,6 +65,7 @@ public class XMLParseTest {
     public void testDataProperty() {
         Property property = mapping.getEntities().get(0).getProperties().get(1);
         Assert.assertTrue("Expected a data property.", property instanceof DataProperty);
+        Assert.assertEquals(PropertyType.DATA_PROPERTY, property.getPropertyType());
 
         DataProperty dataProperty = (DataProperty) property;
         Assert.assertEquals(6, dataProperty.getIdentifier());

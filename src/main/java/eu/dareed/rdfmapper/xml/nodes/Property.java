@@ -1,16 +1,18 @@
 package eu.dareed.rdfmapper.xml.nodes;
 
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 /**
  * @author <a href="mailto:kiril.tonev@kit.edu">Kiril Tonev</a>
  */
-@XmlType(propOrder = {"label", "uri", "name", "identifier", "propertyType"})
+@XmlType(propOrder = {"label", "description", "uri", "identifier"})
 public abstract class Property {
     protected String name;
     protected String uri;
     protected String label;
+    protected String description;
     protected int identifier;
     protected PropertyType propertyType;
 
@@ -28,9 +30,12 @@ public abstract class Property {
         this.identifier = identifier;
     }
 
-    @XmlElement(name = "name", required = true)
-    public String getName() {
-        return name;
+    public DataProperty asDataProperty() {
+        return (DataProperty) this;
+    }
+
+    public ObjectProperty asObjectProperty() {
+        return (ObjectProperty) this;
     }
 
     @XmlElement(name = "uri", required = true)
@@ -60,6 +65,16 @@ public abstract class Property {
         this.label = label;
     }
 
+    @XmlElement(name = "description")
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    @XmlTransient
     public PropertyType getPropertyType() {
         return propertyType;
     }

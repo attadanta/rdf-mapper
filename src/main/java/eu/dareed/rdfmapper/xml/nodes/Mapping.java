@@ -1,8 +1,12 @@
 package eu.dareed.rdfmapper.xml.nodes;
 
+import eu.dareed.rdfmapper.NamespaceResolver;
+
 import javax.xml.bind.annotation.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @XmlRootElement(name = "mapping")
 @XmlType(propOrder = {"namespaces", "entities", "taxonomy"})
@@ -27,6 +31,16 @@ public class Mapping {
 
     public void setNamespaces(List<Namespace> namespaces) {
         this.namespaces = namespaces;
+    }
+
+    public NamespaceResolver namespaceResolver() {
+        Map<String, String> namespacesMap = new HashMap<>();
+
+        for (Namespace namespace : namespaces ) {
+            namespacesMap.put(namespace.getPrefix(), namespace.getUri());
+        }
+
+        return new NamespaceResolver(namespacesMap);
     }
 
     @XmlElementWrapper(name = "entities")

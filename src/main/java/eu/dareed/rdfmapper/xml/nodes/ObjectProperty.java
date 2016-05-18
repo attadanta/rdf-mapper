@@ -20,6 +20,11 @@ public class ObjectProperty extends Property {
         this.uri = uri;
     }
 
+    public ObjectProperty(String uri, String objectURI) {
+        this(uri);
+        this.object = objectURI;
+    }
+
     /**
      * The field containing the uri pattern of the object that this object property refers to.
      *

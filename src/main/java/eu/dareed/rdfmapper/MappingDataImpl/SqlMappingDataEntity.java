@@ -33,5 +33,10 @@ public class SqlMappingDataEntity implements MappingDataEntity {
 		return attributes.get(idx);
 	}
 
+	@Override
+	public boolean containsAttributeWithIndex(int index) {
+		return(attributes.size() > index);
+	}
+
 
 }

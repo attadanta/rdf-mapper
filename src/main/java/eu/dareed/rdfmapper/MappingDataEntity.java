@@ -6,4 +6,5 @@ public interface MappingDataEntity {
 	String getType();
 	List<String> getAttributes();
 	String getAttributeByIndex(int idx);
+	boolean containsAttributeWithIndex(int index);
 }

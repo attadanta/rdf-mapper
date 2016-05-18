@@ -8,7 +8,7 @@ import org.semanticweb.owlapi.vocab.OWL2Datatype;
  */
 enum DataProperty {
     INTEGER(OWL2Datatype.XSD_INTEGER.getIRI().toString()),
-    REAL(OWL2Datatype.XSD_FLOAT.getIRI().toString()),
+    REAL(OWL2Datatype.XSD_DOUBLE.getIRI().toString()),
     ALPHA(OWL2Datatype.XSD_STRING.getIRI().toString());
 
     final String typeURI;
