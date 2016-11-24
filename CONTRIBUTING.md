@@ -8,7 +8,7 @@
 
 ## Suggestions for Further Development
 
- * Provide escape routines for property value placeholders.
+ * Provide escape sequences for property value placeholders.
  * Provide implementations for CSV and/or SQL sources.
  * Provide configuration options for `XMLMapper` to exclude some types or to export just a specific set to make the consequent spec editing more convenient.
  * Indicate the locations of the violations in offenses.

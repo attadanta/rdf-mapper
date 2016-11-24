@@ -301,3 +301,9 @@ converted to a series of subclass axioms.
 
 The inconsistency affords us to handle both the mapping of IDF files and
 IDD files with with a single specification.
+
+## Acknowledgement
+
+This work originated in the [DAREED](http://dareed.eu) project. DAREED has
+received funding from the the Seventh framework programme of the European
+union (EU) under grant agreement 609082.
