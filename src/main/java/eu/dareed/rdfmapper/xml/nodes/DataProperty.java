@@ -2,10 +2,7 @@ package eu.dareed.rdfmapper.xml.nodes;
 
 import com.hp.hpl.jena.datatypes.RDFDatatype;
 import com.hp.hpl.jena.datatypes.TypeMapper;
-import com.hp.hpl.jena.rdf.model.Literal;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.Statement;
+import com.hp.hpl.jena.rdf.model.*;
 import eu.dareed.rdfmapper.Environment;
 
 import javax.xml.bind.annotation.XmlElement;

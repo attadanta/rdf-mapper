@@ -1,27 +1,23 @@
 package eu.dareed.rdfmapper;
 
-import com.hp.hpl.jena.rdf.model.Model;
-
 /**
  * @author <a href="mailto:kiril.tonev@kit.edu">Kiril Tonev</a>
  */
 public class Environment {
-    private final Model model;
     private final NamespaceResolver namespaceResolver;
     private final Context context;
 
-    public Environment(Model model, NamespaceResolver namespaceResolver) {
-        this(model, namespaceResolver, null);
+    public Environment(NamespaceResolver namespaceResolver) {
+        this(namespaceResolver, null);
     }
 
-    Environment(Model model, NamespaceResolver namespaceResolver, Context context) {
-        this.model = model;
+    Environment(NamespaceResolver namespaceResolver, Context context) {
         this.namespaceResolver = namespaceResolver;
         this.context = context;
     }
 
     public Environment augment(MappingDataEntity entity) {
-        return new Environment(this.model, this.namespaceResolver, context.augment(entity));
+        return new Environment(this.namespaceResolver, context == null ? new Context(entity) : context.augment(entity));
     }
 
     public NamespaceResolver getNamespaceResolver() {
@@ -30,9 +26,5 @@ public class Environment {
 
     public Context getContext() {
         return context;
-    }
-
-    public Model getModel() {
-        return model;
     }
 }

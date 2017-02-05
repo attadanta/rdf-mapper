@@ -7,6 +7,7 @@ import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.vocabulary.RDF;
 import com.thaiopensource.util.UriEncoder;
+import eu.dareed.rdfmapper.Environment;
 import eu.dareed.rdfmapper.MappingData;
 import eu.dareed.rdfmapper.MappingDataEntity;
 import eu.dareed.rdfmapper.NamespaceResolver;
@@ -44,42 +45,21 @@ public class RDFMapper {
                 log.info("Class `{}' not found in class map.", dataEntity.getType());
                 continue;
             }
-            Entity clsEnt = classList.get(classIndexMap.get(dataEntity.getType().toLowerCase()));
+            Entity entityType = classList.get(classIndexMap.get(dataEntity.getType().toLowerCase()));
 
             // add triples for 'is instance of class xy'
-            String subjectURI = completeURI(resolver.resolveURI(clsEnt.getUri()), dataEntity);
+            String subjectURI = completeURI(resolver.resolveURI(entityType.getUri()), dataEntity);
+
             Resource subject = model.createResource(subjectURI);
-            for (String classURI : clsEnt.getTypes()) {
+            for (String classURI : entityType.getTypes()) {
                 subject.addProperty(RDF.type, model.createResource(resolver.resolveURI(classURI)));
             }
 
+            Environment environment = new Environment(resolver);
+
             // add triples for properties
-            for (Property classProperty : clsEnt.getProperties()) {
-                String predicateURI = resolver.resolveURI(classProperty.getUri());
-
-                if (classProperty.getPropertyType() == PropertyType.DATA_PROPERTY) {
-                    String value = dataEntity.getAttributeByIndex(classProperty.getIdentifier());
-                    String dataType = classProperty.asDataProperty().getType();
-                    if (dataType != null) {
-                        RDFDatatype type = TypeMapper.getInstance().getSafeTypeByName(dataType);
-                        subject.addProperty(model.getProperty(predicateURI), model.createTypedLiteral(value, type));
-                    } else {
-                        subject.addProperty(model.getProperty(predicateURI), value);
-                    }
-                } else if (classProperty.getPropertyType() == PropertyType.OBJECT_PROPERTY) {
-                    String objectPattern = classProperty.asObjectProperty().getObject();
-                    List<Integer> unresolvablePropertyReferences = unresolvablePropertyReferences(objectPattern, dataEntity);
-
-                    if (unresolvablePropertyReferences.isEmpty()) {
-                        String objectURI = resolver.resolveURI(completeURI(objectPattern, dataEntity));
-                        Resource object = model.getResource(objectURI);
-                        subject.addProperty(model.getProperty(predicateURI), object);
-                    } else {
-                        for (Integer reference : unresolvablePropertyReferences) {
-                            log.info("No field with index {} found in entity `{}'.", reference, clsEnt.getName());
-                        }
-                    }
-                }
+            for (Property classProperty : entityType.getProperties()) {
+                model.add(classProperty.describe(subjectURI, environment.augment(dataEntity)));
             }
         }
 

@@ -3,9 +3,15 @@ package eu.dareed.rdfmapper.xml.nodes;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Statement;
+import eu.dareed.rdfmapper.Context;
 import eu.dareed.rdfmapper.Environment;
+import eu.dareed.rdfmapper.VariableReference;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.xml.bind.annotation.XmlElement;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * An object property represents a relation between two resources in an RDF graph.
@@ -13,6 +19,8 @@ import javax.xml.bind.annotation.XmlElement;
  * @author <a href="mailto:kiril.tonev@kit.edu">Kiril Tonev</a>
  */
 public class ObjectProperty extends Property {
+    private static final Logger log = LoggerFactory.getLogger(ObjectProperty.class);
+
     protected String object;
 
     protected ObjectProperty() {
@@ -47,12 +55,32 @@ public class ObjectProperty extends Property {
     public Model describe(String subject, Environment environment) {
         Model model = ModelFactory.createDefaultModel();
 
+        Context context = environment.getContext();
         String objectURI = environment.getNamespaceResolver().resolveURI(object);
-        objectURI = environment.getContext().resolveVariables(objectURI);
 
-        Statement statement = model.createStatement(model.createResource(objectURI), model.createProperty(uri), model.createResource(objectURI));
-        model.add(statement);
+        List<VariableReference> variableReferences = context.collectVariableReferences(objectURI);
+
+        if (unresolvedVariableReferences(variableReferences).isEmpty()) {
+            objectURI = context.resolveVariables(objectURI);
+
+            Statement statement = model.createStatement(model.createResource(subject), model.createProperty(uri), model.createResource(objectURI));
+            model.add(statement);
+        } else {
+            log.warn("Could not resolve all variable references while linking {}", subject);
+        }
 
         return model;
+    }
+
+    protected List<VariableReference> unresolvedVariableReferences(List<VariableReference> referenceList) {
+        List<VariableReference> result = new LinkedList<>();
+
+        for (VariableReference reference : referenceList) {
+            if (!reference.resolved) {
+                result.add(reference);
+            }
+        }
+
+        return result;
     }
 }
