@@ -1,5 +1,9 @@
 package eu.dareed.rdfmapper.xml.nodes;
 
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.Statement;
+import eu.dareed.rdfmapper.Environment;
+
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
@@ -82,4 +86,6 @@ public abstract class Property {
     public void setPropertyType(PropertyType propertyType) {
         this.propertyType = propertyType;
     }
+
+    public abstract Model describe(String subject, Environment environment);
 }

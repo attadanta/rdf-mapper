@@ -43,4 +43,15 @@ public class IDFMappingDataEntity implements MappingDataEntity {
 
 		return index < attributes.size();
 	}
+
+
+	@Override
+	public String resolveNamedVariable(String variableName) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public String resolveIndex(int index) {
+		return getAttributeByIndex(index);
+	}
 }

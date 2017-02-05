@@ -1,5 +1,13 @@
 package eu.dareed.rdfmapper.xml.nodes;
 
+import com.hp.hpl.jena.datatypes.RDFDatatype;
+import com.hp.hpl.jena.datatypes.TypeMapper;
+import com.hp.hpl.jena.rdf.model.Literal;
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.rdf.model.Statement;
+import eu.dareed.rdfmapper.Environment;
+
 import javax.xml.bind.annotation.XmlElement;
 
 /**
@@ -17,7 +25,7 @@ public class DataProperty extends Property {
     /**
      * Data property constructor.
      *
-     * @param uri the uri of the property.
+     * @param uri  the uri of the property.
      * @param type the uri of the data property's domain.
      */
     public DataProperty(String uri, String type) {
@@ -38,5 +46,25 @@ public class DataProperty extends Property {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    @Override
+    public Model describe(String subject, Environment environment) {
+        Model model = ModelFactory.createDefaultModel();
+
+        String value = environment.getContext().resolveIndex(identifier);
+
+        Literal literal;
+        if (type != null) {
+            RDFDatatype typeName = TypeMapper.getInstance().getSafeTypeByName(type);
+            literal = model.createTypedLiteral(value, typeName);
+        } else {
+            literal = model.createLiteral(value);
+        }
+
+        Statement statement = model.createStatement(model.createResource(subject), model.createProperty(uri), literal);
+        model.add(statement);
+
+        return model;
     }
 }

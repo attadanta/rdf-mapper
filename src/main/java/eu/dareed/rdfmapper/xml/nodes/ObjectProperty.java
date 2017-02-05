@@ -1,5 +1,10 @@
 package eu.dareed.rdfmapper.xml.nodes;
 
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.rdf.model.Statement;
+import eu.dareed.rdfmapper.Environment;
+
 import javax.xml.bind.annotation.XmlElement;
 
 /**
@@ -8,7 +13,6 @@ import javax.xml.bind.annotation.XmlElement;
  * @author <a href="mailto:kiril.tonev@kit.edu">Kiril Tonev</a>
  */
 public class ObjectProperty extends Property {
-
     protected String object;
 
     protected ObjectProperty() {
@@ -37,5 +41,18 @@ public class ObjectProperty extends Property {
 
     public void setObject(String object) {
         this.object = object;
+    }
+
+    @Override
+    public Model describe(String subject, Environment environment) {
+        Model model = ModelFactory.createDefaultModel();
+
+        String objectURI = environment.getNamespaceResolver().resolveURI(object);
+        objectURI = environment.getContext().resolveVariables(objectURI);
+
+        Statement statement = model.createStatement(model.createResource(objectURI), model.createProperty(uri), model.createResource(objectURI));
+        model.add(statement);
+
+        return model;
     }
 }

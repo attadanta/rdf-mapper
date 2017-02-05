@@ -51,7 +51,7 @@ public class Context implements VariableResolver {
         }
     }
 
-    String resolveVariables(String sequence) {
+    public String resolveVariables(String sequence) {
         if (pattern.matcher(sequence).find()) {
             StringBuilder result = new StringBuilder();
             Matcher matcher = pattern.matcher(sequence);

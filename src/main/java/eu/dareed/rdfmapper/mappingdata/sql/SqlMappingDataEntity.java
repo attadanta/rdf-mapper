@@ -36,5 +36,13 @@ public class SqlMappingDataEntity implements MappingDataEntity {
 		return(attributes.size() > index);
 	}
 
+	@Override
+	public String resolveNamedVariable(String variableName) {
+		throw new UnsupportedOperationException();
+	}
 
+	@Override
+	public String resolveIndex(int index) {
+		return getAttributeByIndex(index);
+	}
 }
