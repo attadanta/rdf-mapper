@@ -1,5 +1,8 @@
 package eu.dareed.rdfmapper;
 
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -52,30 +55,60 @@ public class Context implements VariableResolver {
     }
 
     public String resolveVariables(String sequence) {
-        if (pattern.matcher(sequence).find()) {
+        return resolveVariables(collectVariableReferences(sequence), sequence);
+    }
+
+    public String resolveVariables(List<VariableReference> variableReferences, String sequence) {
+        if (!variableReferences.isEmpty()) {
             StringBuilder result = new StringBuilder();
-            Matcher matcher = pattern.matcher(sequence);
 
             int lastMatchIndex = 0;
-            while (matcher.find()) {
-                result.append(sequence.subSequence(lastMatchIndex, matcher.start()));
-
-                String variableName = matcher.group(3) == null ? "" : matcher.group(3);
-                String variableIndexCharacterSequence = matcher.group(6) == null ? "" : matcher.group(6);
-
-                if (variableName.isEmpty()) {
-                    result.append(resolveIndex(Integer.parseInt(variableIndexCharacterSequence)));
-                } else {
-                    result.append(resolveNamedVariable(variableName));
-                }
-
-                lastMatchIndex = matcher.end();
+            for (VariableReference variableReference : variableReferences) {
+                result.append(sequence.substring(lastMatchIndex, variableReference.beginPos));
+                result.append(variableReference.resolved ? variableReference.value : "");
+                lastMatchIndex = variableReference.endPos;
             }
 
             result.append(sequence.substring(lastMatchIndex, sequence.length()));
             return result.toString();
         } else {
             return sequence;
+        }
+    }
+
+    public List<VariableReference> collectVariableReferences(String sequence) {
+        if (pattern.matcher(sequence).find()) {
+            List<VariableReference> result = new LinkedList<>();
+
+            Matcher matcher = pattern.matcher(sequence);
+            while (matcher.find()) {
+                int beginIndex = matcher.start();
+                int endIndex = matcher.end();
+
+                String variableName = matcher.group(3) == null ? "" : matcher.group(3);
+                String variableIndexCharacterSequence = matcher.group(6) == null ? "" : matcher.group(6);
+
+                VariableReference variableReference;
+                String value;
+
+                if (variableName.isEmpty()) {
+                    int index = Integer.parseInt(variableIndexCharacterSequence);
+                    variableReference = new VariableIndex(beginIndex, endIndex, index);
+                    value = variableResolver.resolveIndex(index);
+                } else {
+                    variableReference = new NamedVariable(beginIndex, endIndex, variableName);
+                    value = variableResolver.resolveNamedVariable(variableName);
+                }
+
+                variableReference.value = value;
+                variableReference.resolved = value != null;
+
+                result.add(variableReference);
+            }
+
+            return result;
+        } else {
+            return Collections.emptyList();
         }
     }
 }
