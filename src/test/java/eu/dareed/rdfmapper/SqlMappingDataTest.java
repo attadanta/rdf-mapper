@@ -2,7 +2,7 @@ package eu.dareed.rdfmapper;
 
 import java.util.Properties;
 
-import eu.dareed.rdfmapper.MappingDataImpl.SqlMappingData;
+import eu.dareed.rdfmapper.mappingdata.sql.SqlMappingData;
 
 public class SqlMappingDataTest {
 	
