@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class IDFMappingDataEntity implements MappingDataEntity {
-	String type;
-	List<String> attributes;
+	private String type;
+	private List<String> attributes;
 	
 	public IDFMappingDataEntity(IDFObject idfObj) {
 		List<IDFField> fields = idfObj.getFields();
@@ -31,7 +31,7 @@ public class IDFMappingDataEntity implements MappingDataEntity {
 	}
 
 	@Override
-	public String getAttributeByIndex(int idx){
+	public String getAttributeByIndex(int idx) {
 		return attributes.get(idx);
 	}
 
@@ -52,6 +52,10 @@ public class IDFMappingDataEntity implements MappingDataEntity {
 
 	@Override
 	public String resolveIndex(int index) {
-		return getAttributeByIndex(index);
+        if (containsAttributeWithIndex(index)) {
+            return getAttributeByIndex(index);
+        } else {
+            return null;
+        }
 	}
 }

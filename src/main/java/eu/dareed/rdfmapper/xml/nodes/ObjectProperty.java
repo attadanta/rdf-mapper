@@ -63,7 +63,7 @@ public class ObjectProperty extends Property {
         if (unresolvedVariableReferences(variableReferences).isEmpty()) {
             objectURI = context.resolveVariables(objectURI);
 
-            Statement statement = model.createStatement(model.createResource(subject), model.createProperty(uri), model.createResource(objectURI));
+            Statement statement = model.createStatement(model.createResource(subject), model.createProperty(environment.resolveURL(uri)), model.createResource(objectURI));
             model.add(statement);
         } else {
             log.warn("Could not resolve all variable references while linking {}", subject);

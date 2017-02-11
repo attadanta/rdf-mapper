@@ -27,4 +27,14 @@ public class Environment {
     public Context getContext() {
         return context;
     }
+
+    public String resolveURL(String urlSequence) {
+        String resolvedSequence = namespaceResolver.resolveURI(urlSequence);
+
+        if (context != null) {
+            return context.resolveVariables(resolvedSequence);
+        } else {
+            return resolvedSequence;
+        }
+    }
 }

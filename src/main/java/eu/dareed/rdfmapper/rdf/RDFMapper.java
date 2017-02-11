@@ -1,7 +1,5 @@
 package eu.dareed.rdfmapper.rdf;
 
-import com.hp.hpl.jena.datatypes.RDFDatatype;
-import com.hp.hpl.jena.datatypes.TypeMapper;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
@@ -16,13 +14,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class RDFMapper {
-
     private static final Logger log = LoggerFactory.getLogger(RDFMapper.class);
 
     public Model mapToRDF(MappingData data, Mapping mapping) {
@@ -35,11 +31,14 @@ public class RDFMapper {
         }
 
         NamespaceResolver resolver = mapping.namespaceResolver();
+        Environment environment = new Environment(resolver);
 
         List<Entity> classList = mapping.getEntities();
         Map<String, Integer> classIndexMap = buildClassIndexMap(classList);
 
         for (MappingDataEntity dataEntity : data.getDataEntities()) {
+            Environment entityEnvironment = environment.augment(dataEntity);
+
             // get class entity from entity map
             if (!classIndexMap.containsKey(dataEntity.getType().toLowerCase())) {
                 log.info("Class `{}' not found in class map.", dataEntity.getType());
@@ -48,18 +47,17 @@ public class RDFMapper {
             Entity entityType = classList.get(classIndexMap.get(dataEntity.getType().toLowerCase()));
 
             // add triples for 'is instance of class xy'
-            String subjectURI = completeURI(resolver.resolveURI(entityType.getUri()), dataEntity);
+            String subjectURL = entityEnvironment.resolveURL(entityType.getUri());
 
-            Resource subject = model.createResource(subjectURI);
+            Resource subject = model.createResource(subjectURL);
             for (String classURI : entityType.getTypes()) {
                 subject.addProperty(RDF.type, model.createResource(resolver.resolveURI(classURI)));
             }
 
-            Environment environment = new Environment(resolver);
 
             // add triples for properties
             for (Property classProperty : entityType.getProperties()) {
-                model.add(classProperty.describe(subjectURI, environment.augment(dataEntity)));
+                model.add(classProperty.describe(subjectURL, entityEnvironment));
             }
         }
 
@@ -73,38 +71,5 @@ public class RDFMapper {
             indexMap.put(clsEnt.getName().toLowerCase(), i);
         }
         return indexMap;
-    }
-
-    private String completeURI(String uri, MappingDataEntity dataEntity) {
-        String[] splittedURI = uri.split("\\$");
-        for (int i = 1; i < splittedURI.length; i += 2) {
-            int idx = Integer.parseInt(splittedURI[i]);
-            String attributeValue = dataEntity.getAttributeByIndex(idx);
-            splittedURI[i] = UriEncoder.encode(attributeValue);
-        }
-        return StringUtils.join(splittedURI);
-    }
-
-    private List<Integer> unresolvablePropertyReferences(String uri, MappingDataEntity dataEntity) {
-        List<Integer> references = new ArrayList<>();
-
-        for (Integer reference : propertyReferences(uri)) {
-            if (!dataEntity.containsAttributeWithIndex(reference)) {
-                references.add(reference);
-            }
-        }
-
-        return references;
-    }
-
-    private List<Integer> propertyReferences(String uri) {
-        List<Integer> references = new ArrayList<>();
-
-        String[] splitURI = uri.split("\\$");
-        for (int i = 1; i < splitURI.length; i += 2) {
-            references.add(Integer.parseInt(splitURI[i]));
-        }
-
-        return references;
     }
 }

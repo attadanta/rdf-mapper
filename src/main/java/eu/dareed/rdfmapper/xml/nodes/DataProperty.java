@@ -59,7 +59,7 @@ public class DataProperty extends Property {
             literal = model.createLiteral(value);
         }
 
-        Statement statement = model.createStatement(model.createResource(subject), model.createProperty(uri), literal);
+        Statement statement = model.createStatement(model.createResource(subject), model.createProperty(environment.resolveURL(uri)), literal);
         model.add(statement);
 
         return model;

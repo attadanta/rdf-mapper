@@ -1,6 +1,7 @@
 package eu.dareed.rdfmapper;
 
 import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.vocabulary.RDF;
 import eu.dareed.eplus.model.idf.IDF;
 import eu.dareed.eplus.parsers.idf.IDFParser;
 import eu.dareed.rdfmapper.energyplus.mapping.IDFMappingData;
@@ -22,7 +23,6 @@ import java.util.List;
  * @author <a href="mailto:kiril.tonev@kit.edu">Kiril Tonev</a>
  */
 public class SimulationFileMappingTest {
-
     private static Mapping mapping;
     private static MappingData mappingData;
 
@@ -44,6 +44,27 @@ public class SimulationFileMappingTest {
             Assert.assertFalse("No declared types for entity `" + entities.get(i).getName() + "'.", entities.get(i).getTypes().isEmpty());
         }
         Assert.assertEquals(13, entities.size());
+    }
+
+    @Test
+    public void testZoneList() {
+        Model model = new RDFMapper().mapToRDF(mappingData, mapping);
+
+        String allZonesURL = "http://dareed.eu/simulation/zones/AllZones";
+
+        Assert.assertTrue(model.contains(model.createResource(allZonesURL), RDF.type));
+        Assert.assertTrue(model.contains(model.createResource(allZonesURL), model.createProperty("https://energyplus.net/zone_1"), model.createResource("http://dareed.eu/simulation/zones/Zone001")));
+        Assert.assertFalse(model.contains(model.createResource(allZonesURL), model.createProperty(":zone_1"), model.createResource("http://dareed.eu/simulation/zones/Zone001")));
+    }
+
+    @Test
+    public void testLocation() {
+        Model model = new RDFMapper().mapToRDF(mappingData, mapping);
+
+        String locationURL = "http://dareed.eu/simulation/locations/Office";
+
+        Assert.assertTrue(model.contains(model.createResource(locationURL), RDF.type, model.createResource("https://energyplus.net/Location")));
+        Assert.assertTrue(model.contains(model.createResource(locationURL), model.createProperty("http://www.w3.org/2003/01/geo/wgs84_pos#lat")));
     }
 
     @Test
