@@ -37,4 +37,12 @@ public class Environment {
             return resolvedSequence;
         }
     }
+
+    public String resolveSequence(String sequence) {
+        if (context != null) {
+            return context.resolveVariables(sequence);
+        } else {
+            return sequence;
+        }
+    }
 }

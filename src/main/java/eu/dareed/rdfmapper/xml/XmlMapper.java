@@ -4,6 +4,8 @@ import eu.dareed.eplus.model.idd.IDD;
 import eu.dareed.eplus.model.idd.IDDField;
 import eu.dareed.eplus.model.idd.IDDObject;
 import eu.dareed.eplus.model.idd.Parameter;
+import eu.dareed.rdfmapper.Context;
+import eu.dareed.rdfmapper.VariableResolver;
 import eu.dareed.rdfmapper.xml.nodes.*;
 import org.apache.commons.lang3.StringUtils;
 
@@ -66,13 +68,12 @@ public class XmlMapper {
 
                     Property property;
                     if (isDataProperty(field)) {
-                        property = new eu.dareed.rdfmapper.xml.nodes.DataProperty(eplusProperty.uri, DataProperty.parseDataTypeInField(field).typeURI);
+                        property = new eu.dareed.rdfmapper.xml.nodes.DataProperty(eplusProperty.uri, DataProperty.parseDataTypeInField(field).typeURI, String.format("%s{%d}", Context.indexVariable, i));
                     } else {
                         property = new ObjectProperty(eplusProperty.uri, namespace.getPrefix() + ":");
                     }
                     property.setLabel(eplusProperty.label);
                     property.setDescription(eplusProperty.description);
-                    property.setIdentifier(i);
 
                     propertyList.add(property);
                 }

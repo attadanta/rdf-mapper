@@ -61,14 +61,12 @@ public class IDDExtractionTest {
         Assert.assertEquals(PropertyType.DATA_PROPERTY, name.getPropertyType());
         Assert.assertEquals("Name", name.getLabel());
         Assert.assertEquals("defaultns:Name", name.getUri());
-        Assert.assertEquals(0, name.getIdentifier());
         Assert.assertEquals("http://www.w3.org/2001/XMLSchema#string", name.asDataProperty().getType());
 
         Property lat = entity.getProperties().get(1);
         Assert.assertEquals(PropertyType.DATA_PROPERTY, lat.getPropertyType());
         Assert.assertEquals("Latitude", lat.getLabel());
         Assert.assertEquals("defaultns:Latitude", lat.getUri());
-        Assert.assertEquals(1, lat.getIdentifier());
         Assert.assertEquals("http://www.w3.org/2001/XMLSchema#double", lat.asDataProperty().getType());
     }
 
@@ -79,11 +77,9 @@ public class IDDExtractionTest {
 
         Property name = properties.get(0);
         Assert.assertEquals(PropertyType.DATA_PROPERTY, name.getPropertyType());
-        Assert.assertEquals(0, name.getIdentifier());
 
         Property maxDrybulbTemperature = properties.get(4);
         Assert.assertEquals(PropertyType.DATA_PROPERTY, maxDrybulbTemperature.getPropertyType());
-        Assert.assertEquals(4, maxDrybulbTemperature.getIdentifier());
     }
 
     @Test

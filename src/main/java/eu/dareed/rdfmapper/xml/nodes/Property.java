@@ -10,13 +10,12 @@ import javax.xml.bind.annotation.XmlType;
 /**
  * @author <a href="mailto:kiril.tonev@kit.edu">Kiril Tonev</a>
  */
-@XmlType(propOrder = {"label", "description", "uri", "identifier"})
+@XmlType(propOrder = {"label", "description", "uri"})
 public abstract class Property {
     protected String name;
     protected String uri;
     protected String label;
     protected String description;
-    protected int identifier;
     protected PropertyType propertyType;
 
     protected Property() {
@@ -26,11 +25,10 @@ public abstract class Property {
         this.propertyType = propertyType;
     }
 
-    public Property(String name, PropertyType propertyType, String uri, int identifier) {
+    public Property(String name, PropertyType propertyType, String uri) {
         this.name = name;
         this.propertyType = propertyType;
         this.uri = uri;
-        this.identifier = identifier;
     }
 
     public DataProperty asDataProperty() {
@@ -48,15 +46,6 @@ public abstract class Property {
 
     public void setUri(String uri) {
         this.uri = uri;
-    }
-
-    @XmlElement(name = "id", required = true)
-    public int getIdentifier() {
-        return identifier;
-    }
-
-    public void setIdentifier(int identifier) {
-        this.identifier = identifier;
     }
 
     @XmlElement(name = "label")

@@ -85,7 +85,7 @@ public class OntologyMapper {
                         ontologyManager.addAxiom(ontology, dataFactory.getOWLDataPropertyRangeAxiom(owlProperty, owlDatatype));
                     }
                 } else {
-                    throw new RuntimeException("No known property type in property `" + property.getIdentifier() + " of `" + classEntity.getName() + "'.");
+                    throw new RuntimeException("No known property type in property `" + property.getUri() + " of `" + classEntity.getName() + "'.");
                 }
 
                 OWLAnnotation propertyLabel = dataFactory.getOWLAnnotation(dataFactory.getRDFSLabel(), dataFactory.getOWLLiteral(property.getLabel()));

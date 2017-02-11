@@ -56,7 +56,6 @@ public class XMLParseTest {
         Assert.assertEquals(PropertyType.OBJECT_PROPERTY, property.getPropertyType());
 
         ObjectProperty objectProperty = (ObjectProperty) property;
-        Assert.assertEquals(5, objectProperty.getIdentifier());
         Assert.assertEquals("http://dareed.eu/shadowing", objectProperty.getUri());
         Assert.assertEquals("http://dareed.eu/$2$", objectProperty.getObject());
     }
@@ -68,7 +67,6 @@ public class XMLParseTest {
         Assert.assertEquals(PropertyType.DATA_PROPERTY, property.getPropertyType());
 
         DataProperty dataProperty = (DataProperty) property;
-        Assert.assertEquals(6, dataProperty.getIdentifier());
         Assert.assertEquals("http://dareed.eu/power", dataProperty.getUri());
         Assert.assertEquals("xsd:int", dataProperty.getType());
     }

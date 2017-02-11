@@ -23,8 +23,8 @@ final class DeclaredNamespaces implements Check {
             }
 
             for (Property property : entity.getProperties()) {
-                processURI(namespaceResolver, "property", Integer.toString(property.getIdentifier()), property.getUri(), result);
-                String propertyName = property.getUri() + " of property " + property.getIdentifier() + " in entity " + entity.getName();
+                processURI(namespaceResolver, "property", property.getUri(), property.getUri(), result);
+                String propertyName = property.getUri() + " of property " + property.getUri() + " in entity " + entity.getName();
 
                 if (property.getPropertyType() == PropertyType.OBJECT_PROPERTY) {
                     ObjectProperty objectProperty = property.asObjectProperty();
