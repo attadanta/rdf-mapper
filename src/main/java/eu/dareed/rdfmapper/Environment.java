@@ -16,7 +16,7 @@ public class Environment {
         this.context = context;
     }
 
-    public Environment augment(MappingDataEntity entity) {
+    public Environment augment(VariableResolver entity) {
         return new Environment(this.namespaceResolver, context == null ? new Context(entity) : context.augment(entity));
     }
 
