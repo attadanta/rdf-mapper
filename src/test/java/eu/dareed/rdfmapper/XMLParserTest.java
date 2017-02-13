@@ -11,12 +11,12 @@ import java.io.FileNotFoundException;
 import java.net.URISyntaxException;
 import java.nio.file.Paths;
 
-public class XMLParseTest {
+public class XMLParserTest {
     private static Mapping mapping;
 
     @BeforeClass
     public static void setup() throws JAXBException, URISyntaxException, FileNotFoundException {
-        File xmlMap = Paths.get(XMLParseTest.class.getResource("/fixtures/idd_map.xml").toURI()).toFile();
+        File xmlMap = Paths.get(XMLParserTest.class.getResource("/fixtures/idd_map.xml").toURI()).toFile();
         mapping = new MappingIO().loadXML(xmlMap);
     }
 

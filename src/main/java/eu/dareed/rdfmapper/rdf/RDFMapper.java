@@ -1,14 +1,14 @@
 package eu.dareed.rdfmapper.rdf;
 
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.vocabulary.RDF;
 import eu.dareed.rdfmapper.Environment;
 import eu.dareed.rdfmapper.MappingData;
 import eu.dareed.rdfmapper.MappingDataEntity;
 import eu.dareed.rdfmapper.NamespaceResolver;
 import eu.dareed.rdfmapper.xml.nodes.*;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.vocabulary.RDF;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

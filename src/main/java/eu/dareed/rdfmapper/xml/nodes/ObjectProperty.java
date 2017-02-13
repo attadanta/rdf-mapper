@@ -1,11 +1,11 @@
 package eu.dareed.rdfmapper.xml.nodes;
 
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.Statement;
 import eu.dareed.rdfmapper.Context;
 import eu.dareed.rdfmapper.Environment;
 import eu.dareed.rdfmapper.VariableReference;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.Statement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

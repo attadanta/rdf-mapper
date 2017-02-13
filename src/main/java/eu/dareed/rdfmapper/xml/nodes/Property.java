@@ -1,7 +1,7 @@
 package eu.dareed.rdfmapper.xml.nodes;
 
-import com.hp.hpl.jena.rdf.model.Model;
 import eu.dareed.rdfmapper.Environment;
+import org.apache.jena.rdf.model.Model;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
