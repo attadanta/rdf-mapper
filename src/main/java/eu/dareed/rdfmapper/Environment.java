@@ -4,14 +4,14 @@ package eu.dareed.rdfmapper;
  * @author <a href="mailto:kiril.tonev@kit.edu">Kiril Tonev</a>
  */
 public class Environment {
-    private final NamespaceResolver namespaceResolver;
-    private final Context context;
+    protected final NamespaceResolver namespaceResolver;
+    protected final Context context;
 
     public Environment(NamespaceResolver namespaceResolver) {
         this(namespaceResolver, null);
     }
 
-    Environment(NamespaceResolver namespaceResolver, Context context) {
+    protected Environment(NamespaceResolver namespaceResolver, Context context) {
         this.namespaceResolver = namespaceResolver;
         this.context = context;
     }
