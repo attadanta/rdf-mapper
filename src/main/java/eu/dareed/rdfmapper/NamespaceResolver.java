@@ -23,6 +23,10 @@ public class NamespaceResolver {
         this.nsMap = namespacesMap == null ? Collections.<String, String>emptyMap() : namespacesMap;
     }
 
+    public Map<String, String> getNamespaceMap() {
+        return Collections.unmodifiableMap(nsMap);
+    }
+
     public String resolveURI(String uri) {
         if (isAbsolute(uri)) {
             return uri;
