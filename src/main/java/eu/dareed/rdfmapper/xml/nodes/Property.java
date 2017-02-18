@@ -2,6 +2,7 @@ package eu.dareed.rdfmapper.xml.nodes;
 
 import eu.dareed.rdfmapper.Environment;
 import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.Resource;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -76,4 +77,6 @@ public abstract class Property {
     }
 
     public abstract Model describe(String subject, Environment environment);
+
+    public abstract Model describe(Model model, Resource subject, Environment environment);
 }

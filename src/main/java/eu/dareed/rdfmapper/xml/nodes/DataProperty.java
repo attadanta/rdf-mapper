@@ -3,10 +3,7 @@ package eu.dareed.rdfmapper.xml.nodes;
 import eu.dareed.rdfmapper.Environment;
 import org.apache.jena.datatypes.RDFDatatype;
 import org.apache.jena.datatypes.TypeMapper;
-import org.apache.jena.rdf.model.Literal;
-import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.jena.rdf.model.Statement;
+import org.apache.jena.rdf.model.*;
 
 import javax.xml.bind.annotation.XmlElement;
 
@@ -71,11 +68,16 @@ public class DataProperty extends Property {
 
     @Override
     public Model describe(String subject, Environment environment) {
+        Model model = ModelFactory.createDefaultModel();
+        Resource resource = model.createResource(subject);
+        return describe(model, resource, environment);
+    }
+
+    @Override
+    public Model describe(Model model, Resource subject, Environment environment) {
         if (value == null) {
             throw new IllegalStateException("No value is set for property " + uri);
         }
-
-        Model model = ModelFactory.createDefaultModel();
 
         String lex = environment.resolveSequence(value);
 
@@ -87,7 +89,7 @@ public class DataProperty extends Property {
             literal = model.createLiteral(lex);
         }
 
-        Statement statement = model.createStatement(model.createResource(subject), model.createProperty(environment.resolveURL(uri)), literal);
+        Statement statement = model.createStatement(subject, model.createProperty(environment.resolveURL(uri)), literal);
         model.add(statement);
 
         return model;

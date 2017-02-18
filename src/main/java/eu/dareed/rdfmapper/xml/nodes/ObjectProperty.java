@@ -5,6 +5,7 @@ import eu.dareed.rdfmapper.Environment;
 import eu.dareed.rdfmapper.VariableReference;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.Statement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,9 +53,19 @@ public class ObjectProperty extends Property {
     }
 
     @Override
-    public Model describe(String subject, Environment environment) {
+    public Model describe(String subjectURL, Environment environment) {
         Model model = ModelFactory.createDefaultModel();
 
+        if (subjectURL == null) {
+            return model;
+        }
+
+        Resource subject = model.createResource(subjectURL);
+        return describe(model, subject, environment);
+    }
+
+    @Override
+    public Model describe(Model model, Resource subject, Environment environment) {
         Context context = environment.getContext();
 
         List<VariableReference> variableReferences = context.collectVariableReferences(object);
@@ -63,7 +74,7 @@ public class ObjectProperty extends Property {
             String objectURI = context.resolveVariables(object);
             objectURI = environment.getNamespaceResolver().resolveURI(objectURI);
 
-            Statement statement = model.createStatement(model.createResource(subject), model.createProperty(environment.resolveURL(uri)), model.createResource(objectURI));
+            Statement statement = model.createStatement(subject, model.createProperty(environment.resolveURL(uri)), model.createResource(objectURI));
             model.add(statement);
         } else {
             log.warn("Could not resolve all variable references while linking {}", subject);
