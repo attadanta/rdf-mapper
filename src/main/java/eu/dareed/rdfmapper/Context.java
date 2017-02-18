@@ -94,10 +94,10 @@ public class Context implements VariableResolver {
                 if (variableName.isEmpty()) {
                     int index = Integer.parseInt(variableIndexCharacterSequence);
                     variableReference = new VariableIndex(beginIndex, endIndex, index);
-                    value = variableResolver.resolveIndex(index);
+                    value = resolveIndex(index);
                 } else {
                     variableReference = new NamedVariable(beginIndex, endIndex, variableName);
-                    value = variableResolver.resolveNamedVariable(variableName);
+                    value = resolveNamedVariable(variableName);
                 }
 
                 variableReference.value = value;
