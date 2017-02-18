@@ -33,13 +33,13 @@ public class Environment {
     }
 
     public String resolveURL(String urlSequence) {
-        String resolvedSequence = namespaceResolver.resolveURI(urlSequence);
+        String resolvedSequence = urlSequence;
 
         if (context != null) {
-            return context.resolveVariables(resolvedSequence);
-        } else {
-            return resolvedSequence;
+            resolvedSequence = context.resolveVariables(resolvedSequence);
         }
+
+        return namespaceResolver.resolveURI(resolvedSequence);
     }
 
     public String resolveSequence(String sequence) {
