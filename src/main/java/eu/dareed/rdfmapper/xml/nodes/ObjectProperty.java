@@ -56,12 +56,12 @@ public class ObjectProperty extends Property {
         Model model = ModelFactory.createDefaultModel();
 
         Context context = environment.getContext();
-        String objectURI = environment.getNamespaceResolver().resolveURI(object);
 
-        List<VariableReference> variableReferences = context.collectVariableReferences(objectURI);
+        List<VariableReference> variableReferences = context.collectVariableReferences(object);
 
         if (unresolvedVariableReferences(variableReferences).isEmpty()) {
-            objectURI = context.resolveVariables(objectURI);
+            String objectURI = context.resolveVariables(object);
+            objectURI = environment.getNamespaceResolver().resolveURI(objectURI);
 
             Statement statement = model.createStatement(model.createResource(subject), model.createProperty(environment.resolveURL(uri)), model.createResource(objectURI));
             model.add(statement);

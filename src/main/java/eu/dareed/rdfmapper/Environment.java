@@ -11,6 +11,10 @@ public class Environment {
         this(namespaceResolver, null);
     }
 
+    public Environment(NamespaceResolver namespaceResolver, VariableResolver variableResolver) {
+        this(namespaceResolver, new Context(variableResolver));
+    }
+
     protected Environment(NamespaceResolver namespaceResolver, Context context) {
         this.namespaceResolver = namespaceResolver;
         this.context = context;
