@@ -18,7 +18,7 @@ public class NamespaceResolver {
      * @param namespacesMap a map assigning each namespace prefix a full url.
      */
     public NamespaceResolver(Map<String, String> namespacesMap) {
-        this.nsMap = namespacesMap == null ? Collections.<String, String>emptyMap() : namespacesMap;
+        this.nsMap = namespacesMap == null ? Collections.emptyMap() : namespacesMap;
     }
 
     public Map<String, String> getNamespaceMap() {
