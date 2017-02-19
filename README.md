@@ -11,7 +11,7 @@ The assumptions on the data sources are designed to be broad and should
 be applicable to common table-based format where each item is
 represented by a row in some table. These assumptions are namely:
 
- * Schemas are associated with a names which identifies item types
+ * Schemas are associated with names which identify item types
    uniquely.
  * Item properties are accessed by integers which identify property
    values.
