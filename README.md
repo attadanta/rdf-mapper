@@ -40,25 +40,26 @@ once at the top of the mapping spec.
 
 The namespaces are declared as prefix-uri pairs in a `namespaces`
 element:
-
-    <namespaces xmlns="http://imi.kit.edu/rdfMapping">
-        <ns>
-            <prefix>defaultns</prefix>
-            <uri>https://energyplus.net/</uri>
-        </ns>
-        <ns>
-            <prefix>geo</prefix>
-            <uri>http://www.w3.org/2003/01/geo/wgs84_pos#</uri>
-        </ns>
-        <ns>
-            <prefix>rdfs</prefix>
-            <uri>http://www.w3.org/2000/01/rdf-schema#</uri>
-        </ns>
-        <ns>
-            <prefix>xsd</prefix>
-            <uri>http://www.w3.org/2001/XMLSchema#</uri>
-        </ns>
-    </namespaces>
+```xml
+<namespaces xmlns="http://imi.kit.edu/rdfMapping">
+    <ns>
+        <prefix>defaultns</prefix>
+        <uri>https://energyplus.net/</uri>
+    </ns>
+    <ns>
+        <prefix>geo</prefix>
+        <uri>http://www.w3.org/2003/01/geo/wgs84_pos#</uri>
+    </ns>
+    <ns>
+        <prefix>rdfs</prefix>
+        <uri>http://www.w3.org/2000/01/rdf-schema#</uri>
+    </ns>
+    <ns>
+        <prefix>xsd</prefix>
+        <uri>http://www.w3.org/2001/XMLSchema#</uri>
+    </ns>
+</namespaces>
+```
 
 The prefix `defaultns` is reserved and denotes a base URL.
 
@@ -74,13 +75,18 @@ to `p` in the namespace map. The default prefix can be used by leaving
 The mapping utilizes the concept of property value placeholders, much
 like the URI patterns defined in [RFC 6570](https://tools.ietf.org/html/rfc6570).
 
-Placeholders are delimited by the dollar character `$` on both sides and
-enclose an integer. The integer is a zero-based index of a property
-value in the entity in the scope.
+There are two kinds of value placeholders: named variables and variables
+indicating a property index. A named variable is denoted by the sequence
+`${name}` enclosing the variable name. Named variables can be utilized by extending
+the library and are therefore not explained further in this mini guide.
 
-This convention is used both for building typed literals and URLs. The
+Index-based variables are delimited by the sequence `#{n}` enclosing an integer
+`n`. The integer is a zero-based index of a property value of the entity in
+the current scope.
+
+These conventions are used both for building typed literals and URLs. The
 prefixed URL notation and the property value expansion can thus be
-mixed. The character sequence `:$2$` will resolve to a URL using the
+mixed. The character sequence `:#{2}` will resolve to a URL using the
 default URL prefix and append the property value of the third property
 in the entity under consideration.
 
@@ -105,8 +111,8 @@ Entity maps are defined by four elements:
 ### Property Map
 
 The property map is a sequence of data property and object property
-definitions. Both types should give a URL pattern in an `uri` element
-and an `id` that references the index of the mapped property.
+definitions. Both types should indicate a URL pattern in the `uri` element
+identifying the property.
 
 Values are encoded differently in data properties and object properties.
 Data property mappings _may_ indicate a `type` URL in order to build a
@@ -135,46 +141,47 @@ project (see below).
 A full example demonstrating the usage of the concepts explained above
 is given below:
 
-    <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-    <mapping xmlns="http://imi.kit.edu/rdfMapping">
-        <namespaces>
-            <ns>
-                <prefix>defaultns</prefix>
-                <uri>https://energyplus.net/</uri>
-            </ns>
-            <ns>
-                <prefix>geo</prefix>
-                <uri>http://www.w3.org/2003/01/geo/wgs84_pos#</uri>
-            </ns>
-            <ns>
-                <prefix>rdfs</prefix>
-                <uri>http://www.w3.org/2000/01/rdf-schema#</uri>
-            </ns>
-            <ns>
-                <prefix>xsd</prefix>
-                <uri>http://www.w3.org/2001/XMLSchema#</uri>
-            </ns>
-        </namespaces>
-        <entities>
-            <entity>
-                <uri>http://dareed.eu/simulation/buildings/$0$</uri>
-                <name>Building</name>
-                <type>:Building</type>
-                <properties>
-                    <dataProperty>
-                        <uri>rdfs:label</uri>
-                        <id>0</id>
-                        <type>xsd:string</type>
-                    </dataProperty>
-                    <objectProperty>
-                        <uri>:terrain</uri>
-                        <id>2</id>
-                        <object>:$2$</object>
-                    </objectProperty>
-                </properties>
-            </entity>
-        </entities>
-    </mapping>
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<mapping xmlns="http://imi.kit.edu/rdfMapping">
+    <namespaces>
+        <ns>
+            <prefix>defaultns</prefix>
+            <uri>https://energyplus.net/</uri>
+        </ns>
+        <ns>
+            <prefix>geo</prefix>
+            <uri>http://www.w3.org/2003/01/geo/wgs84_pos#</uri>
+        </ns>
+        <ns>
+            <prefix>rdfs</prefix>
+            <uri>http://www.w3.org/2000/01/rdf-schema#</uri>
+        </ns>
+        <ns>
+            <prefix>xsd</prefix>
+            <uri>http://www.w3.org/2001/XMLSchema#</uri>
+        </ns>
+    </namespaces>
+    <entities>
+        <entity>
+            <uri>http://dareed.eu/simulation/buildings/$0$</uri>
+            <name>Building</name>
+            <type>:Building</type>
+            <properties>
+                <dataProperty>
+                    <uri>rdfs:label</uri>
+                    <value>#{0}</value>
+                    <type>xsd:string</type>
+                </dataProperty>
+                <objectProperty>
+                    <uri>:terrain</uri>
+                    <object>:$2$</object>
+                </objectProperty>
+            </properties>
+        </entity>
+    </entities>
+</mapping>
+```
 
 ## Usage
 
